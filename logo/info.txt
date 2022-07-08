@@ -1,0 +1,14 @@
+
+Hope you enjoy your new logo, here are the people that
+made your beautiful logo happen :)
+font name: Cormorant-Regular
+font link: https://fonts.google.com/specimen/Cormorant
+font author: Christian Thalmann
+font author site: http://www.myfonts.com/foundry/Catharsis_Fonts/
+
+
+icon designer: kesaryvamshi
+icon designer link: /kesary
+        
+{"bg":"transparent","icon-gradient-0":"#574851","icon-gradient-1":"#95A8B1","font":"#000000","slogan":"#141414"}
+      
