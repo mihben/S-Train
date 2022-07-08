@@ -1,1 +1,1 @@
-# S-Train
+![Banner](logo/cover.png)
