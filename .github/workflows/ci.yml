@@ -10,7 +10,10 @@ on:
     
 jobs:
   build:
-    uses: mihben/workflow-template/.github/workflows/dotnet-build.yml@main
-    with:
-      runs-on: ubuntu-latest
-      dotnet-version: 6.0.x
+    - name: Checkout
+      uses: actions/checkout@v3
+  
+    - uses: mihben/workflow-template/.github/workflows/dotnet-build.yml@main
+      with:
+        runs-on: ubuntu-latest
+        dotnet-version: 6.0.x
