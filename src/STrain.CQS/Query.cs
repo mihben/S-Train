@@ -12,6 +12,8 @@ namespace STrain
         }
 
         public override bool Equals(object? obj) => Equals(this, obj as Query<T>);
+
+        [ExcludeFromCodeCoverage]
         public override int GetHashCode() => GetHashCode(this);
 
         public bool Equals(Query<T>? x, Query<T>? y)
@@ -20,6 +22,7 @@ namespace STrain
                  || (x?.RequestId.Equals(y?.RequestId) ?? false);
         }
 
+        [ExcludeFromCodeCoverage]
         public int GetHashCode([DisallowNull] Query<T> obj)
         {
             return obj.RequestId.GetHashCode();
