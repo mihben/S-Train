@@ -2,11 +2,9 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ "develop", "feature/ci-pipeline" ]
+    branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
-
-  workflow_dispatch:
     
 jobs:
   build:
