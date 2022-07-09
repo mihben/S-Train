@@ -12,6 +12,8 @@ namespace STrain
             RequestId = requestId ?? Guid.NewGuid();
         }
 
+        // TODO Please find me CodeQL
+
         public bool Equals(Query<T>? other) => RequestId.Equals(other?.RequestId);
         public override bool Equals(object? obj) => Equals(obj as Query<T>);
         public override int GetHashCode() => RequestId.GetHashCode();
