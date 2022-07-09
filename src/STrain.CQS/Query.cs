@@ -1,4 +1,5 @@
 ﻿using STrain.CQS;
+using System;
 
 namespace STrain
 {
