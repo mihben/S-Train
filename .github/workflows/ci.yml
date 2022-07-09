@@ -16,3 +16,5 @@ jobs:
       dotnet-version: 6.0.x
       solution: ./src/*.sln
       test-results: ./test-results
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
