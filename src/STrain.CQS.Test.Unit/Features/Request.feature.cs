@@ -180,19 +180,19 @@ More information _(here)[https://martinfowler.com/bliki/CommandQuerySeparation.h
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Equals queries")]
+        [Xunit.SkippableFactAttribute(DisplayName="Null command")]
         [Xunit.TraitAttribute("FeatureTitle", "Request")]
-        [Xunit.TraitAttribute("Description", "Equals queries")]
+        [Xunit.TraitAttribute("Description", "Null command")]
         [Xunit.TraitAttribute("Category", "issue-3")]
         [Xunit.TraitAttribute("Category", "unit")]
-        public virtual void EqualsQueries()
+        public virtual void NullCommand()
         {
             string[] tagsOfScenario = new string[] {
                     "issue-3",
                     "unit"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Equals queries", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 33
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Null command", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 30
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -212,16 +212,106 @@ More information _(here)[https://martinfowler.com/bliki/CommandQuerySeparation.h
             else
             {
                 this.ScenarioStart();
-#line 34
-   testRunner.Given("Query with E2DF8CA8-2ADE-42AD-B2EA-E033F0E74730 id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 31
+   testRunner.Given("\'A\' command is null", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 35
-   testRunner.And("Query with E2DF8CA8-2ADE-42AD-B2EA-E033F0E74730 id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 32
+   testRunner.And("Command with 9901DB37-6747-43C2-BD24-F6C1F722A770 id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 36
+#line 33
    testRunner.When("Comparing requests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 37
+#line 34
+   testRunner.Then("Should not be equals", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Generate request id for command")]
+        [Xunit.TraitAttribute("FeatureTitle", "Request")]
+        [Xunit.TraitAttribute("Description", "Generate request id for command")]
+        [Xunit.TraitAttribute("Category", "issue-3")]
+        [Xunit.TraitAttribute("Category", "unit")]
+        public virtual void GenerateRequestIdForCommand()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "issue-3",
+                    "unit"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Generate request id for command", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 38
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 39
+   testRunner.When("Creating command", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 40
+   testRunner.Then("Id should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Equals queries")]
+        [Xunit.TraitAttribute("FeatureTitle", "Request")]
+        [Xunit.TraitAttribute("Description", "Equals queries")]
+        [Xunit.TraitAttribute("Category", "issue-3")]
+        [Xunit.TraitAttribute("Category", "unit")]
+        public virtual void EqualsQueries()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "issue-3",
+                    "unit"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Equals queries", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 47
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 48
+   testRunner.Given("Query with E2DF8CA8-2ADE-42AD-B2EA-E033F0E74730 id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 49
+   testRunner.And("Query with E2DF8CA8-2ADE-42AD-B2EA-E033F0E74730 id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 50
+   testRunner.When("Comparing requests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 51
    testRunner.Then("Should be equals", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -240,7 +330,7 @@ More information _(here)[https://martinfowler.com/bliki/CommandQuerySeparation.h
                     "unit"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Different queries", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 41
+#line 55
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -260,17 +350,107 @@ More information _(here)[https://martinfowler.com/bliki/CommandQuerySeparation.h
             else
             {
                 this.ScenarioStart();
-#line 42
+#line 56
    testRunner.Given("Query with E2DF8CA8-2ADE-42AD-B2EA-E033F0E74730 id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 43
+#line 57
    testRunner.And("Query with 9901DB37-6747-43C2-BD24-F6C1F722A770 id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 44
+#line 58
    testRunner.When("Comparing requests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 45
+#line 59
    testRunner.Then("Should not be equals", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Null query")]
+        [Xunit.TraitAttribute("FeatureTitle", "Request")]
+        [Xunit.TraitAttribute("Description", "Null query")]
+        [Xunit.TraitAttribute("Category", "issue-3")]
+        [Xunit.TraitAttribute("Category", "unit")]
+        public virtual void NullQuery()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "issue-3",
+                    "unit"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Null query", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 63
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 64
+   testRunner.Given("\'A\' query is null", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 65
+   testRunner.And("Query with 9901DB37-6747-43C2-BD24-F6C1F722A770 id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 66
+   testRunner.When("Comparing requests", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 67
+   testRunner.Then("Should not be equals", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Generate request id for query")]
+        [Xunit.TraitAttribute("FeatureTitle", "Request")]
+        [Xunit.TraitAttribute("Description", "Generate request id for query")]
+        [Xunit.TraitAttribute("Category", "issue-3")]
+        [Xunit.TraitAttribute("Category", "unit")]
+        public virtual void GenerateRequestIdForQuery()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "issue-3",
+                    "unit"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Generate request id for query", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 71
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 72
+   testRunner.When("Creating query", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 73
+   testRunner.Then("Id should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

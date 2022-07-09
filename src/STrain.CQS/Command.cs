@@ -1,8 +1,9 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace STrain
 {
-    public class Command : IRequest, IEquatable<Command>
+    [ExcludeFromCodeCoverage]
+    public class Command : IRequest, IEqualityComparer<Command>
     {
         public Guid RequestId { get; }
 
@@ -11,8 +12,14 @@ namespace STrain
             RequestId = requestId ?? Guid.NewGuid();
         }
 
-        public bool Equals(Command? other) => RequestId.Equals(other?.RequestId);
-        public override bool Equals(object? obj) => Equals(obj as Command);
-        public override int GetHashCode() => RequestId.GetHashCode();
+        public override bool Equals(object? obj) => Equals(this, obj as Command);
+        public override int GetHashCode() => GetHashCode(this);
+
+        public bool Equals(Command? x, Command? y)
+        {
+            return (x is null) && (y is null)
+                || (x?.RequestId.Equals(y?.RequestId) ?? false);
+        }
+        public int GetHashCode([DisallowNull] Command obj) => obj.RequestId.GetHashCode();
     }
 }

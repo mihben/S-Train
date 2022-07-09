@@ -1,9 +1,9 @@
-﻿using STrain.CQS;
-using System;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace STrain
 {
-    public class Query<T> : IRequest, IEquatable<Query<T>>
+    [ExcludeFromCodeCoverage]
+    public class Query<T> : IRequest, IEqualityComparer<Query<T>>
     {
         public Guid RequestId { get; }
 
@@ -12,10 +12,17 @@ namespace STrain
             RequestId = requestId ?? Guid.NewGuid();
         }
 
-        // TODO Please find me CodeQL
+        public override bool Equals(object? obj) => Equals(this, obj as Query<T>);
+        public override int GetHashCode() => GetHashCode(this);
 
-        public bool Equals(Query<T>? other) => RequestId.Equals(other?.RequestId);
-        public override bool Equals(object? obj) => Equals(obj as Query<T>);
-        public override int GetHashCode() => RequestId.GetHashCode();
+        public bool Equals(Query<T>? x, Query<T>? y)
+        {
+            return (x is null && y is null)
+                 || (x?.RequestId.Equals(y?.RequestId) ?? false);
+        }
+        public int GetHashCode([DisallowNull] Query<T> obj)
+        {
+            return obj.RequestId.GetHashCode();
+        }
     }
 }
