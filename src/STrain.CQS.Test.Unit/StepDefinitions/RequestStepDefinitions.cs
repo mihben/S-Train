@@ -71,7 +71,7 @@ namespace STrain.CQS.Test.Unit.StepDefinitions
         [Then("Id should be generated")]
         public void ShouldGenerateId()
         {
-            Assert.NotEqual(Guid.Empty, _a.RequestId);
+            Assert.NotEqual(Guid.Empty, _a?.RequestId);
         }
     }
 }
