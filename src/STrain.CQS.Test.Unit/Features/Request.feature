@@ -25,6 +25,14 @@ More information _(here)[https://martinfowler.com/bliki/CommandQuerySeparation.h
 			When  Comparing requests
 			Then Should not be equals
 
+		@issue-3
+		@unit
+		Scenario: Null command
+			Given 'A' command is null
+			And Command with 9901DB37-6747-43C2-BD24-F6C1F722A770 id
+			When  Comparing requests
+			Then Should not be equals
+
 	Rule: Query
 		 Return a result and do not change the observable state of the system (are free of side effects).
 
@@ -40,6 +48,14 @@ More information _(here)[https://martinfowler.com/bliki/CommandQuerySeparation.h
 		@unit
 		Scenario: Different queries
 			Given Query with E2DF8CA8-2ADE-42AD-B2EA-E033F0E74730 id
+			And Query with 9901DB37-6747-43C2-BD24-F6C1F722A770 id
+			When  Comparing requests
+			Then Should not be equals
+
+		@issue-3
+		@unit
+		Scenario: Null query
+			Given 'A' query is null
 			And Query with 9901DB37-6747-43C2-BD24-F6C1F722A770 id
 			When  Comparing requests
 			Then Should not be equals

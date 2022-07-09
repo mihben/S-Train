@@ -23,10 +23,24 @@ namespace STrain.CQS.Test.Unit.StepDefinitions
             else _b = new TestQuery(requestId);
         }
 
+        [Given("{string} query is null")]
+        public void QueryIsNull(string query)
+        {
+            if (query.Equals("A")) _a = null;
+            if (query.Equals("B")) _b = null;
+        }
+
+        [Given("{string} command is null")]
+        public void CommandIsNull(string command)
+        {
+            if (command.Equals("A")) _a = null;
+            if (command.Equals("B")) _b = null;
+        }
 
         [When("Comparing requests")]
         public void CompareRequests()
         {
+            if (_a is null) throw new InvalidOperationException("Request is null");
             _equals = _a.Equals(_b);
         }
 
