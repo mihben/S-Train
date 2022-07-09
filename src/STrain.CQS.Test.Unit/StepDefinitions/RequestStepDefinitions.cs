@@ -44,6 +44,18 @@ namespace STrain.CQS.Test.Unit.StepDefinitions
             _equals = _a.Equals(_b);
         }
 
+        [When("Creating command")]
+        public void CreateCommand()
+        {
+            _a = new TestCommand();
+        }
+
+        [When("Creating query")]
+        public void CreateQuery()
+        {
+            _a = new TestQuery();
+        }
+
         [Then("Should be equals")]
         public void ShouldBeEquals()
         {
@@ -54,6 +66,12 @@ namespace STrain.CQS.Test.Unit.StepDefinitions
         public void ShouldNotBeEquals()
         {
             Assert.False(_equals);
+        }
+
+        [Then("Id should be generated")]
+        public void ShouldGenerateId()
+        {
+            Assert.NotEqual(Guid.Empty, _a.RequestId);
         }
     }
 }

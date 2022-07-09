@@ -33,6 +33,12 @@ More information _(here)[https://martinfowler.com/bliki/CommandQuerySeparation.h
 			When  Comparing requests
 			Then Should not be equals
 
+		@issue-3
+		@unit
+		Scenario: Generate request id for command
+			When Creating command
+			Then Id should be generated
+
 	Rule: Query
 		 Return a result and do not change the observable state of the system (are free of side effects).
 
@@ -59,3 +65,9 @@ More information _(here)[https://martinfowler.com/bliki/CommandQuerySeparation.h
 			And Query with 9901DB37-6747-43C2-BD24-F6C1F722A770 id
 			When  Comparing requests
 			Then Should not be equals
+
+		@issue-3
+		@unit
+		Scenario: Generate request id for query
+			When Creating query
+			Then Id should be generated
