@@ -2,7 +2,7 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "feature/ci-pipeline" ]
   pull_request:
     branches: [ "develop" ]
 
