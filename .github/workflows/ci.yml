@@ -15,3 +15,4 @@ jobs:
       runs-on: ubuntu-latest
       dotnet-version: 6.0.x
       solution: ./src/*.sln
+      test-results: ./test-results
