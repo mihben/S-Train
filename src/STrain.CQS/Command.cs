@@ -2,6 +2,7 @@
 
 namespace STrain
 {
+    [ExcludeFromCodeCoverage]
     public class Command : IRequest, IEqualityComparer<Command>
     {
         public Guid RequestId { get; }
@@ -12,8 +13,6 @@ namespace STrain
         }
 
         public override bool Equals(object? obj) => Equals(this, obj as Command);
-
-        [ExcludeFromCodeCoverage]
         public override int GetHashCode() => GetHashCode(this);
 
         public bool Equals(Command? x, Command? y)
@@ -21,8 +20,6 @@ namespace STrain
             return (x is null) && (y is null)
                 || (x?.RequestId.Equals(y?.RequestId) ?? false);
         }
-
-        [ExcludeFromCodeCoverage]
         public int GetHashCode([DisallowNull] Command obj) => obj.RequestId.GetHashCode();
     }
 }
