@@ -2,7 +2,7 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "feature/publish-livingdoc" ]
   pull_request:
     branches: [ "develop" ]
     
@@ -14,5 +14,17 @@ jobs:
       dotnet-version: 6.0.x
       solution: src/
       test-results: test-results
+      artifacts: s-train
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      
+    uses: mihben/workflow-template/.github/workflows/publish-livingdoc.yml@main
+    with:
+      runs-on: ubuntu-latest
+      branch: livingdoc
+      artifacts: s-train
+      language: en
+      title: S-Train
+      organization: mihben
+      project: S-Train
+      work-item-prefix: issue-
