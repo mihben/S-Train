@@ -19,7 +19,7 @@ jobs:
       dotnet-version: 6.0.x
       solution: src/
       test-results: test-results
-      artifacts: ${{ env.LIVINGDOC_ARTIFACTS }}
+      artifacts: $LIVINGDOC_ARTIFACTS
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       
@@ -29,7 +29,7 @@ jobs:
     with:
       runs-on: ubuntu-latest
       branch: livingdoc
-      artifacts: ${{ env.LIVINGDOC_ARTIFACTS }}
+      artifacts: $LIVINGDOC_ARTIFACTS
       language: en
       title: S-Train
       organization: mihben
