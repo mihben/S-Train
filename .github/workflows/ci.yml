@@ -16,7 +16,7 @@ jobs:
       dotnet-version: 6.0.x
       solution: src/
       test-results: test-results
-      artifacts: livingdoc_${{ github.ref_name }}
+      artifacts: livingdoc_test
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       
@@ -26,7 +26,7 @@ jobs:
     with:
       runs-on: ubuntu-latest
       branch: livingdoc
-      artifacts: livingdoc_${{ github.ref_name }}
+      artifacts: livingdoc_test
       language: en
       title: S-Train-${{ github.ref_name }}
       organization: mihben
