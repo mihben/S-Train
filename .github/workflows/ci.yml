@@ -8,9 +8,6 @@ on:
     
   workflow_dispatch:
     
-env:
-  LIVINGDOC_ARTIFACTS: livingdoc_${{ github.ref_name }}
-    
 jobs:
   build:
     uses: mihben/workflow-template/.github/workflows/dotnet-build.yml@main
@@ -19,7 +16,7 @@ jobs:
       dotnet-version: 6.0.x
       solution: src/
       test-results: test-results
-      artifacts: ${{ env.LIVINGDOC_ARTIFACTS }}
+      artifacts: livingdoc_${{ github.ref_name }}
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       
@@ -29,7 +26,7 @@ jobs:
     with:
       runs-on: ubuntu-latest
       branch: livingdoc
-      artifacts: ${{ env.LIVINGDOC_ARTIFACTS }}
+      artifacts: livingdoc_${{ github.ref_name }}
       language: en
       title: S-Train-${{ github.ref_name }}
       organization: mihben
