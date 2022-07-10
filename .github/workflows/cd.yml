@@ -4,8 +4,6 @@ on:
   push:
     branches: [ "develop" ]
     
-  workflow_dispatch:
-    
 jobs:
   build:
     uses: mihben/workflow-template/.github/workflows/dotnet-build.yml@main
