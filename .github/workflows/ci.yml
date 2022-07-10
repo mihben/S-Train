@@ -17,18 +17,6 @@ jobs:
       solution: src/
       test-results: test-results
       artifacts: livingdoc_test
+      publish-livingdoc-artifacts: false
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      
-  publish-livingdoc:
-    uses: mihben/workflow-template/.github/workflows/publish-livingdoc.yml@main
-    needs: build
-    with:
-      runs-on: ubuntu-latest
-      branch: livingdoc
-      artifacts: livingdoc_test
-      language: en
-      title: S-Train-${{ github.ref_name }}
-      organization: mihben
-      project: S-Train
-      work-item-prefix: issue-
