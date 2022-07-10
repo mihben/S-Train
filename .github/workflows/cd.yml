@@ -2,7 +2,7 @@ name: Continuous Deployment
 
 on:
   push:
-    branches: [ "develop", "feature/publish-livingdoc" ]
+    branches: [ "develop" ]
     
   workflow_dispatch:
     
