@@ -1,0 +1,31 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches: [ "develop" ]
+    
+jobs:
+  build:
+    uses: mihben/workflow-template/.github/workflows/dotnet-build.yml@main
+    with:
+      runs-on: windows-latest
+      dotnet-version: 6.0.x
+      solution: src/
+      test-results: test-results
+      artifacts: livingdoc_develop
+      publish-livingdoc-artifacts: true
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      
+  publish-livingdoc:
+    uses: mihben/workflow-template/.github/workflows/publish-livingdoc.yml@main
+    needs: build
+    with:
+      runs-on: windows-latest
+      branch: livingdoc
+      artifacts: livingdoc_develop
+      language: en
+      title: S-Train - ${{ github.ref_name }}
+      organization: mihben
+      project: S-Train
+      work-item-prefix: issue-
