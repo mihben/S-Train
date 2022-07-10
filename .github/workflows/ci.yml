@@ -18,6 +18,7 @@ jobs:
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       
+  publish-livingdoc:
     uses: mihben/workflow-template/.github/workflows/publish-livingdoc.yml@main
     with:
       runs-on: ubuntu-latest
