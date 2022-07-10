@@ -8,8 +8,8 @@ on:
     
   workflow_dispatch:
     
-  env:
-    LIVINGDOC_ARTIFACTS: livingdoc_${{ github.ref_name }}
+env:
+  LIVINGDOC_ARTIFACTS: livingdoc_${{ github.ref_name }}
     
 jobs:
   build:
