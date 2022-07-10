@@ -35,4 +35,5 @@ jobs:
       organization: mihben
       project: S-Train
       work-item-prefix: issue-
-      
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
