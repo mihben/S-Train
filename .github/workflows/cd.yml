@@ -23,7 +23,7 @@ jobs:
     uses: mihben/workflow-template/.github/workflows/publish-livingdoc.yml@main
     needs: build
     with:
-      runs-on: ubuntu-latest
+      runs-on: windows-latest
       branch: livingdoc
       artifacts: livingdoc_develop
       language: en
