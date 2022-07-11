@@ -71,3 +71,5 @@ More information _(here)[https://martinfowler.com/bliki/CommandQuerySeparation.h
 		Scenario: Generate request id for query
 			When Creating query
 			Then Id should be generated
+
+	Rule: Dispatch request
