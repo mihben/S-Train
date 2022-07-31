@@ -13,5 +13,9 @@
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.Extensions.DependencyInjection\STrain.CQS.Extensions.DependencyInjection.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+  </ItemGroup>
   
 </Project>
