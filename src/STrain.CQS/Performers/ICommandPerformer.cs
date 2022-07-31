@@ -4,7 +4,7 @@
     /// Responsible for performing <see cref="Command"/>.
     /// </summary>
     /// <typeparam name="TCommand">Type of the <see cref="Command"/>.</typeparam>
-    public interface ICommandPerformer<TCommand>
+    public interface ICommandPerformer<in TCommand>
         where TCommand : Command
     {
         /// <summary>

@@ -27,6 +27,6 @@ namespace STrain.CQS.Test.Unit.StepDefinitions
 
     public class ExceptionContext
     {
-        public Exception Exception { get; set; }
+        public Exception? Exception { get; set; }
     }
 }
