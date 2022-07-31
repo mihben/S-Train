@@ -85,19 +85,15 @@ namespace STrain.CQS.Test.Unit.StepDefinitions
         [Then("Command performer should be performed")]
         public void ShouldBePerformedCommandPerformer()
         {
+            Assert.NotNull(_command);
             _commandPerformerMock.Verify(cp => cp.PerformAsync(_command, It.IsAny<CancellationToken>()));
         }
 
         [Then("Query performer should be performed")]
         public void ShouldBePerformedQueryPerformer()
         {
+            Assert.NotNull(_query);
             _queryPerformerMock.Verify(cp => cp.PerformAsync(_query, It.IsAny<CancellationToken>()));
-        }
-
-        [Then("{string} should be thrown")]
-        public void ShouldBeThrown(string exception)
-        {
-
         }
     }
 }
