@@ -12,6 +12,7 @@ jobs:
       dotnet-version: 6.0.x
       solution: src/
       test-results: test-results
+      test-runsettings: environment/test.runsettings
       artifacts: livingdoc_test
       publish-livingdoc-artifacts: false
     secrets:

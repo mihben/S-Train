@@ -1,0 +1,13 @@
+<RunConfiguration>
+	<DataCollector friendlyName="XPlat Code Coverage">
+	  <Configuration>
+		<CodeCoverage>
+		  <ModulePaths>
+			<Exclude>
+			  <ModulePath>.*\.Sample\.*.*</ModulePath>
+			</Exclude>
+		  </ModulePaths>
+		</CodeCoverage>
+	  </Configuration>
+	</DataCollector>
+</RunConfiguration>
