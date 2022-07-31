@@ -13,5 +13,6 @@ namespace STrain.CQS.NetCore.Builders
                 registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().Any(i => i.Name.Equals(typeof(IQueryPerformer<,>).Name)));
             });
         }
+        public static void AddPerformerFrom<T>(this CQSBuilder builder) => builder.AddPerformersFrom(typeof(T).Assembly);
     }
 }
