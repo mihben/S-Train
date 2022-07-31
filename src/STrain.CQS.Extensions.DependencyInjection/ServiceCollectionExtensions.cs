@@ -1,8 +1,10 @@
 ﻿using STrain;
 using STrain.CQS.Dispatchers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         public static void AddCQS(this IServiceCollection services)

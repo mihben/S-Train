@@ -1,8 +1,10 @@
 ﻿using LightInject;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace STrain.CQS.NetCore.Builders
 {
+    [ExcludeFromCodeCoverage]
     public static class CQSBuilderExtensions
     {
         public static void AddPerformersFrom(this CQSBuilder builder, Assembly assembly)
