@@ -1,5 +1,6 @@
 ﻿using STrain.CQS.Test.Function.Drivers;
-using STrain.CQS.Test.Unit.StepDefinitions;
+using STrain.CQS.Test.Function.StepDefinitions;
+using STrain.CQS.Test.Unit.Support;
 
 namespace STrain.CQS.Test.Function.Support.Hooks
 {

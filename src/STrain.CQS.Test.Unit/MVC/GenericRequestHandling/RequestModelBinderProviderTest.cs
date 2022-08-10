@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Moq;
 using STrain.CQS.MVC.GenericRequestHandling;
@@ -27,10 +28,27 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
             var result = sut.GetBinder(context.Object);
 
             // Assert
-            Assert.IsType<CommandModelBinder>(result);
+            Assert.IsType<BinderTypeModelBinder>(result);
         }
 
-        [Fact(DisplayName = "[UNIT][RMBP-002]: Unsupported type")]
+        [Fact(DisplayName = "[UNIT][RMBP-002]: Resolve QueryModelBinder")]
+        public void RequestModelBinderProvider_GetBinder_QueryModelBinder()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var context = new Mock<ModelBinderProviderContext>();
+
+            context.Setup(c => c.Metadata)
+                .Returns(new TestModelMetadata<TestQuery>());
+
+            // Act
+            var result = sut.GetBinder(context.Object);
+
+            // Assert
+            Assert.IsType<BinderTypeModelBinder>(result);
+        }
+
+        [Fact(DisplayName = "[UNIT][RMBP-003]: Unsupported type")]
         public void RequestModelBinderProvider_GetBinder_UnsupportedType()
         {
             // Arrange

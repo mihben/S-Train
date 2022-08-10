@@ -1,11 +1,6 @@
 ﻿namespace STrain.CQS.Test.Function.Support
 {
-    public class TestCommand : Command
+    public record TestCommand : Command
     {
-        public TestCommand(Guid? requestId = null)
-            : base(requestId)
-        {
-
-        }
     }
 }
