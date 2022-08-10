@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.Api\STrain.CQS.Api.csproj" />
     <ProjectReference Include="..\STrain.CQS.Extensions.DependencyInjection\STrain.CQS.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\STrain.CQS.MVC\STrain.CQS.MVC.csproj" />
     <ProjectReference Include="..\STrain.CQS.NetCore.LigtInject\STrain.CQS.NetCore.LigtInject.csproj" />
     <ProjectReference Include="..\STrain.CQS.NetCore\STrain.CQS.NetCore.csproj" />
     <ProjectReference Include="..\STrain.CQS\STrain.CQS.csproj" />

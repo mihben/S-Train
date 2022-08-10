@@ -1,9 +1,9 @@
 ﻿using Moq;
 using STrain.CQS.Dispatchers;
-using STrain.CQS.Test.Unit.Support;
+using STrain.CQS.Test.Function.Support;
 using Xunit.Abstractions;
 
-namespace STrain.CQS.Test.Unit.StepDefinitions
+namespace STrain.CQS.Test.Function.StepDefinitions
 {
     [Binding]
     public class DispatchStepDefinitions

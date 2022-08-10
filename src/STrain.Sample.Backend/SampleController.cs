@@ -15,9 +15,9 @@ namespace STrain.Sample.Backend
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> PostAsync(SampleCommand command, CancellationToken cancellationToken)
         {
-            await _dispatcher.DispatchAsync(new SampleCommand(), cancellationToken);
+            await _dispatcher.DispatchAsync(command, cancellationToken);
             return Accepted();
         }
     }

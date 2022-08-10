@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace STrain.CQS.Test.Unit.Features
+namespace STrain.CQS.Test.Function.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -31,7 +31,7 @@ namespace STrain.CQS.Test.Unit.Features
 #line 1 "Request.feature"
 #line hidden
         
-        public RequestFeature(RequestFeature.FixtureData fixtureData, STrain_CQS_Test_Unit_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public RequestFeature(RequestFeature.FixtureData fixtureData, STrain_CQS_Test_Function_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();

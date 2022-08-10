@@ -14,7 +14,7 @@ namespace STrain
         /// <summary>
         /// Unique identifier of the <see cref="Query{T}"/>.
         /// </summary>
-        public Guid RequestId { get; }
+        public object RequestId { get; }
 
         /// <summary>
         /// Create new <see cref="Command"/> instance.

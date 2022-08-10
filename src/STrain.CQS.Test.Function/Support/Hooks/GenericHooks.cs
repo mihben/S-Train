@@ -1,6 +1,7 @@
-﻿using STrain.CQS.Test.Unit.StepDefinitions;
+﻿using STrain.CQS.Test.Function.Drivers;
+using STrain.CQS.Test.Unit.StepDefinitions;
 
-namespace STrain.CQS.Test.Unit.Support.Hooks
+namespace STrain.CQS.Test.Function.Support.Hooks
 {
     [Binding]
     public sealed class GenericHooks
@@ -12,10 +13,13 @@ namespace STrain.CQS.Test.Unit.Support.Hooks
             _context = context;
         }
 
-        [BeforeScenario]
+        [BeforeScenario(Order = 0)]
         public void RegistrateDependencies()
         {
             _context.ScenarioContainer.RegisterInstanceAs(new ExceptionContext());
+
+            _context.ScenarioContainer.RegisterTypeAs<SampleHost, SampleHost>();
+            _context.ScenarioContainer.RegisterTypeAs<SampleApiDriver, SampleApiDriver>();
         }
     }
 }

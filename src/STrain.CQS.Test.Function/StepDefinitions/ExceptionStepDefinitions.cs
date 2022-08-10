@@ -1,6 +1,6 @@
 ﻿using TechTalk.SpecFlow;
 
-namespace STrain.CQS.Test.Unit.StepDefinitions
+namespace STrain.CQS.Test.Function.StepDefinitions
 {
     [Binding]
     public class ExceptionStepDefinitions

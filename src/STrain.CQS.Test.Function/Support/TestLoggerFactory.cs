@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace STrain.CQS.Test.Unit.Support
+namespace STrain.CQS.Test.Function.Support
 {
     public static class TestLoggerFactory
     {

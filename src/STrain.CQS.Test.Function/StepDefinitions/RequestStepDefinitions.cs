@@ -1,6 +1,6 @@
 ﻿using STrain.CQS.Test.Unit.Support;
 
-namespace STrain.CQS.Test.Unit.StepDefinitions
+namespace STrain.CQS.Test.Function.StepDefinitions
 {
     [Binding]
     public class RequestStepDefinitions
