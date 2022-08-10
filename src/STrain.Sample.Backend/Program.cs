@@ -1,4 +1,3 @@
-using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.Sample.Backend.Services;
 using STrain.Sample.Backend.Wireup;
 
@@ -13,11 +12,9 @@ builder.AddCQS(CQSWireUp.Build);
 
 builder.Services.AddTransient<ISampleService, SampleService>();
 
-builder.Services.AddControllers(options => options.ModelBinderProviders.Insert(0, new RequestModelBinderProvider()));
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.MapGenericRequestController();
 
 app.MapControllers();
 

@@ -30,7 +30,7 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
             return new CommandModelBinder(_logger);
         }
 
-        [Fact(DisplayName = "[UNIT][CMB-001]: Bind based on 'Request-Type' header")]
+        [Fact(DisplayName = "[UNIT][CMB-001]: Bind based on 'request-type' header")]
         public async Task CommandModelBinder_BindModelAsync_BindBasedOnRequestTypeHeader()
         {
             // Arrange
@@ -39,7 +39,7 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
             var modelBindingContextMock = new Mock<ModelBindingContext>();
 
             modelBindingContextMock.MockHttpContext()
-                .UseHeaders(new Dictionary<string, StringValues> { ["Request-Type"] = "STrain.CQS.Test.Unit.Supports.TestCommand, STrain.CQS.Test.Unit" })
+                .UseHeaders(new Dictionary<string, StringValues> { ["request-type"] = "STrain.CQS.Test.Unit.Supports.TestCommand, STrain.CQS.Test.Unit" })
                 .UseBody(command);
 
             // Act
@@ -77,7 +77,7 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
             var modelBindingContextMock = new Mock<ModelBindingContext>();
 
             modelBindingContextMock.MockHttpContext()
-                .UseHeaders(new Dictionary<string, StringValues> { ["Request-Type"] = "FakeType" });
+                .UseHeaders(new Dictionary<string, StringValues> { ["request-type"] = "FakeType" });
 
             // Act
             // Assert

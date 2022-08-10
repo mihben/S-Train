@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using STrain.CQS.Api;
+using System.Diagnostics.CodeAnalysis;
 
 namespace STrain
 {
@@ -6,7 +7,7 @@ namespace STrain
     /// Represents a command.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public record Command : IRequest
+    public record Command : ICommand
     {
 
     }

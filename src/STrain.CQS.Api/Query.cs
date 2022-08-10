@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using STrain.CQS.Api;
+using System.Diagnostics.CodeAnalysis;
 
 namespace STrain
 {
@@ -8,8 +9,8 @@ namespace STrain
     /// <typeparam name="T">
     /// Type of the result.
     /// </typeparam>
-    [ExcludeFromCodeCoverage]
-    public record Query<T> : IRequest
+    [ExcludeFromCodeCoverage]    
+    public record Query<T> : IQuery
     {
         
     }

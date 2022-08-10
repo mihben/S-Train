@@ -2,6 +2,6 @@
 {
     public static class Headers
     {
-        public const string RequestType = "Request-Type";
+        public const string RequestType = "request-type";
     }
 }

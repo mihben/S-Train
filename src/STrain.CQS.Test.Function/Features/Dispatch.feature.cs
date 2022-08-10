@@ -168,18 +168,18 @@ namespace STrain.CQS.Test.Function.Features
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Multiple performer registered for command")]
+        [Xunit.SkippableFactAttribute(DisplayName="Dispatch query")]
         [Xunit.TraitAttribute("FeatureTitle", "Dispatch")]
-        [Xunit.TraitAttribute("Description", "Multiple performer registered for command")]
+        [Xunit.TraitAttribute("Description", "Dispatch query")]
         [Xunit.TraitAttribute("Category", "issue-6")]
         [Xunit.TraitAttribute("Category", "unit")]
-        public virtual void MultiplePerformerRegisteredForCommand()
+        public virtual void DispatchQuery()
         {
             string[] tagsOfScenario = new string[] {
                     "issue-6",
                     "unit"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Multiple performer registered for command", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Dispatch query", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 20
  this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -201,30 +201,30 @@ namespace STrain.CQS.Test.Function.Features
             {
                 this.ScenarioStart();
 #line 21
-  testRunner.Given("Multiple performer registered for command", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+  testRunner.Given("Performer registrered for query", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 22
-  testRunner.When("Dispatching command", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.When("Dispatching query", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 23
-  testRunner.Then("InvalidOperationException should be thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.Then("Query performer should be performed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Dispatch query")]
+        [Xunit.SkippableFactAttribute(DisplayName="Performer not exists for query")]
         [Xunit.TraitAttribute("FeatureTitle", "Dispatch")]
-        [Xunit.TraitAttribute("Description", "Dispatch query")]
+        [Xunit.TraitAttribute("Description", "Performer not exists for query")]
         [Xunit.TraitAttribute("Category", "issue-6")]
         [Xunit.TraitAttribute("Category", "unit")]
-        public virtual void DispatchQuery()
+        public virtual void PerformerNotExistsForQuery()
         {
             string[] tagsOfScenario = new string[] {
                     "issue-6",
                     "unit"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Dispatch query", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Performer not exists for query", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 27
  this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -246,100 +246,10 @@ namespace STrain.CQS.Test.Function.Features
             {
                 this.ScenarioStart();
 #line 28
-  testRunner.Given("Performer registrered for query", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+  testRunner.When("Dispatching query", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 29
-  testRunner.When("Dispatching query", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 30
-  testRunner.Then("Query performer should be performed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Performer not exists for query")]
-        [Xunit.TraitAttribute("FeatureTitle", "Dispatch")]
-        [Xunit.TraitAttribute("Description", "Performer not exists for query")]
-        [Xunit.TraitAttribute("Category", "issue-6")]
-        [Xunit.TraitAttribute("Category", "unit")]
-        public virtual void PerformerNotExistsForQuery()
-        {
-            string[] tagsOfScenario = new string[] {
-                    "issue-6",
-                    "unit"};
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Performer not exists for query", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 34
- this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 35
-  testRunner.When("Dispatching query", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 36
   testRunner.Then("NotImplementedException should be thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Multiple performer registered for query")]
-        [Xunit.TraitAttribute("FeatureTitle", "Dispatch")]
-        [Xunit.TraitAttribute("Description", "Multiple performer registered for query")]
-        [Xunit.TraitAttribute("Category", "issue-6")]
-        [Xunit.TraitAttribute("Category", "unit")]
-        public virtual void MultiplePerformerRegisteredForQuery()
-        {
-            string[] tagsOfScenario = new string[] {
-                    "issue-6",
-                    "unit"};
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Multiple performer registered for query", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 40
- this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 41
-  testRunner.Given("Multiple performer registered for query", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 42
-  testRunner.When("Dispatching query", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 43
-  testRunner.Then("InvalidOperationException should be thrown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

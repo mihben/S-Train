@@ -14,13 +14,6 @@ Responsible for perform the proper performer according to incoming request. Exac
 	Scenario: Performer not exists for command
 		When Dispatching command
 		Then NotImplementedException should be thrown
-
-	@issue-6
-	@unit
-	Scenario: Multiple performer registered for command
-		Given Multiple performer registered for command
-		When Dispatching command
-		Then InvalidOperationException should be thrown
 		
 	@issue-6
 	@unit
@@ -34,10 +27,3 @@ Responsible for perform the proper performer according to incoming request. Exac
 	Scenario: Performer not exists for query
 		When Dispatching query
 		Then NotImplementedException should be thrown
-
-	@issue-6
-	@unit
-	Scenario: Multiple performer registered for query
-		Given Multiple performer registered for query
-		When Dispatching query
-		Then InvalidOperationException should be thrown

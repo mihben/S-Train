@@ -27,11 +27,10 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         }
 
 
-        [Then("Command should be performed by performer")]
-        public void CommandShouldBePerformedByPerformer()
+        [Then("Response status code should be {string}")]
+        public void ResponseStatusCodeShouldBe(string statusCode)
         {
-            Assert.Equal(HttpStatusCode.Accepted, _response.StatusCode);
-            _driver.CommandPerformerMock.Verify(cp => cp.PerformAsync(_command, It.IsAny<CancellationToken>()));
+            Assert.Equal(Enum.Parse<HttpStatusCode>(statusCode), _response.StatusCode);
         }
     }
 }

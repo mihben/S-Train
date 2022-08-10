@@ -1,5 +1,4 @@
-﻿using AutoFixture;
-using Moq;
+﻿using Moq;
 using STrain.CQS.Dispatchers;
 using STrain.CQS.Test.Function.Support;
 using Xunit.Abstractions;
@@ -9,7 +8,8 @@ namespace STrain.CQS.Test.Function.StepDefinitions
     [Binding]
     public class DispatchStepDefinitions
     {
-        private readonly RequestDispatcher _sut;
+        private readonly CommandDispatcher _commandDispatcher;
+        private readonly QueryDispatcher _queryDispatcher;
 
         private readonly Mock<IServiceProvider> _serviceProviderMock = new();
         private readonly Mock<ICommandPerformer<TestCommand>> _commandPerformerMock = new();
@@ -21,7 +21,8 @@ namespace STrain.CQS.Test.Function.StepDefinitions
 
         public DispatchStepDefinitions(ITestOutputHelper outputHelper, ExceptionContext exceptionContext)
         {
-            _sut = new RequestDispatcher(_serviceProviderMock.Object, TestLoggerFactory.CreateLogger<RequestDispatcher>(outputHelper));
+            _commandDispatcher = new CommandDispatcher(_serviceProviderMock.Object, TestLoggerFactory.CreateLogger<CommandDispatcher>(outputHelper));
+            _queryDispatcher = new QueryDispatcher(_serviceProviderMock.Object, TestLoggerFactory.CreateLogger<QueryDispatcher>(outputHelper));
             _exceptionContext = exceptionContext;
         }
 
@@ -29,16 +30,16 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [Given("Performer registrered for command")]
         public void RegistrateCommandPerformer()
         {
-            _serviceProviderMock.Setup(sp => sp.GetService(typeof(IEnumerable<ICommandPerformer<TestCommand>>)))
-                .Returns(new List<ICommandPerformer<TestCommand>> { _commandPerformerMock.Object });
+            _serviceProviderMock.Setup(sp => sp.GetService(typeof(ICommandPerformer<TestCommand>)))
+                .Returns(_commandPerformerMock.Object);
         }
 
 
         [Given("Performer registrered for query")]
         public void RegistrateQueryPerformer()
         {
-            _serviceProviderMock.Setup(sp => sp.GetService(typeof(IEnumerable<IQueryPerformer<TestQuery, string>>)))
-                .Returns(new List<IQueryPerformer<TestQuery, string>> { _queryPerformerMock.Object });
+            _serviceProviderMock.Setup(sp => sp.GetService(typeof(IQueryPerformer<TestQuery, string>)))
+                .Returns(_queryPerformerMock.Object);
         }
 
         [Given("Multiple performer registered for command")]
@@ -61,7 +62,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             _command = new TestCommand();
             try
             {
-                await _sut.DispatchAsync(_command, default);
+                await _commandDispatcher.DispatchAsync(_command, default);
             }
             catch (Exception ex)
             {
@@ -75,7 +76,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             _query = new TestQuery();
             try
             {
-                await _sut.DispatchAsync<TestQuery, string>(_query, default);
+                await _queryDispatcher.DispatchAsync(_query, default);
             }
             catch (Exception ex)
             {

@@ -9,7 +9,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static void AddCQS(this IServiceCollection services)
         {
-            services.AddScoped<IRequestDispatcher, RequestDispatcher>();
+            services.AddScoped<ICommandDispatcher, CommandDispatcher>();
+            services.AddScoped<IQueryDispatcher, QueryDispatcher>();
         }
 
         public static void AddPerformer<TPerformer, TImplementation>(this IServiceCollection services)

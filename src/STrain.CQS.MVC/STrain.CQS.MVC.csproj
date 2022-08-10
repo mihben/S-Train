@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.Api\STrain.CQS.Api.csproj" />
+    <ProjectReference Include="..\STrain.CQS\STrain.CQS.csproj" />
   </ItemGroup>
 
 </Project>

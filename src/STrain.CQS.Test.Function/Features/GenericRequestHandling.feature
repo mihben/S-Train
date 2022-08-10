@@ -13,4 +13,4 @@ Possible to recieve request via generic endpoint. The request type is determined
 		@api
 		Scenario: Receive Command
 			When Receiving command
-			Then Command should be performed by performer
+			Then Response status code should be '202'

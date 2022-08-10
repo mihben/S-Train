@@ -118,7 +118,7 @@ namespace STrain.CQS.Test.Function.Features
    testRunner.When("Receiving command", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 16
-   testRunner.Then("Command should be performed by performer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+   testRunner.Then("Response status code should be \'202\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
