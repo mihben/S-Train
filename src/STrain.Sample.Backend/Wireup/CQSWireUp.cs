@@ -9,7 +9,7 @@ namespace STrain.Sample.Backend.Wireup
         {
             builder.AddPerformerFrom<SampleCommandPerformer>();
 
-            builder.AddGenericRequestHandler();
+            builder.AddGenericRequestHandler("api");
         }
     }
 }
