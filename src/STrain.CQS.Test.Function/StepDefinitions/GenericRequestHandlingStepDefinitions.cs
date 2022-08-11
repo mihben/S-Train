@@ -11,6 +11,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         private readonly SampleApiDriver _driver;
 
         private SampleCommand? _command;
+        private SampleQuery? _query;
         private HttpResponseMessage _response;
 
         public GenericRequestHandlingStepDefinitions(SampleApiDriver driver)
@@ -18,19 +19,26 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             _driver = driver;
         }
 
-
         [When("Receiving command")]
         public async Task ReceiveCommandAsync()
         {
             _command = new SampleCommand();
-            _response = await _driver.SendCommandAsync(_command, TimeSpan.FromSeconds(5));
+            _response = await _driver.SendCommandAsync(_command, TimeSpan.FromSeconds(1));
+        }
+        
+
+        [When("Receiving query")]
+        public async Task ReceiveQueryAsync()
+        {
+            _query = new SampleQuery();
+            _response = await _driver.SendQueryAsync<SampleQuery, string>(_query, TimeSpan.FromSeconds(1));
         }
 
-
-        [Then("Response status code should be {string}")]
-        public void ResponseStatusCodeShouldBe(string statusCode)
+        [Then("Response should be")]
+        public async Task ResponseShouldBeAsync(Table dataTable)
         {
-            Assert.Equal(Enum.Parse<HttpStatusCode>(statusCode), _response.StatusCode);
+            Assert.Equal(Enum.Parse<HttpStatusCode>(dataTable.Rows[0]["StatusCode"]), _response.StatusCode);
+            Assert.Equal(dataTable.Rows[0]["Content"], await _response.Content.ReadAsStringAsync());
         }
     }
 }

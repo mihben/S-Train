@@ -6,7 +6,7 @@ namespace STrain.Sample.Backend.Performers
     {
         public Task<string> PerformAsync(SampleQuery query, CancellationToken cancellationToken)
         {
-            return Task.FromResult("SampleQuery called");
+            return Task.FromResult("SampleQuery Handled");
         }
     }
 }

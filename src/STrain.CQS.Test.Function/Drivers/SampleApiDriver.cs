@@ -26,12 +26,29 @@ namespace STrain.CQS.Test.Function.Drivers
             where TCommand : Command
         {
             var client = _host.CreateClient();
-
-            var content = JsonContent.Create(command);
-            content.Headers.Add("Request-Type", $"{command.GetType().FullName}, {command.GetType().Assembly.GetName().FullName}");
-
             using var cancellationTokenSource = new CancellationTokenSource(timeout);
-            return await client.PostAsync("api", content, cancellationTokenSource.Token);
+            return await client.PostAsync("api", PrepareContent(command), cancellationTokenSource.Token);
+        }
+
+        public async Task<HttpResponseMessage> SendQueryAsync<TQuery, T>(TQuery query, TimeSpan timeout)
+            where TQuery : Query<T>
+        {
+            var client = _host.CreateClient();
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            var message = new HttpRequestMessage(HttpMethod.Get, "api")
+            {
+                Content = PrepareContent(query)
+            };
+            return await client.SendAsync(message, cancellationTokenSource.Token);
+        }
+
+        private HttpContent PrepareContent<TRequest>(TRequest request)
+            where TRequest : IRequest
+        {
+            var content = JsonContent.Create(request);
+            content.Headers.Add("Request-Type", $"{request.GetType().FullName}, {request.GetType().Assembly.GetName().FullName}");
+
+            return content;
         }
     }
 }
