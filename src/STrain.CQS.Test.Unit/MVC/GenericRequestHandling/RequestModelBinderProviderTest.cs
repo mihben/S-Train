@@ -68,7 +68,9 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
 
     internal class TestModelMetadata<T> : ModelMetadata
     {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public TestModelMetadata()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
             : base(ModelMetadataIdentity.ForType(typeof(T)))
         {
         }

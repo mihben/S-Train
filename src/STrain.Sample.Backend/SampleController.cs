@@ -8,18 +8,18 @@ namespace STrain.Sample.Backend
     [ApiController]
     public class SampleController : ControllerBase
     {
-        //private readonly IQueryDispatcher _dispatcher;
+        private readonly ICommandDispatcher _dispatcher;
 
-        //public SampleController(ICommandDispatcher dispatcher)
-        //{
-        //    _dispatcher = dispatcher;
-        //}
+        public SampleController(ICommandDispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> PostAsync(SampleCommand command, CancellationToken cancellationToken)
-        //{
-        //    await _dispatcher.DispatchAsync(command, cancellationToken);
-        //    return Accepted();
-        //}
+        [HttpPost]
+        public async Task<IActionResult> PostAsync(SampleCommand command, CancellationToken cancellationToken)
+        {
+            await _dispatcher.DispatchAsync(command, cancellationToken);
+            return Accepted();
+        }
     }
 }

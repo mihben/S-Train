@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 
 namespace STrain.CQS.MVC.GenericRequestHandling
 {
-    public class QueryModelBinder : IModelBinder
+    public class RequestModelBinder : IModelBinder
     {
-        private readonly ILogger<QueryModelBinder> _logger;
+        private readonly ILogger<RequestModelBinder> _logger;
 
-        public QueryModelBinder(ILogger<QueryModelBinder> logger)
+        public RequestModelBinder(ILogger<RequestModelBinder> logger)
         {
             _logger = logger;
         }
@@ -19,6 +19,7 @@ namespace STrain.CQS.MVC.GenericRequestHandling
             var requestType = value is null ? bindingContext.ModelType : Type.GetType(value);
             if (requestType is null) throw new InvalidOperationException($"{value} type is unknown");
 
+            _logger.LogDebug("Binding to {requestType}", requestType);
             bindingContext.Result = ModelBindingResult.Success(await bindingContext.HttpContext.Request.ReadAsJsonAsync(requestType, bindingContext.HttpContext.RequestAborted));
         }
     }

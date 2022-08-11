@@ -9,7 +9,7 @@ namespace STrain
     /// <typeparam name="T">
     /// Type of the result.
     /// </typeparam>
-    [ExcludeFromCodeCoverage]    
+    [ExcludeFromCodeCoverage]
     public record Query<T> : IQuery
     {
         
