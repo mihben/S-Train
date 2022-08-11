@@ -1,9 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
@@ -14,20 +11,20 @@ using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
 {
-    public class CommandModelBinderTest
+    public class RequestModelBinderTest
     {
-        private readonly ILogger<CommandModelBinder> _logger;
+        private readonly ILogger<RequestModelBinder> _logger;
 
-        public CommandModelBinderTest(ITestOutputHelper outputHelper)
+        public RequestModelBinderTest(ITestOutputHelper outputHelper)
         {
             _logger = new LoggerFactory()
                             .AddXUnit(outputHelper)
-                            .CreateLogger<CommandModelBinder>();
+                            .CreateLogger<RequestModelBinder>();
         }
 
-        private CommandModelBinder CreateSUT()
+        private RequestModelBinder CreateSUT()
         {
-            return new CommandModelBinder(_logger);
+            return new RequestModelBinder(_logger);
         }
 
         [Fact(DisplayName = "[UNIT][CMB-001]: Bind based on 'request-type' header")]

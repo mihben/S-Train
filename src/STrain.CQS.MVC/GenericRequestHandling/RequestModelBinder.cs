@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 
 namespace STrain.CQS.MVC.GenericRequestHandling
 {
-    public class QueryModelBinder : IModelBinder
+    public class RequestModelBinder : IModelBinder
     {
-        private readonly ILogger<QueryModelBinder> _logger;
+        private readonly ILogger<RequestModelBinder> _logger;
 
-        public QueryModelBinder(ILogger<QueryModelBinder> logger)
+        public RequestModelBinder(ILogger<RequestModelBinder> logger)
         {
             _logger = logger;
         }
