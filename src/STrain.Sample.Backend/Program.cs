@@ -1,5 +1,3 @@
-using STrain.CQS.NetCore.Builders;
-using STrain.Sample.Backend.Performers;
 using STrain.Sample.Backend.Services;
 using STrain.Sample.Backend.Wireup;
 
@@ -16,8 +14,13 @@ builder.Services.AddTransient<ISampleService, SampleService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.MapGenericRequestController();
 
 app.MapControllers();
 
 app.Run();
+
+namespace STrain.Sample.Backend
+{
+    public class Program { }
+}

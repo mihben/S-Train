@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using STrain.CQS.Dispatchers;
 using STrain.Sample.Api;
 
 namespace STrain.Sample.Backend
@@ -7,18 +8,18 @@ namespace STrain.Sample.Backend
     [ApiController]
     public class SampleController : ControllerBase
     {
-        private readonly IRequestDispatcher _dispatcher;
+        //private readonly IQueryDispatcher _dispatcher;
 
-        public SampleController(IRequestDispatcher dispatcher)
-        {
-            _dispatcher = dispatcher;
-        }
+        //public SampleController(ICommandDispatcher dispatcher)
+        //{
+        //    _dispatcher = dispatcher;
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> PostAsync(CancellationToken cancellationToken)
-        {
-            await _dispatcher.DispatchAsync(new SampleCommand(), cancellationToken);
-            return Accepted();
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> PostAsync(SampleCommand command, CancellationToken cancellationToken)
+        //{
+        //    await _dispatcher.DispatchAsync(command, cancellationToken);
+        //    return Accepted();
+        //}
     }
 }

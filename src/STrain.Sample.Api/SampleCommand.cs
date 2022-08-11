@@ -1,7 +1,6 @@
 ﻿namespace STrain.Sample.Api
 {
-    public class SampleCommand : Command
+    public record SampleCommand : Command
     {
-
     }
 }

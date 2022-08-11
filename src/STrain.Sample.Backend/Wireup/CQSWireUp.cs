@@ -8,6 +8,8 @@ namespace STrain.Sample.Backend.Wireup
         public static void Build(CQSBuilder builder)
         {
             builder.AddPerformerFrom<SampleCommandPerformer>();
+
+            builder.AddGenericRequestHandler("api");
         }
     }
 }
