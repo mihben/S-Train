@@ -6,7 +6,7 @@ namespace STrain.CQS.Dispatchers
     public class CommandDispatcher : ICommandDispatcher
     {
         private readonly IServiceProvider _provider;
-        private ILogger<CommandDispatcher> _logger;
+        private readonly ILogger<CommandDispatcher> _logger;
 
         public CommandDispatcher(IServiceProvider provider, ILogger<CommandDispatcher> logger)
         {

@@ -19,6 +19,7 @@ namespace STrain.CQS.MVC.GenericRequestHandling
             var requestType = value is null ? bindingContext.ModelType : Type.GetType(value);
             if (requestType is null) throw new InvalidOperationException($"{value} type is unknown");
 
+            _logger.LogDebug("Binding to {requestType}", requestType);
             bindingContext.Result = ModelBindingResult.Success(await bindingContext.HttpContext.Request.ReadAsJsonAsync(requestType, bindingContext.HttpContext.RequestAborted));
         }
     }

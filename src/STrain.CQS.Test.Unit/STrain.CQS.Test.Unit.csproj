@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.MVC\STrain.CQS.MVC.csproj" />
-    <ProjectReference Include="..\STrain.CQS.Testing\STrain.CQS.Testing.csproj" />
     <ProjectReference Include="..\STrain.Sample.Api\STrain.Sample.Api.csproj" />
   </ItemGroup>
 

@@ -12,7 +12,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
 
         private SampleCommand? _command;
         private SampleQuery? _query;
-        private HttpResponseMessage _response;
+        private HttpResponseMessage? _response;
 
         public GenericRequestHandlingStepDefinitions(SampleApiDriver driver)
         {
