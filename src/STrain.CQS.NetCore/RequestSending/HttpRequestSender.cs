@@ -24,13 +24,14 @@ namespace STrain.CQS.NetCore.RequestSending
         }
 
         public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+            where TCommand : Command
         {
-            //var type = typeof(TCommand);
-            ////var message = new HttpRequestMessage(_methodProvider[type], _pathProvider[type]);
+            var type = typeof(TCommand);
+            var message = new HttpRequestMessage(HttpMethod.Get, _pathProvider.GetPath(command));
 
-            //_logger.LogDebug("Sending request to {uri}", message.RequestUri);
-            //_logger.LogTrace("Request message: {@message}", message);
-            //await _httpClient.SendAsync(message, cancellationToken);
+            _logger.LogDebug("Sending request to {uri}", message.RequestUri);
+            _logger.LogTrace("Request message: {@message}", message);
+            await _httpClient.SendAsync(message, cancellationToken);
         }
     }
 }
