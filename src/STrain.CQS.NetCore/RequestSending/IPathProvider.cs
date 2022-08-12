@@ -2,6 +2,7 @@
 {
     public interface IPathProvider
     {
-        string this[Type type] { get; }
+        string GetPath<TRequest>(TRequest request)
+            where TRequest : IRequest;
     }
 }
