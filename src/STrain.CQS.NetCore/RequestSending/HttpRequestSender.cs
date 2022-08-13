@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.Senders;
 
 namespace STrain.CQS.NetCore.RequestSending
@@ -29,7 +30,7 @@ namespace STrain.CQS.NetCore.RequestSending
         public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
             where TCommand : Command
         {
-            var message = new HttpRequestMessage(_methodProvider.GetMethod<TCommand>(), _pathProvider.GetPath(command));
+            var message = new HttpRequestMessage(_methodProvider.GetMethod<TCommand>(), $"{_httpClient.BaseAddress}{_pathProvider.GetPath(command)}");
             foreach (var parameterProvider in _parameterProviders)
             {
                 await parameterProvider.SetParametersAsync(message, command, cancellationToken);

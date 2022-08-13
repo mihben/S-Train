@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using STrain.CQS.MVC.GenericRequestHandling;
+using Microsoft.Extensions.Options;
 using STrain.CQS.MVC.Options;
+using STrain.CQS.NetCore.RequestSending;
+using STrain.CQS.NetCore.RequestSending.Attributive;
+using STrain.CQS.NetCore.RequestSending.Providers;
+using STrain.CQS.NetCore.RequestSending.Providers.Attributive;
+using STrain.CQS.Senders;
 using System.Diagnostics.CodeAnalysis;
 
 namespace STrain.CQS.NetCore.Builders
@@ -31,6 +36,25 @@ namespace STrain.CQS.NetCore.Builders
         public CQSBuilder AddGenericRequestHandler(Action<GenericRequestHandlerOptions, IConfiguration> configure)
         {
             Builder.Services.AddGenericRequestHandler(configure);
+            return this;
+        }
+
+        public CQSBuilder AddHttpSender(Action<HttpRequestSenderOptions, IConfiguration> configure)
+        {
+            Builder.Services.AddOptions<HttpRequestSenderOptions>()
+                .Configure(configure);
+
+            Builder.Services.AddTransient<IPathProvider, AttributivePathProvider>();
+            Builder.Services.AddTransient<IMethodProvider, AttributiveMethodProvider>();
+            Builder.Services.AddTransient<IParameterProvider, AttributiveQueryParameterProvider>();
+            Builder.Services.AddTransient<IParameterProvider, AttributiveBodyParameterProvider>();
+            Builder.Services.AddTransient<IParameterProvider, AttributiveHeaderParameterProvider>();
+            Builder.Services.AddHttpClient<IRequestSender, HttpRequestSender>((provider, client) =>
+            {
+                var options = provider.GetRequiredService<IOptions<HttpRequestSenderOptions>>();
+                client.BaseAddress = options.Value.BaseAddress;
+            });
+
             return this;
         }
     }

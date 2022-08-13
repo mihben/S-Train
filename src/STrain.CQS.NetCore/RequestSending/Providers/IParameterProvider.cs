@@ -1,4 +1,4 @@
-﻿namespace STrain.CQS.NetCore.RequestSending
+﻿namespace STrain.CQS.NetCore.RequestSending.Providers
 {
     public interface IParameterProvider
     {

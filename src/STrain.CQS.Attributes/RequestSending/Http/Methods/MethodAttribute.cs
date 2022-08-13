@@ -1,7 +1,7 @@
 ﻿namespace STrain.CQS.Attributes.RequestSending.Http
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class MethodAttribute : PathAttribute
+    public class MethodAttribute : RouteAttribute
     {
         public HttpMethod Method { get; set; }
 

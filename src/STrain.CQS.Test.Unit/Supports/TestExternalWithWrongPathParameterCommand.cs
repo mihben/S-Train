@@ -1,6 +1,6 @@
 ﻿namespace STrain.CQS.Test.Unit.Supports
 {
-    [Path("{parameter}")]
+    [Route("{parameter}")]
     public record TestExternalWithWrongPathParameterCommand : Command
     {
     }

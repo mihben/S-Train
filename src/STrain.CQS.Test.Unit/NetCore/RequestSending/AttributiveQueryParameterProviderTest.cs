@@ -1,15 +1,15 @@
 ﻿using AutoFixture;
 using Moq;
 using STrain.CQS.Attributes.RequestSending.Http;
-using STrain.CQS.NetCore.RequestSending;
+using STrain.CQS.NetCore.RequestSending.Attributive;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
-    public class AttributeBasedQueryParameterProviderTest
+    public class AttributiveQueryParameterProviderTest
     {
-        private AttributeBasedQueryParameterProvider CreateSUT()
+        private AttributiveQueryParameterProvider CreateSUT()
         {
-            return new AttributeBasedQueryParameterProvider();
+            return new AttributiveQueryParameterProvider();
         }
 
         [Fact(DisplayName = "[UNIT][ABQPP-001] - Add Whole Object to Query Parameter")]

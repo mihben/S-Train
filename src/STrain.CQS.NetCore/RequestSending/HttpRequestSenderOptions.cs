@@ -2,6 +2,7 @@
 {
     public record HttpRequestSenderOptions
     {
-        public string Path { get; } = null!;
+        public Uri BaseAddress { get; init; } = null!;
+        public string Path { get; init; } = null!;
     }
 }

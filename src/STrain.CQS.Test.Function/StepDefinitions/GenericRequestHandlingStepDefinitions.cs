@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Moq;
+using Microsoft.AspNetCore.Mvc.Testing;
 using STrain.CQS.Test.Function.Drivers;
 using STrain.Sample.Api;
 using System.Net;
@@ -7,24 +7,24 @@ using System.Net;
 namespace STrain.CQS.Test.Function.StepDefinitions
 {
     [Binding]
-    public class GenericRequestHandlingStepDefinitions
+    internal class GenericRequestHandlingStepDefinitions
     {
-        private readonly SampleApiDriver _driver;
+        private WebApplicationFactory<Program> _driver;
 
         private SampleCommand? _command;
         private SampleQuery? _query;
         private HttpResponseMessage? _response;
 
-        public GenericRequestHandlingStepDefinitions(SampleApiDriver driver)
+        public GenericRequestHandlingStepDefinitions()
         {
-            _driver = driver;
+            _driver = new WebApplicationFactory<Program>();
         }
 
         [When("Receiving command")]
         public async Task ReceiveCommandAsync()
         {
             _command = new SampleCommand();
-            _response = await _driver.SendCommandAsync(_command, TimeSpan.FromSeconds(1));
+            _response = await _driver.ReceiveCommandAsync(_command, TimeSpan.FromSeconds(1));
         }
         
 
@@ -32,7 +32,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public async Task ReceiveQueryAsync()
         {
             _query = new SampleQuery(new Fixture().Create<string>());
-            _response = await _driver.SendQueryAsync<SampleQuery, string>(_query, TimeSpan.FromSeconds(1));
+            _response = await _driver.ReceiveQueryAsync<SampleQuery, string>(_query, TimeSpan.FromSeconds(1));
         }
 
         [Then("Response should be")]

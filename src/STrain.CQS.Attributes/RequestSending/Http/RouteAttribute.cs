@@ -1,11 +1,11 @@
 ﻿namespace STrain
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class PathAttribute : Attribute
+    public class RouteAttribute : Attribute
     {
         public string Path { get; }
 
-        public PathAttribute(string path)
+        public RouteAttribute(string path)
         {
             Path = path;
         }

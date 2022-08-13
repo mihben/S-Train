@@ -1,10 +1,11 @@
 ﻿using STrain.CQS.Api;
 using STrain.CQS.Attributes.RequestSending.Http;
+using STrain.CQS.NetCore.RequestSending.Providers;
 using System.Reflection;
 
-namespace STrain.CQS.NetCore.RequestSending
+namespace STrain.CQS.NetCore.RequestSending.Attributive
 {
-    public class AttributeBasedMethodProvider : IMethodProvider
+    public class AttributiveMethodProvider : IMethodProvider
     {
         public HttpMethod GetMethod<TRequest>()
             where TRequest : IRequest

@@ -1,10 +1,11 @@
 ﻿using STrain.CQS.Attributes.RequestSending.Http;
+using STrain.CQS.NetCore.RequestSending.Providers;
 using System.Reflection;
 using System.Web;
 
-namespace STrain.CQS.NetCore.RequestSending
+namespace STrain.CQS.NetCore.RequestSending.Attributive
 {
-    public class AttributeBasedQueryParameterProvider : IParameterProvider
+    public class AttributiveQueryParameterProvider : IParameterProvider
     {
         public Task SetParametersAsync<TRequest>(HttpRequestMessage message, TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest
@@ -18,7 +19,7 @@ namespace STrain.CQS.NetCore.RequestSending
         }
     }
 
-    internal static class AttributeBasedQueryParameterProviderExtensions
+    internal static class AttributiveQueryParameterProviderExtensions
     {
         public static Uri SetQuery<TRequest>(this Uri uri, IEnumerable<PropertyInfo> properties, TRequest request)
             where TRequest : IRequest

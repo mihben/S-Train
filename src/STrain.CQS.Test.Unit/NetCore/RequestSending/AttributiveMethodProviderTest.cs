@@ -1,13 +1,13 @@
-﻿using STrain.CQS.NetCore.RequestSending;
+﻿using STrain.CQS.NetCore.RequestSending.Attributive;
 using STrain.CQS.Test.Unit.Supports;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
-    public class AttributeBasedMethodProviderTest
+    public class AttributiveMethodProviderTest
     {
-        private AttributeBasedMethodProvider CreateSUT()
+        private AttributiveMethodProvider CreateSUT()
         {
-            return new AttributeBasedMethodProvider();
+            return new AttributiveMethodProvider();
         }
 
         [Fact(DisplayName = "[UNIT][ABMP-001] - Get Method from Attribute")]

@@ -14,14 +14,16 @@ Sending request via HTTP to external services.
 
 		@issue-6
 		@api	
+		@request-sender
 		Scenario: [API][HRS/SRS-001] - Send command
 			When Sending command to STrain service
 			Then Request should be sent
-				| Url                    | Path | Method |
+				| BaseAddress            | Path | Method |
 				| http://strain-service/ | api  | POST   |
 
 		@issue-6
 		@api	
+		@request-sender
 		Scenario: [API][HRS/SRS-002] - Send query
 			When Sending query to STrain service
 			Then Request should be sent

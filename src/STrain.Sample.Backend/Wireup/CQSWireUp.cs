@@ -10,6 +10,8 @@ namespace STrain.Sample.Backend.Wireup
             builder.AddPerformerFrom<SampleCommandPerformer>();
 
             builder.AddGenericRequestHandler("api");
+
+            builder.AddHttpSender((options, configuration) => configuration.Bind("Senders:Internal", options));
         }
     }
 }

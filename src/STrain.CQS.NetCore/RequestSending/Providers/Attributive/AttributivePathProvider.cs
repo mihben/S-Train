@@ -1,14 +1,15 @@
 ﻿using Microsoft.Extensions.Options;
+using STrain.CQS.NetCore.RequestSending.Providers;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace STrain.CQS.NetCore.RequestSending
+namespace STrain.CQS.NetCore.RequestSending.Attributive
 {
-    public class AttributeBasedPathProvider : IPathProvider
+    public class AttributivePathProvider : IPathProvider
     {
         private readonly IOptions<HttpRequestSenderOptions> _options;
 
-        public AttributeBasedPathProvider(IOptions<HttpRequestSenderOptions> options)
+        public AttributivePathProvider(IOptions<HttpRequestSenderOptions> options)
         {
             _options = options;
         }
@@ -16,14 +17,14 @@ namespace STrain.CQS.NetCore.RequestSending
         public string GetPath<TRequest>(TRequest request) where TRequest : IRequest
         {
             var type = typeof(TRequest);
-            var attribute = type.GetCustomAttribute<PathAttribute>();
+            var attribute = type.GetCustomAttribute<RouteAttribute>();
 
             if (attribute is null) return _options.Value.Path;
             return attribute.Path.ReplaceParameters(request);
         }
     }
 
-    internal static class AttributeBasedPathProviderExtensions
+    internal static class AttributivePathProviderExtensions
     {
         public static string ReplaceParameters<TRequest>(this string path, TRequest request)
         {

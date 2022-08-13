@@ -1,24 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using STrain.CQS.Dispatchers;
+using STrain.CQS.Senders;
 using STrain.Sample.Api;
 
 namespace STrain.Sample.Backend
 {
-    [Route("api/[controller]")]
+    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
     public class SampleController : ControllerBase
     {
-        private readonly ICommandDispatcher _dispatcher;
+        private readonly IRequestSender _sender;
 
-        public SampleController(ICommandDispatcher dispatcher)
+        public SampleController(IRequestSender sender)
         {
-            _dispatcher = dispatcher;
+            _sender = sender;
         }
 
         [HttpPost]
         public async Task<IActionResult> PostAsync(SampleCommand command, CancellationToken cancellationToken)
         {
-            await _dispatcher.DispatchAsync(command, cancellationToken);
+            await _sender.SendAsync(command, cancellationToken);
             return Accepted();
         }
     }

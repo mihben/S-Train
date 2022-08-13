@@ -2,19 +2,20 @@
 using Microsoft.Extensions.Options;
 using Moq;
 using STrain.CQS.NetCore.RequestSending;
+using STrain.CQS.NetCore.RequestSending.Attributive;
 using STrain.CQS.Test.Unit.Supports;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
-    public class AttributeBasedPathProviderTest
+    public class AttributivePathProviderTest
     {
         private Mock<IOptions<HttpRequestSenderOptions>> _optionsMock;
 
-        private AttributeBasedPathProvider CreateSUT()
+        private AttributivePathProvider CreateSUT()
         {
             _optionsMock = new Mock<IOptions<HttpRequestSenderOptions>>();
 
-            return new AttributeBasedPathProvider(_optionsMock.Object);
+            return new AttributivePathProvider(_optionsMock.Object);
         }
 
         [Fact(DisplayName = "[UNIT][ABPP-001] - Get Path from Attribute")]
