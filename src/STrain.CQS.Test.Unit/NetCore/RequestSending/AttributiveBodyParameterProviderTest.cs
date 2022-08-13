@@ -14,8 +14,8 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 
         public static IEnumerable<object[]> WholeObjectTestData = new List<object[]>
         {
-            new object[] { new Fixture().Create<TestBodyParameterWithAttributeCommand>() },
-            new object[] { new Fixture().Create<TestBodyParameterWithoutAttributeCommand>() }
+            new object[] { new Fixture().Create<BodyRequest>() },
+            new object[] { new Fixture().Create<GenericRequest>() }
         };
         [Theory(DisplayName = "[UNIT][ABPP-001] - Convert the Whole Object")]
         [MemberData(nameof(WholeObjectTestData))]
@@ -39,7 +39,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
         {
             // Arrange
             var sut = CreateSUT();
-            var request = new Fixture().Create<TestBodyParameterWithPropertyCommand>();
+            var request = new Fixture().Create<PropertyBodyRequest>();
             var message = new HttpRequestMessage(HttpMethod.Post, new Uri("http://test.com"));
 
             // Act
@@ -47,14 +47,16 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 
             // Assert
             Assert.NotNull(message.Content);
-            Assert.Equal(JsonConvert.SerializeObject(new TestBodyParameterWithPropertyCommand.Expected(request.BodyParameter)), await message.Content.ReadAsStringAsync());
+            Assert.Equal(JsonConvert.SerializeObject(new PropertyBodyRequest.Expected(request.BodyParameter)), await message.Content.ReadAsStringAsync());
         }
     }
 
+    [Post]
     [BodyParameter]
-    internal record TestBodyParameterWithAttributeCommand : Command { }
-    internal record TestBodyParameterWithoutAttributeCommand : Command { }
-    internal record TestBodyParameterWithPropertyCommand : Command
+    internal record BodyRequest : Command { }
+    internal record GenericRequest : Command { }
+    [Post]
+    internal record PropertyBodyRequest : Command
     {
         public string IgnoredParameter { get; }
         public string PathParameter { get; }
@@ -73,7 +75,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             }
         }
 
-        public TestBodyParameterWithPropertyCommand(string ignoredParameter, string pathParameter, string queryParameter, string bodyParameter)
+        public PropertyBodyRequest(string ignoredParameter, string pathParameter, string queryParameter, string bodyParameter)
         {
             IgnoredParameter = ignoredParameter;
             PathParameter = pathParameter;

@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using STrain.CQS.Attributes.RequestSending.Http.Parameters;
+using System.Net.Http.Json;
+using System.Net.Mime;
 using System.Reflection;
+using System.Text;
 
 namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
 {
@@ -11,26 +14,25 @@ namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
             where TRequest : IRequest
         {
             var type = typeof(TRequest);
-            var attribute = type.GetCustomAttribute<ParameterAttribute>();
-            if (attribute is null|| attribute is BodyParameterAttribute)
+            if (type.IsGenericRequest() || type.GetCustomAttribute<BodyParameterAttribute>() is not null)
             {
-                message.Content = new StringContent(JsonConvert.SerializeObject(request, new JsonSerializerSettings
-                {
-                    ContractResolver = new RequestContractResolver()
-                }));
+                message.Content = JsonContent.Create(request);
+                return Task.CompletedTask;
             }
 
+            message.Content = new StringContent(JsonConvert.SerializeObject(request, new JsonSerializerSettings
+            {
+                ContractResolver = new RequestContractResolver()
+            }), Encoding.UTF8, MediaTypeNames.Application.Json);
             return Task.CompletedTask;
         }
     }
 
     internal class RequestContractResolver : DefaultContractResolver
     {
-
         protected override List<MemberInfo> GetSerializableMembers(Type objectType)
         {
-            if (!objectType.IsAssignableTo(typeof(IRequest))) return base.GetSerializableMembers(objectType);
-            return objectType.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty).Where(m => m.GetCustomAttribute<BodyParameterAttribute>() is not null).ToList();
+            return objectType.GetMembers(Constants.HttpRequestSender.PropertyBindings).Where(m => m.GetCustomAttribute<BodyParameterAttribute>() is not null).ToList();
         }
     }
 }

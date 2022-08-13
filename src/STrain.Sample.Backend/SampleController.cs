@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using STrain.CQS.Dispatchers;
 using STrain.CQS.Senders;
 using STrain.Sample.Api;
 
@@ -21,6 +20,12 @@ namespace STrain.Sample.Backend
         {
             await _sender.SendAsync(command, cancellationToken);
             return Accepted();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+        {
+            return Ok(await _sender.GetAsync<SampleQuery, SampleQuery.Result>(new SampleQuery("Test-Value"), cancellationToken));
         }
     }
 }

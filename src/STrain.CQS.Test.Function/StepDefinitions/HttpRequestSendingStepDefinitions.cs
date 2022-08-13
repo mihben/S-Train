@@ -18,6 +18,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
 
         private readonly WebApplicationFactory<Program> _driver;
         private SampleCommand _command;
+        private SampleQuery _query;
 
         public HttpRequestSendingStepDefinitions(ITestOutputHelper outputHelper)
         {
@@ -38,11 +39,19 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         }
 
 
+        [When("Sending query to STrain service")]
+        public async Task SendingQueryToStrainServiceAsync()
+        {
+            _query = new Fixture().Create<SampleQuery>();
+            await _driver.SendQueryAsync<SampleQuery, SampleQuery.Result>(_query, TimeSpan.FromSeconds(1));
+        }
+
         [Then("Request should be sent")]
         public void ShouldSentRequest(Table dataTable)
         {
             var uri = new Uri($"{dataTable.Rows[0]["BaseAddress"]}{dataTable.Rows[0]["Path"]}");
-            _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(m => m.Verify(dataTable.Rows[0]["Method"], uri, _command)), ItExpr.IsAny<CancellationToken>());
+            if (_command is not null) _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(m => m.Verify(dataTable.Rows[0]["Method"], uri, _command)), ItExpr.IsAny<CancellationToken>());
+            if (_query is not null) _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(m => m.Verify(dataTable.Rows[0]["Method"], uri, _query)), ItExpr.IsAny<CancellationToken>());
         }
     }
 
@@ -54,7 +63,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             return message.Method.Method.Equals(method)
                 && message.RequestUri.AbsoluteUri.Equals(uri.AbsoluteUri)
                 && message.Headers.GetValues("request-type").First().Equals($"{request.GetType().FullName}, {request.GetType().Assembly.GetName().Name}")
-                && JsonSerializer.Deserialize<TRequest>(message.Content.ReadAsStream()).Equals(request);
+                && JsonSerializer.Deserialize<TRequest>(message.Content.ReadAsStream(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }).Equals(request);
         }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace STrain.Sample.Backend.Performers
 {
-    public class SampleQueryPerformer : IQueryPerformer<SampleQuery, string>
+    public class SampleQueryPerformer : IQueryPerformer<SampleQuery, SampleQuery.Result>
     {
-        public Task<string> PerformAsync(SampleQuery query, CancellationToken cancellationToken)
+        public Task<SampleQuery.Result> PerformAsync(SampleQuery query, CancellationToken cancellationToken)
         {
-            return Task.FromResult("SampleQuery Handled");
+            return Task.FromResult(new SampleQuery.Result("Handled"));
         }
     }
 }

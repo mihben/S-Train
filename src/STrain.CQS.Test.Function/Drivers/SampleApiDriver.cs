@@ -41,6 +41,14 @@ namespace STrain.CQS.Test.Function.Drivers
              });
         }
 
+        public static async Task<T?> SendQueryAsync<TQuery, T>(this WebApplicationFactory<Program> driver, TQuery query, TimeSpan timeout)
+            where TQuery : Query<T>
+        {
+            var sender = driver.Services.GetRequiredService<IRequestSender>();
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            return await sender.GetAsync<TQuery, T>(query, cancellationTokenSource.Token);
+        }
+
         public static async Task SendCommandAsync<TCommand>(this WebApplicationFactory<Program> driver, TCommand command, TimeSpan timeout)
             where TCommand : Command
         {

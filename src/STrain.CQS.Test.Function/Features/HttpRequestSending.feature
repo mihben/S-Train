@@ -27,5 +27,5 @@ Sending request via HTTP to external services.
 		Scenario: [API][HRS/SRS-002] - Send query
 			When Sending query to STrain service
 			Then Request should be sent
-				| Url                    | Path | Method |
+				| BaseAddress            | Path | Method |
 				| http://strain-service/ | api  | GET    |
