@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.Senders;
+using System.Net.Http.Json;
 
 namespace STrain.CQS.NetCore.RequestSending
 {
@@ -21,24 +22,26 @@ namespace STrain.CQS.NetCore.RequestSending
             _logger = logger;
         }
 
-        public Task GetAsync<TQuery, T>(TQuery query, CancellationToken cancellationToken)
-            where TQuery : Query<T>
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<T?> GetAsync<TQuery, T>(TQuery query, CancellationToken cancellationToken)
+            where TQuery : Query<T> => await SendAsync<TQuery, T>(query, cancellationToken).ConfigureAwait(false);
 
         public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
-            where TCommand : Command
+            where TCommand : Command => await SendAsync<TCommand, object>(command, cancellationToken).ConfigureAwait(false);
+
+        public async Task<T?> SendAsync<TRequest, T>(TRequest request, CancellationToken cancellationToken)
+            where TRequest : IRequest
         {
-            var message = new HttpRequestMessage(_methodProvider.GetMethod<TCommand>(), $"{_httpClient.BaseAddress}{_pathProvider.GetPath(command)}");
+            var message = new HttpRequestMessage(_methodProvider.GetMethod<TRequest>(), $"{_httpClient.BaseAddress}{_pathProvider.GetPath(request)}");
             foreach (var parameterProvider in _parameterProviders)
             {
-                await parameterProvider.SetParametersAsync(message, command, cancellationToken);
+                await parameterProvider.SetParametersAsync(message, request, cancellationToken);
             }
 
             _logger.LogDebug("Sending request to {uri}", message.RequestUri);
             _logger.LogTrace("Request message: {@message}", message);
-            await _httpClient.SendAsync(message, cancellationToken);
+            var response = await _httpClient.SendAsync(message, cancellationToken);
+            if (response.Content.Headers.ContentLength == 0) return default;
+            return await response.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
         }
     }
 }
