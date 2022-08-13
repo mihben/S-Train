@@ -17,8 +17,7 @@ namespace STrain.CQS.NetCore.RequestSending.Attributive
         public string GetPath<TRequest>(TRequest request) where TRequest : IRequest
         {
             var type = typeof(TRequest);
-            var attribute = type.GetCustomAttribute<RouteAttribute>();
-
+            var attribute = type.GetRouteAttribute();
             if (attribute is null) return _options.Value.Path;
             return attribute.Path.ReplaceParameters(request);
         }
@@ -30,9 +29,9 @@ namespace STrain.CQS.NetCore.RequestSending.Attributive
         {
             var result = path;
             var type = typeof(TRequest);
-            foreach (Match match in new Regex("{[a-zA-Z0-9_]*}").Matches(path))
+            foreach (Match match in new Regex("{[a-zA-Z0-9_]*}").Matches(path).Cast<Match>())
             {
-                var property = type.GetProperty(match.Value.Trim('{', '}'), BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance);
+                var property = type.GetProperty(match.Value.Trim('{', '}'), Constants.HttpRequestSender.PropertyBindings | BindingFlags.IgnoreCase);
                 if (property is null) throw new InvalidOperationException($"{match.Value} not found in {type}");
                 result = result.Replace(match.Value, property.GetValue(request)?.ToString() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
             }

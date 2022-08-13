@@ -3,13 +3,12 @@ using Microsoft.Extensions.Options;
 using Moq;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Attributive;
-using STrain.CQS.Test.Unit.Supports;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
     public class AttributivePathProviderTest
     {
-        private Mock<IOptions<HttpRequestSenderOptions>> _optionsMock;
+        private Mock<IOptions<HttpRequestSenderOptions>> _optionsMock = null!;
 
         private AttributivePathProvider CreateSUT()
         {
@@ -23,7 +22,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
         {
             // Arrange
             var sut = CreateSUT();
-            var command = new Fixture().Create<TestExternalWithAttributeCommand>();
+            var command = new Fixture().Create<ExternalCommand>();
 
             // Act
             var result = sut.GetPath(command);
@@ -43,7 +42,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
                 .Returns(options);
 
             // Act
-            var result = sut.GetPath(new TestExternalWithoutAttributeCommand());
+            var result = sut.GetPath(new GenericCommand());
 
             // Assert
             Assert.Equal(options.Path, result);
@@ -57,7 +56,31 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 
             // Act
             // Assert
-            Assert.Throws<InvalidOperationException>(() => sut.GetPath(new TestExternalWithWrongPathParameterCommand()));
+            Assert.Throws<InvalidOperationException>(() => sut.GetPath(new Fixture().Create<InvalidExternalCommand>()));
         }
     }
+
+    [Patch("test-path/{parameter}")]
+    internal record ExternalCommand : Command
+    {
+        public string Parameter { get; }
+
+        public ExternalCommand(string parameter)
+        {
+            Parameter = parameter;
+        }
+    }
+
+    [Patch("test-path/{wrongparameter}")]
+    internal record InvalidExternalCommand : Command
+    {
+        public string Parameter { get; }
+
+        public InvalidExternalCommand(string parameter)
+        {
+            Parameter = parameter;
+        }
+    }
+
+    internal record GenericCommand : Command { }
 }
