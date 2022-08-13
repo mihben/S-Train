@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using STrain.CQS.NetCore.RequestSending.Parsers;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.Senders;
 using System.Net.Http.Json;
@@ -8,17 +10,21 @@ namespace STrain.CQS.NetCore.RequestSending
     public class HttpRequestSender : IRequestSender
     {
         private readonly HttpClient _httpClient;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IPathProvider _pathProvider;
         private readonly IMethodProvider _methodProvider;
         private readonly IEnumerable<IParameterProvider> _parameterProviders;
+        private readonly IDictionary<string, Type> _responseReaderFactory;
         private readonly ILogger<HttpRequestSender> _logger;
 
-        public HttpRequestSender(HttpClient httpClient, IPathProvider pathProvider, IMethodProvider methodProvider, IEnumerable<IParameterProvider> parameterProviders, ILogger<HttpRequestSender> logger)
+        public HttpRequestSender(HttpClient httpClient, IServiceProvider serviceProvider, IPathProvider pathProvider, IMethodProvider methodProvider, IEnumerable<IParameterProvider> parameterProviders, IDictionary<string, Type> responseReaderFactory, ILogger<HttpRequestSender> logger)
         {
             _httpClient = httpClient;
+            _serviceProvider = serviceProvider;
             _pathProvider = pathProvider;
             _methodProvider = methodProvider;
             _parameterProviders = parameterProviders;
+            _responseReaderFactory = responseReaderFactory;
             _logger = logger;
         }
 
@@ -41,7 +47,8 @@ namespace STrain.CQS.NetCore.RequestSending
             _logger.LogTrace("Request message: {@message}", message);
             var response = await _httpClient.SendAsync(message, cancellationToken);
             if (response.Content.Headers.ContentLength == 0) return default;
-            return await response.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
+            response.EnsureSuccessStatusCode();
+            return (T?)(await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderFactory[response.Content.Headers.ContentType.MediaType])).ReadAsync<T>(response, cancellationToken));
         }
     }
 }

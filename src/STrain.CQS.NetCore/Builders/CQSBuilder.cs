@@ -2,13 +2,17 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using STrain.CQS.MVC.Constants;
 using STrain.CQS.MVC.Options;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Attributive;
+using STrain.CQS.NetCore.RequestSending.Parsers;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.NetCore.RequestSending.Providers.Attributive;
+using STrain.CQS.NetCore.RequestSending.Readers;
 using STrain.CQS.Senders;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Mime;
 
 namespace STrain.CQS.NetCore.Builders
 {
@@ -54,6 +58,14 @@ namespace STrain.CQS.NetCore.Builders
                 var options = provider.GetRequiredService<IOptions<HttpRequestSenderOptions>>();
                 client.BaseAddress = options.Value.BaseAddress;
             });
+
+            Builder.Services.AddSingleton<IDictionary<string, Type>>(new Dictionary<string, Type>
+            {
+                [System.Net.Mime.MediaTypeNames.Text.Plain] = typeof(StringResponseReader),
+                [System.Net.Mime.MediaTypeNames.Application.Json] = typeof(JsonResponseReader)
+            });
+            Builder.Services.AddTransient<StringResponseReader>();
+            Builder.Services.AddTransient<JsonResponseReader>();
 
             return this;
         }
