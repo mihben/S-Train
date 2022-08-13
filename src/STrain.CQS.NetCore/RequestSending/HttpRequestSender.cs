@@ -8,13 +8,15 @@ namespace STrain.CQS.NetCore.RequestSending
         private readonly HttpClient _httpClient;
         private readonly IPathProvider _pathProvider;
         private readonly IMethodProvider _methodProvider;
+        private readonly IEnumerable<IParameterProvider> _parameterProviders;
         private readonly ILogger<HttpRequestSender> _logger;
 
-        public HttpRequestSender(HttpClient httpClient, IPathProvider pathProvider, IMethodProvider methodProvider, ILogger<HttpRequestSender> logger)
+        public HttpRequestSender(HttpClient httpClient, IPathProvider pathProvider, IMethodProvider methodProvider, IEnumerable<IParameterProvider> parameterProviders, ILogger<HttpRequestSender> logger)
         {
             _httpClient = httpClient;
             _pathProvider = pathProvider;
             _methodProvider = methodProvider;
+            _parameterProviders = parameterProviders;
             _logger = logger;
         }
 
@@ -28,6 +30,10 @@ namespace STrain.CQS.NetCore.RequestSending
             where TCommand : Command
         {
             var message = new HttpRequestMessage(_methodProvider.GetMethod<TCommand>(), _pathProvider.GetPath(command));
+            foreach (var parameterProvider in _parameterProviders)
+            {
+                await parameterProvider.SetParametersAsync(message, command, cancellationToken);
+            }
 
             _logger.LogDebug("Sending request to {uri}", message.RequestUri);
             _logger.LogTrace("Request message: {@message}", message);
