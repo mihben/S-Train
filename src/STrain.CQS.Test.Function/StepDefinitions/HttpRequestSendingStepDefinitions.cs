@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using AutoFixture;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Moq;
 using Moq.Protected;
 using STrain.CQS.Test.Function.Drivers;
 using STrain.Sample.Api;
-using System.Net.Http.Json;
 using System.Text.Json;
 using Xunit.Abstractions;
 
@@ -33,8 +33,8 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [When("Sending command to STrain service")]
         public async Task SendingCommandToStrainServiceAsync()
         {
-            _command = new SampleCommand();
-            await _driver.SendCommandAsync(new SampleCommand(), TimeSpan.FromSeconds(1));
+            _command = new Fixture().Create<SampleCommand>();
+            await _driver.SendCommandAsync(_command, TimeSpan.FromSeconds(1));
         }
 
 

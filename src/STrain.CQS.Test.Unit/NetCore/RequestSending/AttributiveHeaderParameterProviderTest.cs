@@ -27,13 +27,13 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             Assert.Contains(message.Headers, h => h.Key.Equals("request-type") && h.Value.Contains($"{request.GetType().FullName}, {request.GetType().Assembly.GetName().Name}"));
         }
 
-        [Fact(DisplayName = "[UNIT][AHPP-002] - Send Whole Object as Header")]
+        [Fact(DisplayName = "[UNIT][AHPP-002] - Send whole object as Header")]
         public async Task AttributiveHeaderParameterProvider_SetParameterAsync_SendWholeObjectAsHeader()
         {
             // Arrange
             var sut = CreateSUT();
             var message = new HttpRequestMessage(HttpMethod.Get, "http://test.com");
-            var request = new Fixture().Create<TestHeaderCommand>();
+            var request = new Fixture().Create<HeaderRequest>();
 
             // Act
             await sut.SetParametersAsync(message, request, default);
@@ -42,13 +42,13 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             Assert.Contains(message.Headers, h => h.Key.Equals("Parameter") && h.Value.Contains(request.Parameter));
         }
 
-        [Fact(DisplayName = "[UNIT][AHPP-003] - Set Header from Properties")]
+        [Fact(DisplayName = "[UNIT][AHPP-003] - Set header from properties")]
         public async Task AttributiveHeaderParameterProvider_SetParameterAsync_SetHeaderFromProperties()
         {
             // Arrange
             var sut = CreateSUT();
             var message = new HttpRequestMessage(HttpMethod.Get, "http://test.com");
-            var request = new Fixture().Create<TestHeaderPropertyCommand>();
+            var request = new Fixture().Create<PropertyHeaderRequest>();
 
             // Act
             await sut.SetParametersAsync(message, request, default);
@@ -60,23 +60,23 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 
     [Patch("patch")]
     [HeaderParameter]
-    internal record TestHeaderCommand : Command
+    internal record HeaderRequest : Command
     {
         public string Parameter { get; }
 
-        public TestHeaderCommand(string parameter)
+        public HeaderRequest(string parameter)
         {
             Parameter = parameter;
         }
     }
 
     [Patch("patch")]
-    internal record TestHeaderPropertyCommand : Command
+    internal record PropertyHeaderRequest : Command
     {
         [HeaderParameter(Name = "test-parameter")]
         public string Parameter { get; }
 
-        public TestHeaderPropertyCommand(string parameter)
+        public PropertyHeaderRequest(string parameter)
         {
             Parameter = parameter;
         }

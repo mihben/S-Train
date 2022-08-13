@@ -23,7 +23,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [When("Receiving command")]
         public async Task ReceiveCommandAsync()
         {
-            _command = new SampleCommand();
+            _command = new Fixture().Create<SampleCommand>();
             _response = await _driver.ReceiveCommandAsync(_command, TimeSpan.FromSeconds(1));
         }
         

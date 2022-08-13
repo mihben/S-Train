@@ -1,5 +1,4 @@
-﻿using STrain.CQS.Attributes.RequestSending.Http;
-using STrain.CQS.NetCore.RequestSending.Providers;
+﻿using STrain.CQS.NetCore.RequestSending.Providers;
 using System.Reflection;
 using System.Web;
 
@@ -13,6 +12,8 @@ namespace STrain.CQS.NetCore.RequestSending.Attributive
             if (message.RequestUri is null) throw new ArgumentException("Uri is required");
 
             var type = typeof(TRequest);
+            if (type.IsGenericRequest()) return Task.CompletedTask;
+
             if (type.GetCustomAttribute<QueryParameterAttribute>() is not null) message.RequestUri = message.RequestUri.SetQuery(type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty), request);
             else message.RequestUri = message.RequestUri.SetQuery(type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty).Where(p => p.GetCustomAttribute<QueryParameterAttribute>() is not null), request);
             return Task.CompletedTask;

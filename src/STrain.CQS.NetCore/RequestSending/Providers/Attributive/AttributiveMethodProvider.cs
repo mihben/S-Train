@@ -11,11 +11,14 @@ namespace STrain.CQS.NetCore.RequestSending.Attributive
             where TRequest : IRequest
         {
             var type = typeof(TRequest);
+            if (type.IsGenericRequest())
+            {
+                if (type.IsAssignableTo(typeof(ICommand))) return HttpMethod.Post;
+                if (type.IsAssignableTo(typeof(IQuery))) return HttpMethod.Get;
+            }
+
             var attribute = type.GetCustomAttribute<MethodAttribute>();
             if (attribute is not null) return attribute.Method;
-
-            if (type.IsAssignableTo(typeof(ICommand))) return HttpMethod.Post;
-            if (type.IsAssignableTo(typeof(IQuery))) return HttpMethod.Get;
 
             throw new InvalidOperationException($"Method of {type} cannot be determined");
         }

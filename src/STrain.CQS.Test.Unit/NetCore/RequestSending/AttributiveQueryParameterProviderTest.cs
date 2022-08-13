@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
-using Moq;
-using STrain.CQS.Attributes.RequestSending.Http;
 using STrain.CQS.NetCore.RequestSending.Attributive;
+using STrain.CQS.Test.Unit.Supports;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
@@ -12,12 +11,12 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             return new AttributiveQueryParameterProvider();
         }
 
-        [Fact(DisplayName = "[UNIT][ABQPP-001] - Add Whole Object to Query Parameter")]
+        [Fact(DisplayName = "[UNIT][ABQPP-001] - Add whole object to query parameter")]
         public async Task AttributeBasedQueryParameterProvider_SetParameterAsync_AddWholeObjectToQueryParameter()
         {
             // Arrange
             var sut = CreateSUT();
-            var command = new Fixture().Create<WholeObjectTestCommand>();
+            var command = new Fixture().Create<QueryParameterRequest>();
             var message = new HttpRequestMessage(HttpMethod.Get, "http://test.com");
 
             // Act
@@ -32,7 +31,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
         {
             // Arrange
             var sut = CreateSUT();
-            var command = new Fixture().Create<PropertyTestCommand>();
+            var command = new Fixture().Create<PropertyQueryParameterRequest>();
             var message = new HttpRequestMessage(HttpMethod.Get, "http://test.com");
 
             // Act
@@ -47,7 +46,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
         {
             // Arrange
             var sut = CreateSUT();
-            var command = new Fixture().Create<PropertyNameTestCommand>();
+            var command = new Fixture().Create<PropertyNameQueryParameterRequest>();
             var message = new HttpRequestMessage(HttpMethod.Get, "http://test.com");
 
             // Act
@@ -62,43 +61,61 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
         {
             // Arrange
             var sut = CreateSUT();
-            var command = new Fixture().Create<PropertyNameTestCommand>();
+            var command = new Fixture().Create<PropertyNameQueryParameterRequest>();
             var message = new HttpRequestMessage();
 
             // Act
             // Assert
             await Assert.ThrowsAsync<ArgumentException>(async () => await sut.SetParametersAsync(message, command, default));
         }
+
+        [Fact(DisplayName = "[UNIT][ABQPP-004] - Generic request")]
+        public async Task AttributeBasedQueryParameterProvider_SetParameterAsync_GenericRequest()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var command = new Fixture().Create<TestCommand>();
+            var message = new HttpRequestMessage(HttpMethod.Get, "http://test.com");
+
+            // Act
+            await sut.SetParametersAsync(message, command, default);
+
+            // Assert
+            Assert.Empty(message.RequestUri.Query);
+        }
     }
 
+    [Get]
     [QueryParameter]
-    public record WholeObjectTestCommand : Command
+    public record QueryParameterRequest : Command
     {
         public string Parameter { get; }
 
-        public WholeObjectTestCommand(string parameter)
+        public QueryParameterRequest(string parameter)
         {
             Parameter = parameter;
         }
     }
 
-    public record PropertyTestCommand : Command
+    [Get]
+    public record PropertyQueryParameterRequest : Command
     {
         [QueryParameter]
         public string Parameter { get; }
 
-        public PropertyTestCommand(string parameter)
+        public PropertyQueryParameterRequest(string parameter)
         {
             Parameter = parameter;
         }
     }
 
-    public record PropertyNameTestCommand : Command
+    [Get]
+    public record PropertyNameQueryParameterRequest : Command
     {
         [QueryParameter(Name = "OverridedParameter")]
         public string Parameter { get; }
 
-        public PropertyNameTestCommand(string parameter)
+        public PropertyNameQueryParameterRequest(string parameter)
         {
             Parameter = parameter;
         }
