@@ -44,7 +44,7 @@ namespace STrain.CQS.NetCore.RequestSending
             }
 
             _logger.LogDebug("Sending request to {uri}", message.RequestUri);
-            _logger.LogTrace("Request message: {@message}", message);
+            _logger.LogTrace("Request message: {message}", message);
             var response = await _httpClient.SendAsync(message, cancellationToken);
             if (response.Content.Headers.ContentLength == 0) return default;
             response.EnsureSuccessStatusCode();
