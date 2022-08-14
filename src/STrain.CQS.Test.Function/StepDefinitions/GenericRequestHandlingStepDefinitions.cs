@@ -32,7 +32,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public async Task ReceiveQueryAsync()
         {
             _query = new SampleQuery(new Fixture().Create<string>());
-            _response = await _driver.ReceiveQueryAsync<SampleQuery, string>(_query, TimeSpan.FromSeconds(1));
+            _response = await _driver.ReceiveQueryAsync<SampleQuery, SampleQuery.Result>(_query, TimeSpan.FromSeconds(1));
         }
 
         [Then("Response should be")]

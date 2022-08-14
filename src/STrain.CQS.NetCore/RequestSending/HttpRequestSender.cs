@@ -14,17 +14,17 @@ namespace STrain.CQS.NetCore.RequestSending
         private readonly IPathProvider _pathProvider;
         private readonly IMethodProvider _methodProvider;
         private readonly IEnumerable<IParameterProvider> _parameterProviders;
-        private readonly IDictionary<string, Type> _responseReaderFactory;
+        private readonly IResponseReaderProvider _responseReaderProvider;
         private readonly ILogger<HttpRequestSender> _logger;
 
-        public HttpRequestSender(HttpClient httpClient, IServiceProvider serviceProvider, IPathProvider pathProvider, IMethodProvider methodProvider, IEnumerable<IParameterProvider> parameterProviders, IDictionary<string, Type> responseReaderFactory, ILogger<HttpRequestSender> logger)
+        public HttpRequestSender(HttpClient httpClient, IServiceProvider serviceProvider, IPathProvider pathProvider, IMethodProvider methodProvider, IEnumerable<IParameterProvider> parameterProviders, IResponseReaderProvider responseReaderProvider, ILogger<HttpRequestSender> logger)
         {
             _httpClient = httpClient;
             _serviceProvider = serviceProvider;
             _pathProvider = pathProvider;
             _methodProvider = methodProvider;
             _parameterProviders = parameterProviders;
-            _responseReaderFactory = responseReaderFactory;
+            _responseReaderProvider = responseReaderProvider;
             _logger = logger;
         }
 
@@ -48,7 +48,7 @@ namespace STrain.CQS.NetCore.RequestSending
             var response = await _httpClient.SendAsync(message, cancellationToken);
             if (response.Content.Headers.ContentLength == 0) return default;
             response.EnsureSuccessStatusCode();
-            return (T?)(await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderFactory[response.Content.Headers.ContentType.MediaType])).ReadAsync<T>(response, cancellationToken));
+            return (T?)(await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType.MediaType])).ReadAsync<T>(response, cancellationToken));
         }
     }
 }

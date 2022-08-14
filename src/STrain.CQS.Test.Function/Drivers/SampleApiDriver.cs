@@ -35,7 +35,7 @@ namespace STrain.CQS.Test.Function.Drivers
                              BaseAddress = new Uri(baseAddress)
                          };
 
-                         return new HttpRequestSender(httpClient, provider.GetRequiredService<IPathProvider>(), provider.GetRequiredService<IMethodProvider>(), provider.GetServices<IParameterProvider>(), provider.GetRequiredService<ILogger<HttpRequestSender>>());
+                         return new HttpRequestSender(httpClient, provider, provider.GetRequiredService<IPathProvider>(), provider.GetRequiredService<IMethodProvider>(), provider.GetServices<IParameterProvider>(),provider.GetRequiredService<IResponseReaderProvider>(), provider.GetRequiredService<ILogger<HttpRequestSender>>());
                      });
                  });
              });
