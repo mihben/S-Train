@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using STrain.CQS.Api;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.Senders;
@@ -41,6 +42,13 @@ namespace STrain.CQS.Test.Function.Drivers
              });
         }
 
+        public static async Task<T?> SendRequestAsync<TRequest, T>(this WebApplicationFactory<Program> driver, TRequest request, TimeSpan timeout)
+            where TRequest : IRequest
+        {
+            var sender = driver.Services.GetRequiredService<IRequestSender>();
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            return await sender.SendAsync<TRequest, T>(request, cancellationTokenSource.Token);
+        }
         public static async Task<T?> SendQueryAsync<TQuery, T>(this WebApplicationFactory<Program> driver, TQuery query, TimeSpan timeout)
             where TQuery : Query<T>
         {
