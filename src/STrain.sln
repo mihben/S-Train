@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.CQS.MVC", "STrain.CQ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.CQS.Test.Unit", "STrain.CQS.Test.Unit\STrain.CQS.Test.Unit.csproj", "{7B903F98-1C31-47B4-94AD-C00DC4D6E512}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STrain.CQS.Attributes", "STrain.CQS.Attributes\STrain.CQS.Attributes.csproj", "{7000A3E4-61D6-41B9-92E1-DC16776F8C7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{7B903F98-1C31-47B4-94AD-C00DC4D6E512}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B903F98-1C31-47B4-94AD-C00DC4D6E512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B903F98-1C31-47B4-94AD-C00DC4D6E512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7000A3E4-61D6-41B9-92E1-DC16776F8C7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7000A3E4-61D6-41B9-92E1-DC16776F8C7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7000A3E4-61D6-41B9-92E1-DC16776F8C7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7000A3E4-61D6-41B9-92E1-DC16776F8C7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +93,7 @@ Global
 		{F7561B41-4FEC-4C17-AC39-9ABC293C5392} = {8B4C80B2-F62B-4D01-AA0E-F54682F448F8}
 		{AAA6D27F-8AFC-405D-9207-F505EDD34C5B} = {8B4C80B2-F62B-4D01-AA0E-F54682F448F8}
 		{7B903F98-1C31-47B4-94AD-C00DC4D6E512} = {6B7FDBDE-5009-4003-B00B-4A1E4026DBF8}
+		{7000A3E4-61D6-41B9-92E1-DC16776F8C7A} = {8B4C80B2-F62B-4D01-AA0E-F54682F448F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B663B222-AB3B-44EB-B3F7-6AAEEDD843F9}

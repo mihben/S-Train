@@ -3,27 +3,29 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using STrain.Sample.Backend;
+using Moq;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.Support
 {
-    public class SampleHost : WebApplicationFactory<Program>
+    internal class SampleHost : WebApplicationFactory<Program>
     {
         private readonly ITestOutputHelper _outputHelper;
 
-        public SampleHost(ITestOutputHelper outputHelper)
-        {
-            _outputHelper = outputHelper;
-        }
+        public Mock<HttpMessageHandler> MessageHandlerMock { get; } = new();
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            base.ConfigureWebHost(builder);
+        //public SampleHost(ITestOutputHelper outputHelper)
+        //{
+        //    _outputHelper = outputHelper;
+        //}
 
-            builder.ConfigureTestServices(services => services.AddLogging(builder => builder
-                                                                                                                    .AddXUnit(_outputHelper)
-                                                                                                                    .SetMinimumLevel(LogLevel.Trace)));
-        }
+        //protected override void ConfigureWebHost(IWebHostBuilder builder)
+        //{
+        //    base.ConfigureWebHost(builder);
+
+        //    builder.ConfigureTestServices(services => services.AddLogging(builder => builder
+        //                                                                                                            .AddXUnit(_outputHelper)
+        //                                                                                                            .SetMinimumLevel(LogLevel.Trace)));
+        //}
     }
 }

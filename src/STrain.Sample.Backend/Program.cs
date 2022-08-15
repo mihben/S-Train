@@ -1,9 +1,9 @@
 using STrain.Sample.Backend.Services;
 using STrain.Sample.Backend.Wireup;
+using LokiLoggingProvider.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Host.UseLightInject();
 
 builder.Services.AddMvc();
@@ -19,8 +19,3 @@ app.MapGenericRequestController();
 app.MapControllers();
 
 app.Run();
-
-namespace STrain.Sample.Backend
-{
-    public class Program { }
-}

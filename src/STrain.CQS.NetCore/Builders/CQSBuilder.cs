@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.CQS.MVC.Options;
+using STrain.CQS.NetCore.RequestSending;
 using System.Diagnostics.CodeAnalysis;
 
 namespace STrain.CQS.NetCore.Builders
@@ -32,6 +32,12 @@ namespace STrain.CQS.NetCore.Builders
         {
             Builder.Services.AddGenericRequestHandler(configure);
             return this;
+        }
+
+        public HttpRequestSenderBuilder AddHttpSender(Action<HttpRequestSenderOptions, IConfiguration> configure)
+        {
+            Builder.Services.AddHttpRequestSender(configure);
+            return new HttpRequestSenderBuilder(Builder).UseDefaults();
         }
     }
 }

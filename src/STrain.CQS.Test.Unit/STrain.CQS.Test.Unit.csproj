@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.MVC\STrain.CQS.MVC.csproj" />
+    <ProjectReference Include="..\STrain.CQS.NetCore\STrain.CQS.NetCore.csproj" />
     <ProjectReference Include="..\STrain.Sample.Api\STrain.Sample.Api.csproj" />
   </ItemGroup>
 
