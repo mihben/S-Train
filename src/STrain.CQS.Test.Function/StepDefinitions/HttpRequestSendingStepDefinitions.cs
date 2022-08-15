@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using Logproto;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Moq;
 using Moq.Protected;
@@ -8,7 +7,6 @@ using STrain.CQS.Test.Function.Drivers;
 using STrain.Sample.Api;
 using System.Text.Json;
 using Xunit.Abstractions;
-using static System.Net.WebRequestMethods;
 
 namespace STrain.CQS.Test.Function.StepDefinitions
 {
@@ -22,8 +20,12 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         private readonly WebApplicationFactory<Program> _driver;
         private SampleCommand _command;
         private SampleQuery _query;
+
         private GetRequest _getRequest;
         private PostRequest _postRequest;
+        private PutRequest _putRequest;
+        private PatchRequest _patchRequest;
+        private DeleteRequest _deleteRequest;
 
         public HttpRequestSendingStepDefinitions(ITestOutputHelper outputHelper)
         {
@@ -63,6 +65,18 @@ namespace STrain.CQS.Test.Function.StepDefinitions
                     _postRequest = new Fixture().Create<PostRequest>();
                     await _driver.SendRequestAsync<PostRequest, string>(_postRequest, TimeSpan.FromSeconds(1));
                     break;
+                case "PUT":
+                    _putRequest = new Fixture().Create<PutRequest>();
+                    await _driver.SendRequestAsync<PutRequest, string>(_putRequest, TimeSpan.FromSeconds(1));
+                    break;
+                case "PATCH":
+                    _patchRequest = new Fixture().Create<PatchRequest>();
+                    await _driver.SendRequestAsync<PatchRequest, string>(_patchRequest, TimeSpan.FromSeconds(1));
+                    break;
+                case "DELETE":
+                    _deleteRequest = new Fixture().Create<DeleteRequest>();
+                    await _driver.SendRequestAsync<DeleteRequest, string>(_deleteRequest, TimeSpan.FromSeconds(1));
+                    break;
                 default:
                     throw new InvalidOperationException($"{method} method is unsupported");
             }
@@ -92,6 +106,18 @@ namespace STrain.CQS.Test.Function.StepDefinitions
                 case "POST":
                     Assert.NotNull(_postRequest);
                     _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _postRequest.HeaderParameter, $"?query-parameter={_postRequest.QueryParameter}", $"{{\"{nameof(PostRequest.BodyParameter)}\":\"{_postRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    break;
+                case "PUT":
+                    Assert.NotNull(_putRequest);
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _putRequest.HeaderParameter, $"?query-parameter={_putRequest.QueryParameter}", $"{{\"{nameof(PutRequest.BodyParameter)}\":\"{_putRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    break;
+                case "PATCH":
+                    Assert.NotNull(_patchRequest);
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _patchRequest.HeaderParameter, $"?query-parameter={_patchRequest.QueryParameter}", $"{{\"{nameof(PatchRequest.BodyParameter)}\":\"{_patchRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    break;
+                case "DELETE":
+                    Assert.NotNull(_deleteRequest);
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _deleteRequest.HeaderParameter, $"?query-parameter={_deleteRequest.QueryParameter}", $"{{\"{nameof(DeleteRequest.BodyParameter)}\":\"{_deleteRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 default:
                     throw new InvalidOperationException($"{method} method is unsupported");
@@ -155,6 +181,69 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public string BodyParameter { get; }
 
         public PostRequest(string headerParameter, string queryParameter, string bodyParameter)
+        {
+            HeaderParameter = headerParameter;
+            QueryParameter = queryParameter;
+            BodyParameter = bodyParameter;
+        }
+    }
+
+    [Put("put-endpoint/{id}")]
+    internal record PutRequest : IRequest
+    {
+        public int Id => 3;
+
+        [HeaderParameter(Name = "header-parameter")]
+        public string HeaderParameter { get; }
+
+        [QueryParameter(Name = "query-parameter")]
+        public string QueryParameter { get; }
+        [BodyParameter]
+        public string BodyParameter { get; }
+
+        public PutRequest(string headerParameter, string queryParameter, string bodyParameter)
+        {
+            HeaderParameter = headerParameter;
+            QueryParameter = queryParameter;
+            BodyParameter = bodyParameter;
+        }
+    }
+
+    [Patch("patch-endpoint/{id}")]
+    internal record PatchRequest : IRequest
+    {
+        public int Id => 4;
+
+        [HeaderParameter(Name = "header-parameter")]
+        public string HeaderParameter { get; }
+
+        [QueryParameter(Name = "query-parameter")]
+        public string QueryParameter { get; }
+        [BodyParameter]
+        public string BodyParameter { get; }
+
+        public PatchRequest(string headerParameter, string queryParameter, string bodyParameter)
+        {
+            HeaderParameter = headerParameter;
+            QueryParameter = queryParameter;
+            BodyParameter = bodyParameter;
+        }
+    }
+
+    [Delete("delete-endpoint/{id}")]
+    internal record DeleteRequest : IRequest
+    {
+        public int Id => 5;
+
+        [HeaderParameter(Name = "header-parameter")]
+        public string HeaderParameter { get; }
+
+        [QueryParameter(Name = "query-parameter")]
+        public string QueryParameter { get; }
+        [BodyParameter]
+        public string BodyParameter { get; }
+
+        public DeleteRequest(string headerParameter, string queryParameter, string bodyParameter)
         {
             HeaderParameter = headerParameter;
             QueryParameter = queryParameter;
