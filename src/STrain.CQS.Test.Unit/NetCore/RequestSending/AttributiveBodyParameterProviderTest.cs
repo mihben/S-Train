@@ -31,7 +31,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 
             // Assert
             Assert.NotNull(message.Content);
-            Assert.Equal(request, await message.Content.ReadFromJsonAsync(request.GetType()));
+            Assert.Equal(request, await message.Content!.ReadFromJsonAsync(request.GetType()));
         }
 
         [Fact(DisplayName = "[UNIT][ABPP-001] - Convert Properties")]
@@ -47,7 +47,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 
             // Assert
             Assert.NotNull(message.Content);
-            Assert.Equal(JsonConvert.SerializeObject(new PropertyBodyRequest.Expected(request.BodyParameter)), await message.Content.ReadAsStringAsync());
+            Assert.Equal(JsonConvert.SerializeObject(new PropertyBodyRequest.Expected(request.BodyParameter)), await message.Content!.ReadAsStringAsync());
         }
     }
 

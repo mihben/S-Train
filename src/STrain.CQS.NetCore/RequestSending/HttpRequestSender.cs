@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using STrain.CQS.NetCore.RequestSending.Parsers;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.Senders;
-using System.Net.Http.Json;
 
 namespace STrain.CQS.NetCore.RequestSending
 {
@@ -48,7 +47,7 @@ namespace STrain.CQS.NetCore.RequestSending
             var response = await _httpClient.SendAsync(message, cancellationToken);
             if (response.Content.Headers.ContentLength == 0) return default;
             response.EnsureSuccessStatusCode();
-            return (T?)(await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType.MediaType])).ReadAsync<T>(response, cancellationToken));
+            return (T?)(await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType?.MediaType])).ReadAsync<T>(response, cancellationToken));
         }
     }
 }

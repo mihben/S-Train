@@ -58,6 +58,20 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             // Assert
             Assert.Throws<InvalidOperationException>(() => sut.GetPath(new Fixture().Create<InvalidExternalCommand>()));
         }
+
+        [Fact(DisplayName = "[UNIT][ABPP-004] - Path does not configured in configuration")]
+        public void AttributeBasedPathProvider_GetPath_PathDoesNotConfiguredInConfiguration()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            _optionsMock.Setup(o => o.Value)
+                .Returns(new HttpRequestSenderOptions());
+
+            // Act
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => sut.GetPath(new Fixture().Create<GenericCommand>()));
+        }
     }
 
     [Patch("test-path/{parameter}")]

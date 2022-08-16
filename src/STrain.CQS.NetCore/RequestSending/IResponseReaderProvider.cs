@@ -2,6 +2,6 @@
 {
     public interface IResponseReaderProvider
     {
-        Type this[string mediaType] { get; }
+        Type this[string? mediaType] { get; }
     }
 }
