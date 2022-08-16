@@ -6,10 +6,11 @@ using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Parsers;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.Senders;
-using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         public static void AddGenericRequestHandler(this IServiceCollection services, Action<GenericRequestHandlerOptions, IConfiguration> configure)
