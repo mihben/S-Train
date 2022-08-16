@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using STrain.CQS.Api;
 using STrain.CQS.Dispatchers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace STrain.CQS.MVC.GenericRequestHandling
 {
+    [ExcludeFromCodeCoverage]
     public class GenericRequestController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
