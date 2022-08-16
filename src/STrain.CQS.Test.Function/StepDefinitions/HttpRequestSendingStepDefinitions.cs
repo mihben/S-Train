@@ -18,14 +18,14 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         private readonly string _path = "api";
 
         private readonly WebApplicationFactory<Program> _driver;
-        private SampleCommand _command;
-        private SampleQuery _query;
+        private SampleCommand? _command;
+        private SampleQuery? _query;
 
-        private GetRequest _getRequest;
-        private PostRequest _postRequest;
-        private PutRequest _putRequest;
-        private PatchRequest _patchRequest;
-        private DeleteRequest _deleteRequest;
+        private GetRequest? _getRequest;
+        private PostRequest? _postRequest;
+        private PutRequest? _putRequest;
+        private PatchRequest? _patchRequest;
+        private DeleteRequest? _deleteRequest;
 
         public HttpRequestSendingStepDefinitions(ITestOutputHelper outputHelper)
         {
@@ -130,19 +130,20 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public static bool VerifyExternalRequest(this HttpRequestMessage message, string method, Uri uri, string header, string query, string body)
         {
             return message.Method.Method.Equals(method)
-                && message.RequestUri.AbsoluteUri.StartsWith(uri.AbsoluteUri)
+                && (message.RequestUri?.AbsoluteUri.StartsWith(uri.AbsoluteUri) ?? false)
                 && message.Headers.GetValues("header-parameter").Contains(header)
                 && message.RequestUri.Query.Equals(query)
-                && message.Content.ReadAsStringAsync().Result.Equals(body);
+                && (message.Content?.ReadAsStringAsync().Result.Equals(body) ?? false);
         }
 
         public static bool VerifyGenericRequest<TRequest>(this HttpRequestMessage message, string method, Uri uri, TRequest request)
             where TRequest : IRequest
         {
             return message.Method.Method.Equals(method)
-                && message.RequestUri.AbsoluteUri.Equals(uri.AbsoluteUri)
+                && (message.RequestUri?.AbsoluteUri.StartsWith(uri.AbsoluteUri) ?? false)
                 && message.Headers.GetValues("request-type").First().Equals($"{request.GetType().FullName}, {request.GetType().Assembly.GetName().Name}")
-                && JsonSerializer.Deserialize<TRequest>(message.Content.ReadAsStream(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }).Equals(request);
+                && message.Content is not null
+                && (JsonSerializer.Deserialize<TRequest>(message.Content.ReadAsStream(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true })?.Equals(request) ?? false);
         }
     }
 

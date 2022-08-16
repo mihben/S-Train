@@ -110,6 +110,6 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
         public override bool ValidateChildren { get; }
         public override IReadOnlyList<object> ValidatorMetadata { get; }
         public override Func<object, object> PropertyGetter { get; }
-        public override Action<object, object> PropertySetter { get; }
+        public override Action<object, object?> PropertySetter { get; }
     }
 }

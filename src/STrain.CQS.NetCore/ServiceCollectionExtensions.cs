@@ -36,7 +36,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .Validate(options => options.BaseAddress is not null, "Base address is required")
                 .PostConfigure(options =>
                 {
-                    if (!options.BaseAddress?.AbsoluteUri.EndsWith('/') ?? false) options.BaseAddress = new Uri(options.BaseAddress, "/");
+                    if (options.BaseAddress is not null
+                        && !options.BaseAddress.AbsoluteUri.EndsWith('/')) options.BaseAddress = new Uri(options.BaseAddress, "/");
                 })
                 .ValidateOnStart();
 

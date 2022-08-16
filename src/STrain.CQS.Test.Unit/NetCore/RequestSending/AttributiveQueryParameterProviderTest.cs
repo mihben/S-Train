@@ -23,7 +23,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             await sut.SetParametersAsync(message, command, default);
 
             // Assert
-            Assert.Equal($"?parameter={command.Parameter}", message.RequestUri.Query);
+            Assert.Equal($"?parameter={command.Parameter}", message.RequestUri?.Query);
         }
 
         [Fact(DisplayName = "[UNIT][ABQPP-002] - Add Property for Query Parameter")]
@@ -38,7 +38,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             await sut.SetParametersAsync(message, command, default);
 
             // Assert
-            Assert.Equal($"?parameter={command.Parameter}", message.RequestUri.Query);
+            Assert.Equal($"?parameter={command.Parameter}", message.RequestUri?.Query);
         }
 
         [Fact(DisplayName = "[UNIT][ABQPP-003] - Add Property for Query Parameter with Name")]
@@ -53,7 +53,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             await sut.SetParametersAsync(message, command, default);
 
             // Assert
-            Assert.Equal($"?overridedparameter={command.Parameter}", message.RequestUri.Query);
+            Assert.Equal($"?overridedparameter={command.Parameter}", message.RequestUri?.Query);
         }
 
         [Fact(DisplayName = "[UNIT][ABQPP-004] - Uri is null")]
@@ -81,7 +81,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             await sut.SetParametersAsync(message, command, default);
 
             // Assert
-            Assert.Empty(message.RequestUri.Query);
+            Assert.Empty(message.RequestUri?.Query);
         }
     }
 

@@ -6,7 +6,7 @@ namespace STrain.CQS.NetCore.RequestSending
     {
         private readonly IDictionary<string, Type> _registrations = new Dictionary<string, Type>();
 
-        public Type this[string mediaType]
+        public Type this[string? mediaType]
         {
             get
             {

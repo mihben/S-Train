@@ -18,7 +18,7 @@ namespace STrain.CQS.NetCore.RequestSending.Attributive
         {
             var type = typeof(TRequest);
             var attribute = type.GetRouteAttribute();
-            if (attribute is null) return _options.Value.Path;
+            if (attribute is null) return _options.Value.Path ?? throw new InvalidOperationException($"Path of the {request} request cannot be determined. It must be configured via request attribute or in the configuration");
             return attribute.Path.ReplaceParameters(request);
         }
     }
@@ -29,11 +29,11 @@ namespace STrain.CQS.NetCore.RequestSending.Attributive
         {
             var result = path;
             var type = typeof(TRequest);
-            foreach (Match match in new Regex("{[a-zA-Z0-9_]*}").Matches(path).Cast<Match>())
+            foreach (var parameter in new Regex("{[a-zA-Z0-9_]*}").Matches(path).Select(m => m.Value))
             {
-                var property = type.GetProperty(match.Value.Trim('{', '}'), Constants.HttpRequestSender.PropertyBindings | BindingFlags.IgnoreCase);
-                if (property is null) throw new InvalidOperationException($"{match.Value} not found in {type}");
-                result = result.Replace(match.Value, property.GetValue(request)?.ToString() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+                var property = type.GetProperty(parameter.Trim('{', '}'), Constants.HttpRequestSender.PropertyBindings | BindingFlags.IgnoreCase);
+                if (property is null) throw new InvalidOperationException($"{parameter} not found in {type}");
+                result = result.Replace(parameter, property.GetValue(request)?.ToString() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
             }
             return result;
         }

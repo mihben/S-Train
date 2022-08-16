@@ -4,6 +4,6 @@ namespace STrain.CQS.NetCore.RequestSending
 {
     public interface IResponseReaderRegister
     {
-        IResponseReaderRegister Registrate<TResponseReader>(string meditType) where TResponseReader : IResponseReader;
+        IResponseReaderRegister Registrate<TResponseReader>(string mediaType) where TResponseReader : IResponseReader;
     }
 }
