@@ -101,23 +101,23 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             {
                 case "GET":
                     Assert.NotNull(_getRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _getRequest.HeaderParameter, $"?query-parameter={_getRequest.QueryParameter}", $"{{\"{nameof(GetRequest.BodyParameter)}\":\"{_getRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _getRequest!.HeaderParameter, $"?query-parameter={_getRequest.QueryParameter}", $"{{\"{nameof(GetRequest.BodyParameter)}\":\"{_getRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 case "POST":
                     Assert.NotNull(_postRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _postRequest.HeaderParameter, $"?query-parameter={_postRequest.QueryParameter}", $"{{\"{nameof(PostRequest.BodyParameter)}\":\"{_postRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _postRequest!.HeaderParameter, $"?query-parameter={_postRequest.QueryParameter}", $"{{\"{nameof(PostRequest.BodyParameter)}\":\"{_postRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 case "PUT":
                     Assert.NotNull(_putRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _putRequest.HeaderParameter, $"?query-parameter={_putRequest.QueryParameter}", $"{{\"{nameof(PutRequest.BodyParameter)}\":\"{_putRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _putRequest!.HeaderParameter, $"?query-parameter={_putRequest.QueryParameter}", $"{{\"{nameof(PutRequest.BodyParameter)}\":\"{_putRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 case "PATCH":
                     Assert.NotNull(_patchRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _patchRequest.HeaderParameter, $"?query-parameter={_patchRequest.QueryParameter}", $"{{\"{nameof(PatchRequest.BodyParameter)}\":\"{_patchRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _patchRequest!.HeaderParameter, $"?query-parameter={_patchRequest.QueryParameter}", $"{{\"{nameof(PatchRequest.BodyParameter)}\":\"{_patchRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 case "DELETE":
                     Assert.NotNull(_deleteRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _deleteRequest.HeaderParameter, $"?query-parameter={_deleteRequest.QueryParameter}", $"{{\"{nameof(DeleteRequest.BodyParameter)}\":\"{_deleteRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _deleteRequest!.HeaderParameter, $"?query-parameter={_deleteRequest.QueryParameter}", $"{{\"{nameof(DeleteRequest.BodyParameter)}\":\"{_deleteRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 default:
                     throw new InvalidOperationException($"{method} method is unsupported");
