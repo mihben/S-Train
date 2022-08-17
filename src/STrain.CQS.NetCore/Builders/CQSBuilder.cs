@@ -34,10 +34,10 @@ namespace STrain.CQS.NetCore.Builders
             return this;
         }
 
-        public HttpRequestSenderBuilder AddHttpSender(Action<HttpRequestSenderOptions, IConfiguration> configure)
+        public RequestRouterBuilder AddRequestRouter(Func<IRequest, string> requestSenderKeyProvider)
         {
-            Builder.Services.AddHttpRequestSender(configure);
-            return new HttpRequestSenderBuilder(Builder).UseDefaults();
+            Builder.Services.AddRequestRouter(requestSenderKeyProvider);
+            return new RequestRouterBuilder(Builder);
         }
     }
 }

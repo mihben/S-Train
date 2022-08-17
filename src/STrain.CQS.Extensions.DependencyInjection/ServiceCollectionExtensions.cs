@@ -1,5 +1,7 @@
 ﻿using STrain;
+using STrain.CQS;
 using STrain.CQS.Dispatchers;
+using STrain.CQS.Senders;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -18,6 +20,12 @@ namespace Microsoft.Extensions.DependencyInjection
             where TImplementation : class, TPerformer
         {
             services.AddScoped<TPerformer, TImplementation>();
+        }
+
+        public static void AddRequestRouter(this IServiceCollection services, Func<IRequest, string> requestKeyProvider)
+        {
+            services.AddSingleton(requestKeyProvider);
+            services.AddScoped<IRequestSender, RequestRouter>();
         }
     }
 }
