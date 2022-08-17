@@ -1,4 +1,6 @@
-﻿namespace STrain.CQS.Senders
+﻿using STrain.CQS;
+
+namespace STrain
 {
     public interface IRequestSender
     {

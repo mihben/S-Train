@@ -5,17 +5,20 @@ using Moq.Protected;
 using STrain.CQS.Attributes.RequestSending.Http.Parameters;
 using STrain.CQS.Test.Function.Drivers;
 using STrain.Sample.Api;
+using System.IO;
 using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Function.StepDefinitions
 {
     [Binding]
-    internal class HttpRequestSendingStepDefinitions
+    internal class RequestSendingStepDefinitions
     {
         private readonly Mock<HttpMessageHandler> _messageHandlerMock = new();
-        private string _baseAddress = "http://test-service";
+
+        private string _externalBaseAddress = "http://test-service/";
         private readonly string _path = "api";
+        private string _genericBaseAddress = "http://strain-service/";
 
         private readonly WebApplicationFactory<Program> _driver;
         private SampleCommand? _command;
@@ -27,14 +30,15 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         private PatchRequest? _patchRequest;
         private DeleteRequest? _deleteRequest;
 
-        public HttpRequestSendingStepDefinitions(ITestOutputHelper outputHelper)
+        public RequestSendingStepDefinitions(ITestOutputHelper outputHelper)
         {
             _messageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
 
             _driver = new WebApplicationFactory<Program>()
                         .Initialize(outputHelper)
-                        .MockHttpSender(_messageHandlerMock.Object, _path, _baseAddress);
+                        .MockHttpSender(_messageHandlerMock.Object, _path, _externalBaseAddress)
+                        .MockHttpSender(_messageHandlerMock.Object, _path, _genericBaseAddress);
         }
 
 
@@ -82,6 +86,24 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             }
         }
 
+        [Given("Configured request sender to {string}")]
+        public void ConfigureRequestSender(string endpoint)
+        {
+            
+        }
+
+        [When("Sending generic request")]
+        public async Task SendingGenericRequestAsync()
+        {
+            await _driver.SendCommandAsync(new Fixture().Create<SampleCommand>(), TimeSpan.FromSeconds(5));
+        }
+
+        [When("Sending external request")]
+        public async Task SendingExternalRequestAsync()
+        {
+            await _driver.SendRequestAsync<ExternalSampleRequest, object>(new Fixture().Create<ExternalSampleRequest>(), TimeSpan.FromSeconds(5));
+        }
+
         [Then("Request should be sent")]
         public void ShouldSentRequest(Table dataTable)
         {
@@ -122,6 +144,13 @@ namespace STrain.CQS.Test.Function.StepDefinitions
                 default:
                     throw new InvalidOperationException($"{method} method is unsupported");
             }
+        }
+
+
+        [Then("Request should be sent to {string}")]
+        public void ShouldSentRequestTo(string endpoint)
+        {
+            _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.RequestUri.AbsoluteUri.StartsWith(endpoint)), ItExpr.IsAny<CancellationToken>());
         }
     }
 
