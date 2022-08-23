@@ -1,4 +1,5 @@
 ﻿using STrain.CQS.NetCore.Builders;
+using STrain.CQS.NetCore.LigtInject;
 using STrain.Sample.Backend.Performers;
 
 namespace STrain.Sample.Backend.Wireup
@@ -11,7 +12,17 @@ namespace STrain.Sample.Backend.Wireup
 
             builder.AddGenericRequestHandler("api");
 
-            builder.AddHttpSender((options, configuration) => configuration.Bind("Senders:Internal", options));
+            builder.AddRequestRouter(request =>
+                                                            {
+                                                                if (request.GetType().Name.StartsWith("External")) return "external";
+                                                                else return "internal";
+                                                            },
+                builder =>
+                        {
+                            builder.AddHttpSender("external", (options, configuration) => configuration.Bind("Senders:External", options)).UseDefaults();
+                            builder.AddHttpSender("internal", (options, configuraion) => configuraion.Bind("Senders:Internal", options)).UseDefaults();
+                        });
+
         }
     }
 }

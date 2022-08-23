@@ -33,11 +33,5 @@ namespace STrain.CQS.NetCore.Builders
             Builder.Services.AddGenericRequestHandler(configure);
             return this;
         }
-
-        public RequestRouterBuilder AddRequestRouter(Func<IRequest, string> requestSenderKeyProvider)
-        {
-            Builder.Services.AddRequestRouter(requestSenderKeyProvider);
-            return new RequestRouterBuilder(Builder);
-        }
     }
 }

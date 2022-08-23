@@ -60,15 +60,15 @@ Sending request to external service. Currently only HTTP is supported.
 
 		@issue-20
 		@api
-		Scenario: [API][RQS/SRH-001] - Send generic request
-			Given Configured request sender to 'http://strain-service/'
-			And Configured request sender to 'http://test-service/'
+		Scenario: [API][RQS/RRT-001] - Send generic request
+			Given Configured generic request sender to 'http://strain-service/'
+			And Configured external request sender to 'http://test-service/'
 			When Sending generic request
 			Then Request should be sent to 'http://strain-service/'
 
 		@issue-20
 		@api
-		Scenario: [API][RQS/SRH-002] - Send external request
+		Scenario: [API][RQS/RRT-002] - Send external request
 			Given Configured request sender to 'http://strain-service/'
 			And Configured request sender to 'http://test-service/'
 			When Sending external request

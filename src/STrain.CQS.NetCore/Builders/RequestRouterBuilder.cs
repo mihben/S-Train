@@ -13,11 +13,5 @@ namespace STrain.CQS.NetCore.Builders
         {
             Builder = builder;
         }
-
-        public HttpRequestSenderBuilder AddHttpSender(string key, Action<HttpRequestSenderOptions, IConfiguration> configure)
-        {
-            Builder.Services.AddHttpRequestSender(key, configure);
-            return new HttpRequestSenderBuilder(key, Builder).UseDefaults();
-        }
     }
 }

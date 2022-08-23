@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using STrain;
 using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.CQS.MVC.Options;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Parsers;
 using STrain.CQS.NetCore.RequestSending.Providers;
-using STrain.CQS.Senders;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -43,7 +41,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 })
                 .ValidateOnStart();
 
-            services.AddHttpClient<IRequestSender, HttpRequestSender>(key, (provider, client) =>
+            services.AddHttpClient(key, (provider, client) =>
             {
                 var options = provider.GetRequiredService<IOptionsSnapshot<HttpRequestSenderOptions>>();
                 client.BaseAddress = options.Get(key).BaseAddress;

@@ -5,7 +5,6 @@ using Moq.Protected;
 using STrain.CQS.Attributes.RequestSending.Http.Parameters;
 using STrain.CQS.Test.Function.Drivers;
 using STrain.Sample.Api;
-using System.IO;
 using System.Text.Json;
 using Xunit.Abstractions;
 
@@ -37,8 +36,8 @@ namespace STrain.CQS.Test.Function.StepDefinitions
 
             _driver = new WebApplicationFactory<Program>()
                         .Initialize(outputHelper)
-                        .MockHttpSender(_messageHandlerMock.Object, _path, _externalBaseAddress)
-                        .MockHttpSender(_messageHandlerMock.Object, _path, _genericBaseAddress);
+                        .MockHttpSender("external", _messageHandlerMock.Object, _path, _externalBaseAddress)
+                        .MockHttpSender("internal", _messageHandlerMock.Object, _path, _genericBaseAddress);
         }
 
 
@@ -86,10 +85,16 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             }
         }
 
-        [Given("Configured request sender to {string}")]
-        public void ConfigureRequestSender(string endpoint)
+        [Given("Configured generic request sender to {string}")]
+        public void ConfigureGenericRequestSender(string endpoint)
         {
-            
+            //_driver.MockHttpSender("internal", _messageHandlerMock.Object, "", endpoint);
+        }
+
+        [Given("Configured external request sender to {string}")]
+        public void ConfigureExternalRequestSender(string endpoint)
+        {
+            //_driver.MockHttpSender("external", _messageHandlerMock.Object, "", endpoint);
         }
 
         [When("Sending generic request")]

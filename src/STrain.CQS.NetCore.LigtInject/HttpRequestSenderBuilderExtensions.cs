@@ -1,27 +1,30 @@
-﻿using STrain.CQS.NetCore.Builders;
-using STrain.CQS.NetCore.RequestSending.Attributive;
-using STrain.CQS.NetCore.RequestSending.Providers.Attributive;
-using STrain.CQS.NetCore.RequestSending.Providers;
+﻿using LightInject;
+using Microsoft.Extensions.Options;
+using STrain.CQS.NetCore.Builders;
 using STrain.CQS.NetCore.RequestSending;
-using System.Runtime.CompilerServices;
-using LightInject;
-using Microsoft.Extensions.DependencyInjection;
+using STrain.CQS.NetCore.RequestSending.Attributive;
+using STrain.CQS.NetCore.RequestSending.Providers;
+using STrain.CQS.NetCore.RequestSending.Providers.Attributive;
 
 namespace STrain.CQS.NetCore.LigtInject
 {
     public static class HttpRequestSenderBuilderExtensions
     {
-        public HttpRequestSenderBuilder UseDefaults(this HttpRequestSenderBuilder builder)
+        public static HttpRequestSenderBuilder UseDefaults(this HttpRequestSenderBuilder builder)
         {
-            UseAttributivePathProvider();
-            UseAttributeMethodProvider();
-            UseAttributiveParameterProviders();
-            UseResponseReaders();
+            builder.UseAttributivePathProvider();
+            builder.UseAttributeMethodProvider();
+            builder.UseAttributiveParameterProviders();
+            builder.UseResponseReaders();
 
             return builder;
         }
 
-        public static HttpRequestSenderBuilder UseAttributivePathProvider(this HttpRequestSenderBuilder builder) => builder.UsePathProvider<AttributivePathProvider>();
+        public static HttpRequestSenderBuilder UseAttributivePathProvider(this HttpRequestSenderBuilder builder)
+        {
+            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IPathProvider>(factory => new AttributivePathProvider(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path), builder.Key));
+            return builder;
+        }
         public static HttpRequestSenderBuilder UsePathProvider<TPathProvider>(this HttpRequestSenderBuilder builder)
             where TPathProvider : class, IPathProvider
         {
@@ -45,9 +48,9 @@ namespace STrain.CQS.NetCore.LigtInject
         {
             builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) =>
             {
-                registry.RegisterTransient<IParameterProvider, THeaderParameterProvider>(builder.Key);
-                registry.RegisterTransient<IParameterProvider, TQueryParameterProvider>(builder.Key);
-                registry.RegisterTransient<IParameterProvider, TBodyParameterProvider>(builder.Key);
+                registry.RegisterTransient<IParameterProvider, THeaderParameterProvider>($"{builder.Key}.header");
+                registry.RegisterTransient<IParameterProvider, TQueryParameterProvider>($"{builder.Key}.query");
+                registry.RegisterTransient<IParameterProvider, TBodyParameterProvider>($"{builder.Key}.body");
             });
             return builder;
         }
@@ -55,11 +58,12 @@ namespace STrain.CQS.NetCore.LigtInject
         public static HttpRequestSenderBuilder UseResponseReaders(this HttpRequestSenderBuilder builder) => builder.UseResponseReaders(register => register.UseDefaults());
         public static HttpRequestSenderBuilder UseResponseReaders(this HttpRequestSenderBuilder builder, Action<ResponseReadersRegister> registrate)
         {
-            var registry = new ResponseReaderRegistry();
-            registrate(new ResponseReadersRegister(registry, builder.Builder));
+            var responseReaderRegistry = new ResponseReaderRegistry();
+            registrate(new ResponseReadersRegister(responseReaderRegistry, builder.Builder));
             builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) =>
             {
-                registry.RegisterInstance<ResponseReadersRegister>(registry, builder.Key);
+                registry.RegisterInstance(responseReaderRegistry, builder.Key);
+                registry.RegisterTransient<IResponseReaderProvider>(factory => factory.GetInstance<ResponseReaderRegistry>(builder.Key), builder.Key);
             });
             return builder;
         }
