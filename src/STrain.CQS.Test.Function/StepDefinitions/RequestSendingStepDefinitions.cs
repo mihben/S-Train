@@ -95,7 +95,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [Given("Configured external request sender to {string}")]
         public void ConfigureExternalRequestSender(string endpoint)
         {
-            //_driver.MockHttpSender("external", _messageHandlerMock.Object, "", endpoint);
+            
         }
 
         [When("Sending generic request")]
@@ -156,7 +156,8 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [Then("Request should be sent to {string}")]
         public void ShouldSentRequestTo(string endpoint)
         {
-            _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.RequestUri.AbsoluteUri.StartsWith(endpoint)), ItExpr.IsAny<CancellationToken>());
+            _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.RequestUri != null
+                                                                                                                                        && hrm.RequestUri.AbsoluteUri.StartsWith(endpoint)), ItExpr.IsAny<CancellationToken>());
         }
     }
 

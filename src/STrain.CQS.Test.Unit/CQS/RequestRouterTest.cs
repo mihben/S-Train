@@ -9,7 +9,6 @@ namespace STrain.CQS.Test.Unit.CQS
     public class RequestRouterTest
     {
         private readonly ILogger<RequestRouter> _logger;
-        private Mock<IServiceProvider> _serviceProviderMock;
 
         public RequestRouterTest(ITestOutputHelper outputHelper)
         {
@@ -43,18 +42,24 @@ namespace STrain.CQS.Test.Unit.CQS
         public async Task RequestRouter_SendAsync_RequestIsNull()
         {
             // Arrange
+#pragma warning disable CS8603 // Possible null reference return.
             var sut = CreateSUT(_ => null, (_) => null);
+#pragma warning restore CS8603 // Possible null reference return.
 
             // Act
             // Assert
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SendAsync<TestRequest, object>(null, default));
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact(DisplayName = "[UNIT][RQR-003] - Key not found")]
         public async Task RequestRouter_SendAsync_KeyNotFound()
         {
             // Arrange
+#pragma warning disable CS8603 // Possible null reference return.
             var sut = CreateSUT(_ => null, (_) => null);
+#pragma warning restore CS8603 // Possible null reference return.
 
             // Act
             // Assert
@@ -66,7 +71,9 @@ namespace STrain.CQS.Test.Unit.CQS
         {
             // Arrange
             var key = new Fixture().Create<string>();
+#pragma warning disable CS8603 // Possible null reference return.
             var sut = CreateSUT(_ => null, (_) => key);
+#pragma warning restore CS8603 // Possible null reference return.
 
             // Act
             // Assert
