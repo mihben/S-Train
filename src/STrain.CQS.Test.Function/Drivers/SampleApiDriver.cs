@@ -1,4 +1,5 @@
 ﻿using LightInject;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +16,11 @@ namespace STrain.CQS.Test.Function.Drivers
     {
         public static WebApplicationFactory<Program> Initialize(this WebApplicationFactory<Program> driver, ITestOutputHelper outputHelper)
         {
-            return driver;
+            return driver
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.ConfigureLogging(builder => builder.AddXUnit(outputHelper));
+                });
         }
 
         public static WebApplicationFactory<Program> MockHttpSender(this WebApplicationFactory<Program> driver, string key, HttpMessageHandler messageHandler, string path, string baseAddress)
@@ -106,6 +111,13 @@ namespace STrain.CQS.Test.Function.Drivers
             content.Headers.Add("Request-Type", $"{request.GetType().FullName}, {request.GetType().Assembly.GetName().FullName}");
 
             return content;
+        }
+
+        public static async Task<HttpResponseMessage> SendAsync(this WebApplicationFactory<Program> driver, string endpoint, TimeSpan timeout)
+        {
+            var client = driver.CreateClient();
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            return await client.GetAsync(endpoint, cancellationTokenSource.Token);
         }
     }
 }

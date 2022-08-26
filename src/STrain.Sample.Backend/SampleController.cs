@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using STrain.Sample.Api;
 
 namespace STrain.Sample.Backend
@@ -31,6 +32,13 @@ namespace STrain.Sample.Backend
         public async Task<ActionResult<string>> GetAsync([FromQuery]string criteria, CancellationToken cancellationToken)
         {
             return Ok(await _sender.SendAsync<ExternalSampleRequest, string>(new ExternalSampleRequest(criteria), cancellationToken));
+        }
+
+        [Authorize]
+        [HttpGet("authorized-endpoint")]
+        public Task<IActionResult> AuthorizeAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult((IActionResult)Ok());
         }
     }
 }
