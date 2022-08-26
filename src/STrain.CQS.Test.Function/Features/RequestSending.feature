@@ -58,7 +58,6 @@ Sending request to external service. Currently only HTTP is supported.
 
 		Can be configured multiple request sender. In this case the request router is determine the right request sender according to the request.
 
-		@blocked
 		@issue-20
 		@api
 		Scenario: [API][RQS/RRT-001] - Send generic request
@@ -67,7 +66,6 @@ Sending request to external service. Currently only HTTP is supported.
 			When Sending generic request
 			Then Request should be sent to 'http://strain-service/'
 
-		@blocked
 		@issue-20
 		@api
 		Scenario: [API][RQS/RRT-002] - Send external request
