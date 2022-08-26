@@ -7,18 +7,18 @@ namespace STrain.CQS.NetCore.RequestSending.Attributive
 {
     public class AttributivePathProvider : IPathProvider
     {
-        private readonly IOptions<HttpRequestSenderOptions> _options;
+        private readonly string? _path;
 
-        public AttributivePathProvider(IOptions<HttpRequestSenderOptions> options)
+        public AttributivePathProvider(string? path)
         {
-            _options = options;
+            _path = path;
         }
 
         public string GetPath<TRequest>(TRequest request) where TRequest : IRequest
         {
             var type = typeof(TRequest);
             var attribute = type.GetRouteAttribute();
-            if (attribute is null) return _options.Value.Path ?? throw new InvalidOperationException($"Path of the {request} request cannot be determined. It must be configured via request attribute or in the configuration");
+            if (attribute is null) return _path ?? throw new InvalidOperationException($"Path of the {request} request cannot be determined. It must be configured via request attribute or in the configuration");
             return attribute.Path.ReplaceParameters(request);
         }
     }

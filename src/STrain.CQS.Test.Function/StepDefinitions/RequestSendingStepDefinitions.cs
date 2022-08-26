@@ -4,6 +4,7 @@ using Moq;
 using Moq.Protected;
 using STrain.CQS.Attributes.RequestSending.Http.Parameters;
 using STrain.CQS.Test.Function.Drivers;
+using STrain.CQS.Test.Function.Workarounds;
 using STrain.Sample.Api;
 using System.Text.Json;
 using Xunit.Abstractions;
@@ -11,30 +12,33 @@ using Xunit.Abstractions;
 namespace STrain.CQS.Test.Function.StepDefinitions
 {
     [Binding]
-    internal class HttpRequestSendingStepDefinitions
+    internal class RequestSendingStepDefinitions
     {
         private readonly Mock<HttpMessageHandler> _messageHandlerMock = new();
-        private string _baseAddress = "http://test-service";
+
+        private string _externalBaseAddress = "http://test-service/";
         private readonly string _path = "api";
+        private string _genericBaseAddress = "http://strain-service/";
 
         private readonly WebApplicationFactory<Program> _driver;
         private SampleCommand? _command;
         private SampleQuery? _query;
 
-        private GetRequest? _getRequest;
-        private PostRequest? _postRequest;
-        private PutRequest? _putRequest;
-        private PatchRequest? _patchRequest;
-        private DeleteRequest? _deleteRequest;
+        private ExternalGetRequest? _getRequest;
+        private ExternalPostRequest? _postRequest;
+        private ExternalPutRequest? _putRequest;
+        private ExternalPatchRequest? _patchRequest;
+        private ExternalDeleteRequest? _deleteRequest;
 
-        public HttpRequestSendingStepDefinitions(ITestOutputHelper outputHelper)
+        public RequestSendingStepDefinitions(ITestOutputHelper outputHelper)
         {
             _messageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
 
-            _driver = new WebApplicationFactory<Program>()
+            _driver = new LightinjectWebApplicationFactory<Program>()
                         .Initialize(outputHelper)
-                        .MockHttpSender(_messageHandlerMock.Object, _path, _baseAddress);
+                        .MockHttpSender("external", _messageHandlerMock.Object, _path, _externalBaseAddress)
+                        .MockHttpSender("internal", _messageHandlerMock.Object, _path, _genericBaseAddress);
         }
 
 
@@ -58,28 +62,52 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             switch (method)
             {
                 case "GET":
-                    _getRequest = new Fixture().Create<GetRequest>();
-                    await _driver.SendRequestAsync<GetRequest, string>(_getRequest, TimeSpan.FromSeconds(1));
+                    _getRequest = new Fixture().Create<ExternalGetRequest>();
+                    await _driver.SendRequestAsync<ExternalGetRequest, string>(_getRequest, TimeSpan.FromSeconds(1));
                     break;
                 case "POST":
-                    _postRequest = new Fixture().Create<PostRequest>();
-                    await _driver.SendRequestAsync<PostRequest, string>(_postRequest, TimeSpan.FromSeconds(1));
+                    _postRequest = new Fixture().Create<ExternalPostRequest>();
+                    await _driver.SendRequestAsync<ExternalPostRequest, string>(_postRequest, TimeSpan.FromSeconds(1));
                     break;
                 case "PUT":
-                    _putRequest = new Fixture().Create<PutRequest>();
-                    await _driver.SendRequestAsync<PutRequest, string>(_putRequest, TimeSpan.FromSeconds(1));
+                    _putRequest = new Fixture().Create<ExternalPutRequest>();
+                    await _driver.SendRequestAsync<ExternalPutRequest, string>(_putRequest, TimeSpan.FromSeconds(1));
                     break;
                 case "PATCH":
-                    _patchRequest = new Fixture().Create<PatchRequest>();
-                    await _driver.SendRequestAsync<PatchRequest, string>(_patchRequest, TimeSpan.FromSeconds(1));
+                    _patchRequest = new Fixture().Create<ExternalPatchRequest>();
+                    await _driver.SendRequestAsync<ExternalPatchRequest, string>(_patchRequest, TimeSpan.FromSeconds(1));
                     break;
                 case "DELETE":
-                    _deleteRequest = new Fixture().Create<DeleteRequest>();
-                    await _driver.SendRequestAsync<DeleteRequest, string>(_deleteRequest, TimeSpan.FromSeconds(1));
+                    _deleteRequest = new Fixture().Create<ExternalDeleteRequest>();
+                    await _driver.SendRequestAsync<ExternalDeleteRequest, string>(_deleteRequest, TimeSpan.FromSeconds(1));
                     break;
                 default:
                     throw new InvalidOperationException($"{method} method is unsupported");
             }
+        }
+
+        [Given("Configured generic request sender to {string}")]
+        public void ConfigureGenericRequestSender(string endpoint)
+        {
+            _driver.MockHttpSender("internal", _messageHandlerMock.Object, "", endpoint);
+        }
+
+        [Given("Configured external request sender to {string}")]
+        public void ConfigureExternalRequestSender(string endpoint)
+        {
+            
+        }
+
+        [When("Sending generic request")]
+        public async Task SendingGenericRequestAsync()
+        {
+            await _driver.SendCommandAsync(new Fixture().Create<SampleCommand>(), TimeSpan.FromSeconds(5));
+        }
+
+        [When("Sending external request")]
+        public async Task SendingExternalRequestAsync()
+        {
+            await _driver.SendRequestAsync<ExternalSampleRequest, object>(new Fixture().Create<ExternalSampleRequest>(), TimeSpan.FromSeconds(5));
         }
 
         [Then("Request should be sent")]
@@ -101,27 +129,35 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             {
                 case "GET":
                     Assert.NotNull(_getRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _getRequest!.HeaderParameter, $"?query-parameter={_getRequest.QueryParameter}", $"{{\"{nameof(GetRequest.BodyParameter)}\":\"{_getRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _getRequest!.HeaderParameter, $"?query-parameter={_getRequest.QueryParameter}", $"{{\"{nameof(ExternalGetRequest.BodyParameter)}\":\"{_getRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 case "POST":
                     Assert.NotNull(_postRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _postRequest!.HeaderParameter, $"?query-parameter={_postRequest.QueryParameter}", $"{{\"{nameof(PostRequest.BodyParameter)}\":\"{_postRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _postRequest!.HeaderParameter, $"?query-parameter={_postRequest.QueryParameter}", $"{{\"{nameof(ExternalPostRequest.BodyParameter)}\":\"{_postRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 case "PUT":
                     Assert.NotNull(_putRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _putRequest!.HeaderParameter, $"?query-parameter={_putRequest.QueryParameter}", $"{{\"{nameof(PutRequest.BodyParameter)}\":\"{_putRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _putRequest!.HeaderParameter, $"?query-parameter={_putRequest.QueryParameter}", $"{{\"{nameof(ExternalPutRequest.BodyParameter)}\":\"{_putRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 case "PATCH":
                     Assert.NotNull(_patchRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _patchRequest!.HeaderParameter, $"?query-parameter={_patchRequest.QueryParameter}", $"{{\"{nameof(PatchRequest.BodyParameter)}\":\"{_patchRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _patchRequest!.HeaderParameter, $"?query-parameter={_patchRequest.QueryParameter}", $"{{\"{nameof(ExternalPatchRequest.BodyParameter)}\":\"{_patchRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 case "DELETE":
                     Assert.NotNull(_deleteRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _deleteRequest!.HeaderParameter, $"?query-parameter={_deleteRequest.QueryParameter}", $"{{\"{nameof(DeleteRequest.BodyParameter)}\":\"{_deleteRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
+                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _deleteRequest!.HeaderParameter, $"?query-parameter={_deleteRequest.QueryParameter}", $"{{\"{nameof(ExternalDeleteRequest.BodyParameter)}\":\"{_deleteRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
                     break;
                 default:
                     throw new InvalidOperationException($"{method} method is unsupported");
             }
+        }
+
+
+        [Then("Request should be sent to {string}")]
+        public void ShouldSentRequestTo(string endpoint)
+        {
+            _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.RequestUri != null
+                                                                                                                                        && hrm.RequestUri.AbsoluteUri.StartsWith(endpoint)), ItExpr.IsAny<CancellationToken>());
         }
     }
 
@@ -148,7 +184,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
     }
 
     [Get("get-endpoint/{id}")]
-    internal record GetRequest : IRequest
+    internal record ExternalGetRequest : IRequest
     {
         public int Id => 1;
 
@@ -160,7 +196,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [BodyParameter]
         public string BodyParameter { get; }
 
-        public GetRequest(string headerParameter, string queryParameter, string bodyParameter)
+        public ExternalGetRequest(string headerParameter, string queryParameter, string bodyParameter)
         {
             HeaderParameter = headerParameter;
             QueryParameter = queryParameter;
@@ -169,7 +205,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
     }
 
     [Post("post-endpoint/{id}")]
-    internal record PostRequest : IRequest
+    internal record ExternalPostRequest : IRequest
     {
         public int Id => 2;
 
@@ -181,7 +217,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [BodyParameter]
         public string BodyParameter { get; }
 
-        public PostRequest(string headerParameter, string queryParameter, string bodyParameter)
+        public ExternalPostRequest(string headerParameter, string queryParameter, string bodyParameter)
         {
             HeaderParameter = headerParameter;
             QueryParameter = queryParameter;
@@ -190,7 +226,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
     }
 
     [Put("put-endpoint/{id}")]
-    internal record PutRequest : IRequest
+    internal record ExternalPutRequest : IRequest
     {
         public int Id => 3;
 
@@ -202,7 +238,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [BodyParameter]
         public string BodyParameter { get; }
 
-        public PutRequest(string headerParameter, string queryParameter, string bodyParameter)
+        public ExternalPutRequest(string headerParameter, string queryParameter, string bodyParameter)
         {
             HeaderParameter = headerParameter;
             QueryParameter = queryParameter;
@@ -211,7 +247,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
     }
 
     [Patch("patch-endpoint/{id}")]
-    internal record PatchRequest : IRequest
+    internal record ExternalPatchRequest : IRequest
     {
         public int Id => 4;
 
@@ -223,7 +259,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [BodyParameter]
         public string BodyParameter { get; }
 
-        public PatchRequest(string headerParameter, string queryParameter, string bodyParameter)
+        public ExternalPatchRequest(string headerParameter, string queryParameter, string bodyParameter)
         {
             HeaderParameter = headerParameter;
             QueryParameter = queryParameter;
@@ -232,7 +268,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
     }
 
     [Delete("delete-endpoint/{id}")]
-    internal record DeleteRequest : IRequest
+    internal record ExternalDeleteRequest : IRequest
     {
         public int Id => 5;
 
@@ -244,7 +280,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [BodyParameter]
         public string BodyParameter { get; }
 
-        public DeleteRequest(string headerParameter, string queryParameter, string bodyParameter)
+        public ExternalDeleteRequest(string headerParameter, string queryParameter, string bodyParameter)
         {
             HeaderParameter = headerParameter;
             QueryParameter = queryParameter;

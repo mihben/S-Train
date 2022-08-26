@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using LightInject;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using STrain.CQS.Api;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Providers;
-using STrain.CQS.Senders;
 using System.Net.Http.Json;
 using Xunit.Abstractions;
 
@@ -19,7 +18,7 @@ namespace STrain.CQS.Test.Function.Drivers
             return driver;
         }
 
-        public static WebApplicationFactory<Program> MockHttpSender(this WebApplicationFactory<Program> driver, HttpMessageHandler messageHandler, string path, string baseAddress)
+        public static WebApplicationFactory<Program> MockHttpSender(this WebApplicationFactory<Program> driver, string key, HttpMessageHandler messageHandler, string path, string baseAddress)
         {
             return driver.WithWebHostBuilder(builder =>
              {
@@ -27,16 +26,31 @@ namespace STrain.CQS.Test.Function.Drivers
                  {
                      ["Senders:Internal:Path"] = path
                  }));
-                 builder.ConfigureTestServices(services =>
+                 builder.ConfigureTestContainer<IServiceContainer>(registry =>
                  {
-                     services.AddSingleton<IRequestSender>(provider =>
+                     var httpClient = new HttpClient(messageHandler)
                      {
-                         var httpClient = new HttpClient(messageHandler)
-                         {
-                             BaseAddress = new Uri(baseAddress)
-                         };
+                         BaseAddress = new Uri(baseAddress)
+                     };
+                     registry.Override(registration => registration.ServiceName.Equals(key), (factory, registration) =>
+                     {
+                         registration.Lifetime = new PerContainerLifetime();
 
-                         return new HttpRequestSender(httpClient, provider, provider.GetRequiredService<IPathProvider>(), provider.GetRequiredService<IMethodProvider>(), provider.GetServices<IParameterProvider>(),provider.GetRequiredService<IResponseReaderProvider>(), provider.GetRequiredService<ILogger<HttpRequestSender>>());
+                         using (var scope = factory.BeginScope())
+                         {
+                             var pathProvider = scope.GetInstance<IPathProvider>(key);
+                             var methodProvider = scope.GetInstance<IMethodProvider>(key);
+                             var parameterProviders = new List<IParameterProvider>
+                             {
+                                 scope.GetInstance<IParameterProvider>($"{key}.header"),
+                                 scope.GetInstance<IParameterProvider>($"{key}.query"),
+                                 scope.GetInstance<IParameterProvider>($"{key}.body")
+                             };
+                             var responseReaderProvider = scope.GetInstance<IResponseReaderProvider>(key);
+                             registration.Value = new HttpRequestSender(httpClient, scope.GetInstance<IServiceProvider>(), pathProvider, methodProvider, parameterProviders, responseReaderProvider, scope.GetInstance<ILogger<HttpRequestSender>>());
+                         }
+
+                         return registration;
                      });
                  });
              });

@@ -33,11 +33,5 @@ namespace STrain.CQS.NetCore.Builders
             Builder.Services.AddGenericRequestHandler(configure);
             return this;
         }
-
-        public HttpRequestSenderBuilder AddHttpSender(Action<HttpRequestSenderOptions, IConfiguration> configure)
-        {
-            Builder.Services.AddHttpRequestSender(configure);
-            return new HttpRequestSenderBuilder(Builder).UseDefaults();
-        }
     }
 }

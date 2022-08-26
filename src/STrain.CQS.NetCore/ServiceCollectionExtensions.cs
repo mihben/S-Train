@@ -5,7 +5,6 @@ using STrain.CQS.MVC.Options;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Parsers;
 using STrain.CQS.NetCore.RequestSending.Providers;
-using STrain.CQS.Senders;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -30,9 +29,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddControllers(options => options.ModelBinderProviders.Insert(0, new RequestModelBinderProvider()));
         }
 
-        public static void AddHttpRequestSender(this IServiceCollection services, Action<HttpRequestSenderOptions, IConfiguration> configure)
+        public static void AddHttpRequestSender(this IServiceCollection services, string key, Action<HttpRequestSenderOptions, IConfiguration> configure)
         {
-            services.AddOptions<HttpRequestSenderOptions>()
+            services.AddOptions<HttpRequestSenderOptions>(key)
                 .Configure(configure)
                 .Validate(options => options.BaseAddress is not null, "Base address is required")
                 .PostConfigure(options =>
@@ -42,10 +41,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 })
                 .ValidateOnStart();
 
-            services.AddHttpClient<IRequestSender, HttpRequestSender>((provider, client) =>
+            services.AddHttpClient(key, (provider, client) =>
             {
-                var options = provider.GetRequiredService<IOptions<HttpRequestSenderOptions>>();
-                client.BaseAddress = options.Value.BaseAddress;
+                var options = provider.GetRequiredService<IOptionsSnapshot<HttpRequestSenderOptions>>();
+                client.BaseAddress = options.Get(key).BaseAddress;
             });
         }
 
