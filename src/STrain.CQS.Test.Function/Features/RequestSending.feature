@@ -27,8 +27,8 @@ Sending request to external service. Currently only HTTP is supported.
 		Scenario: [API][RQS/SRH-001] - Send generic command
 			When Sending command to STrain service
 			Then Request should be sent
-				| BaseAddress          | Path | Method |
-				| http://test-service/ | api  | POST   |
+				| BaseAddress            | Path | Method |
+				| http://strain-service/ | api  | POST   |
 
 		@issue-17
 		@api	
@@ -36,7 +36,7 @@ Sending request to external service. Currently only HTTP is supported.
 			When Sending query to STrain service
 			Then Request should be sent
 				| BaseAddress          | Path | Method |
-				| http://test-service/ | api  | GET    |
+				| http://strain-service/ | api  | GET    |
 
 		@issue-17
 		@api
@@ -71,7 +71,7 @@ Sending request to external service. Currently only HTTP is supported.
 		@issue-20
 		@api
 		Scenario: [API][RQS/RRT-002] - Send external request
-			Given Configured request sender to 'http://strain-service/'
-			And Configured request sender to 'http://test-service/'
+			Given Configured generic request sender to 'http://strain-service/'
+			And Configured external request sender to 'http://test-service/'
 			When Sending external request
 			Then Request should be sent to 'http://test-service/'

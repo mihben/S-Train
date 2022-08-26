@@ -36,7 +36,7 @@ namespace STrain.CQS.NetCore.LigtInject
         public static HttpRequestSenderBuilder UseMethodProvider<TMethodProvider>(this HttpRequestSenderBuilder builder)
             where TMethodProvider : class, IMethodProvider
         {
-            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterScoped<IMethodProvider, TMethodProvider>(builder.Key));
+            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IMethodProvider, TMethodProvider>(builder.Key));
             return builder;
         }
 

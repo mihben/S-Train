@@ -26,7 +26,7 @@ namespace STrain.CQS.Test.Function.Drivers
                  {
                      ["Senders:Internal:Path"] = path
                  }));
-                 builder.ConfigureTestContainer<IServiceRegistry>(registry =>
+                 builder.ConfigureTestContainer<IServiceContainer>(registry =>
                  {
                      var httpClient = new HttpClient(messageHandler)
                      {
@@ -35,16 +35,20 @@ namespace STrain.CQS.Test.Function.Drivers
                      registry.Override(registration => registration.ServiceName.Equals(key), (factory, registration) =>
                      {
                          registration.Lifetime = new PerContainerLifetime();
-                         var pathProvider = factory.GetInstance<IPathProvider>(key);
-                         var methodProvider = factory.GetInstance<IMethodProvider>(key);
-                         var parameterProviders = new List<IParameterProvider>
+
+                         using (var scope = factory.BeginScope())
                          {
-                             factory.GetInstance<IParameterProvider>($"{key}.header"),
-                             factory.GetInstance<IParameterProvider>($"{key}.query"),
-                             factory.GetInstance<IParameterProvider>($"{key}.body")
-                         };
-                         var responseReaderProvider = factory.GetInstance<IResponseReaderProvider>(key);
-                         registration.Value = new HttpRequestSender(httpClient, factory.GetInstance<IServiceProvider>(), pathProvider, methodProvider, parameterProviders, responseReaderProvider, factory.GetInstance<ILogger<HttpRequestSender>>());
+                             var pathProvider = scope.GetInstance<IPathProvider>(key);
+                             var methodProvider = scope.GetInstance<IMethodProvider>(key);
+                             var parameterProviders = new List<IParameterProvider>
+                             {
+                                 scope.GetInstance<IParameterProvider>($"{key}.header"),
+                                 scope.GetInstance<IParameterProvider>($"{key}.query"),
+                                 scope.GetInstance<IParameterProvider>($"{key}.body")
+                             };
+                             var responseReaderProvider = scope.GetInstance<IResponseReaderProvider>(key);
+                             registration.Value = new HttpRequestSender(httpClient, scope.GetInstance<IServiceProvider>(), pathProvider, methodProvider, parameterProviders, responseReaderProvider, scope.GetInstance<ILogger<HttpRequestSender>>());
+                         }
 
                          return registration;
                      });

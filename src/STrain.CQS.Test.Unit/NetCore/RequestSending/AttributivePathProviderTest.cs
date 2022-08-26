@@ -8,13 +8,9 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
     public class AttributivePathProviderTest
     {
-        private Mock<IOptions<HttpRequestSenderOptions>> _optionsMock = null!;
-
-        private AttributivePathProvider CreateSUT()
+        private AttributivePathProvider CreateSUT(string? path = null)
         {
-            _optionsMock = new Mock<IOptions<HttpRequestSenderOptions>>();
-
-            return new AttributivePathProvider(_optionsMock.Object);
+            return new AttributivePathProvider(path);
         }
 
         [Fact(DisplayName = "[UNIT][ABPP-001] - Get Path from Attribute")]
@@ -35,17 +31,14 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
         public void AttributeBasedPathProvider_GetPath_GetGenericHandlerPath()
         {
             // Arrange
-            var sut = CreateSUT();
-            var options = new Fixture().Create<HttpRequestSenderOptions>();
-
-            _optionsMock.Setup(o => o.Value)
-                .Returns(options);
+            var path = new Fixture().Create<string>();
+            var sut = CreateSUT(path);
 
             // Act
             var result = sut.GetPath(new GenericCommand());
 
             // Assert
-            Assert.Equal(options.Path, result);
+            Assert.Equal(path, result);
         }
 
         [Fact(DisplayName = "[UNIT][ABPP-003] - Wrong Parameter Reference")]
@@ -64,9 +57,6 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
         {
             // Arrange
             var sut = CreateSUT();
-
-            _optionsMock.Setup(o => o.Value)
-                .Returns(new HttpRequestSenderOptions());
 
             // Act
             // Assert
