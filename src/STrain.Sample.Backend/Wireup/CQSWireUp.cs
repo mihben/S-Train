@@ -1,5 +1,6 @@
 ﻿using STrain.CQS.NetCore.Builders;
 using STrain.CQS.NetCore.LigtInject;
+using STrain.Sample.Api;
 using STrain.Sample.Backend.Performers;
 
 namespace STrain.Sample.Backend.Wireup
@@ -9,6 +10,9 @@ namespace STrain.Sample.Backend.Wireup
         public static void Build(CQSBuilder builder)
         {
             builder.AddPerformerFrom<SampleCommandPerformer>();
+
+            builder.AddRequestValidator()
+                .UseFluentRequestValidator(builder => builder.RegistrateFrom<SampleCommandValidator>());
 
             builder.AddGenericRequestHandler("api");
 

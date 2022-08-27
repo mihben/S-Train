@@ -2,6 +2,7 @@
 using STrain.CQS;
 using STrain.CQS.Dispatchers;
 using STrain.CQS.Senders;
+using STrain.CQS.Validations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -26,6 +27,12 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddSingleton(requestKeyProvider);
             services.AddScoped<IRequestSender, RequestRouter>();
+        }
+
+        public static void AddRequestValidator<TValidator>(this IServiceCollection services)
+            where TValidator : class, IRequestValidator
+        {
+            services.AddTransient<IRequestValidator, TValidator>();
         }
     }
 }

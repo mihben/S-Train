@@ -1,5 +1,7 @@
 ﻿using LightInject;
+using STrain.CQS.Dispatchers;
 using STrain.CQS.Senders;
+using STrain.CQS.Validations;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -26,6 +28,13 @@ namespace STrain.CQS.NetCore.Builders
                 registry.RegisterInstance(requestSenderKeyProvider);
                 registry.RegisterTransient<IRequestSender, RequestRouter>();
             });
+        }
+
+        public static RequestValidatorBuilder AddRequestValidator(this CQSBuilder builder)
+        {
+            builder.Builder.Host.ConfigureContainer<IServiceContainer>( (_, container) => container.Decorate<ICommandDispatcher, CommandValidator>());
+
+            return new RequestValidatorBuilder(builder.Builder);
         }
     }
 }
