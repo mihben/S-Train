@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.Api\STrain.CQS.Api.csproj" />
     <ProjectReference Include="..\STrain.CQS.Attributes\STrain.CQS.Attributes.csproj" />
   </ItemGroup>

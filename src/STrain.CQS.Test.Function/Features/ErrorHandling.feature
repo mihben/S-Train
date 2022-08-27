@@ -56,8 +56,8 @@ S-Train provides default error handling.
 	Scenario: [API][ERH/ERR-006] - Validation error
 		When Calling '/api/Sample/invalid-request' endpoint
 		Then Error response should be
-			| Code | ContentType              | Type                  | Title            | Status | Detail                               | Instance                    | Errors.Property | Errors.Message        |
-			| 400  | application/problem+json | /errors/invalid-value | Invalid Request. | 400    | Invalid request. See the the errors. | /api/Sample/invalid-request | Value           | Value cannot be empty. |
+			| Code | ContentType              | Type                    | Title            | Status | Detail                           | Instance                    | Errors.Property | Errors.Message                 |
+			| 400  | application/problem+json | /errors/invalid-request | Invalid request. | 400    | Invalid request. See the errors. | /api/Sample/invalid-request | Parameter       | 'Parameter' must not be empty. |
 				
 	@issue-23
 	@api

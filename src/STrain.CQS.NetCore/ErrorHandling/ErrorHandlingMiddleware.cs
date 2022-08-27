@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using STrain.Core.Enumerations;
 using STrain.Core.Exceptions;
 
 namespace STrain.CQS.NetCore.ErrorHandling
@@ -49,6 +48,11 @@ namespace STrain.CQS.NetCore.ErrorHandling
                 _logger.LogError(exception, "Verification error");
                 await context.Response.WriteAsProblemAsync(exception, context.Request.Path, context.RequestAborted);
             }
+            catch (ValidationException exception)
+            {
+                _logger.LogError(exception, "Invalid request");
+                await context.Response.WriteAsProblemAsync(exception, context.Request.Path, context.RequestAborted);
+            }
             catch (Exception exception)
             {
                 _logger.LogError(exception, "Internal server error");
@@ -59,6 +63,20 @@ namespace STrain.CQS.NetCore.ErrorHandling
 
     internal static class ErrorHandlingMiddlewareExtensions
     {
+        public static async Task WriteAsProblemAsync(this HttpResponse response, ValidationException exception, string instance, CancellationToken cancellationToken)
+        {
+            var problem = new ProblemDetails
+            {
+                Type = exception.Type,
+                Title = exception.Title,
+                Detail = exception.Detail,
+                Instance = instance,
+                Status = StatusCodes.Status400BadRequest
+            };
+            problem.Extensions.Add("Errors", exception.Errors.Select(e => new { Property = e.Key, Message = e.Value }));
+            await response.WriteAsProblemAsync(problem, StatusCodes.Status400BadRequest, cancellationToken);
+        }
+
         public static async Task WriteAsProblemAsync(this HttpResponse response, VerificationException exception, string instance, CancellationToken cancellationToken)
         {
             await response.WriteAsProblemAsync(new ProblemDetails

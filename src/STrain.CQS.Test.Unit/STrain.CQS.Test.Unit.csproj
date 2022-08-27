@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
+    <PackageReference Include="FluentValidation" Version="11.2.0" />
     <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
