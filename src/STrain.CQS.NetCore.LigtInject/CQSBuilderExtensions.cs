@@ -32,7 +32,11 @@ namespace STrain.CQS.NetCore.Builders
 
         public static RequestValidatorBuilder AddRequestValidator(this CQSBuilder builder)
         {
-            builder.Builder.Host.ConfigureContainer<IServiceContainer>( (_, container) => container.Decorate<ICommandDispatcher, CommandValidator>());
+            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) =>
+            {
+                container.Decorate<ICommandDispatcher, CommandValidator>();
+                container.Decorate<IQueryDispatcher, QueryValidator>();
+            });
 
             return new RequestValidatorBuilder(builder.Builder);
         }
