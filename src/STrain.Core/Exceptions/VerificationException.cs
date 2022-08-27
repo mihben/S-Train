@@ -1,13 +1,10 @@
-﻿using STrain.CQS;
-
-namespace STrain.Core.Exceptions
+﻿namespace STrain.Core.Exceptions
 {
     public class VerificationException : Exception
     {
         public string Type { get; }
         public string Title { get; }
         public string Detail { get; }
-        public IRequest Request { get; }
 
         public VerificationException() : base()
         {
@@ -21,12 +18,11 @@ namespace STrain.Core.Exceptions
         {
         }
 
-        public VerificationException(string type, string title, string detail, IRequest request)
+        public VerificationException(string type, string title, string detail)
         {
             Type = type;
             Title = title;
             Detail = detail;
-            Request = request;
         }
     }
 }

@@ -13,13 +13,8 @@ namespace STrain.Core.Exceptions
         {
         }
 
-        public NotFoundException(string resource, IRequest request)
-            : base("/errors/resource-not-found", "Resource not found.", $"Resource '{resource}' was not found.", request)
-        {
-        }
-
-        public NotFoundException(string? message)
-            : base(message)
+        public NotFoundException(string resource)
+            : base("/errors/resource-not-found", "Resource not found.", $"Resource '{resource}' was not found.")
         {
         }
     }

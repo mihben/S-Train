@@ -7,7 +7,7 @@ namespace STrain.Sample.Backend.Performers
     {
         public Task PerformAsync(SampleNotFoundCommand command, CancellationToken cancellationToken)
         {
-            throw new NotFoundException(command.Resource, command);
+            throw new NotFoundException(command.Resource);
         }
     }
 }

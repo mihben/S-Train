@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using STrain.CQS.Test.Function.Drivers;
 using STrain.CQS.Test.Function.Workarounds;
@@ -20,7 +19,9 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public ErrorHandlingStepDefinitions(ITestOutputHelper outputHelper)
         {
             _driver = new LightinjectWebApplicationFactory<Program>()
-                        .Initialize(outputHelper);
+                        .Initialize(outputHelper)
+                        .Forbidden()
+                        .Unathorized();
         }
 
         [When("Throwing NotFoundException")]

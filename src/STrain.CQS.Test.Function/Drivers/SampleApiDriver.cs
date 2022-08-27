@@ -1,13 +1,18 @@
 ﻿using LightInject;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Providers;
+using STrain.CQS.Test.Function.Workarounds;
 using System.Net.Http.Json;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Function.Drivers
@@ -118,6 +123,66 @@ namespace STrain.CQS.Test.Function.Drivers
             var client = driver.CreateClient();
             using var cancellationTokenSource = new CancellationTokenSource(timeout);
             return await client.GetAsync(endpoint, cancellationTokenSource.Token);
+        }
+
+        public static WebApplicationFactory<Program> Forbidden(this WebApplicationFactory<Program> driver)
+        {
+            return driver.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddAuthorization(options => options.AddPolicy("forbidden-policy", policy => policy.RequireUserName("forbidden-user")));
+                    services.AddAuthentication("Forbidden")
+                        .AddScheme<AuthenticationSchemeOptions, ForbiddenAuthenticationHandler>("Forbidden", _ => { });
+                });
+            });
+        }
+
+        public static WebApplicationFactory<Program> Unathorized(this WebApplicationFactory<Program> driver)
+        {
+            return driver.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddAuthentication("Unathorized")
+                        .AddScheme<AuthenticationSchemeOptions, UnathorizedAuthenticationHandler>("Unathorized", _ => { });
+                });
+            });
+        }
+    }
+
+    internal class ForbiddenAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    {
+        public ForbiddenAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+            : base(options, logger, encoder, clock)
+        {
+        }
+
+        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        {
+            var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
+            var identity = new ClaimsIdentity(claims, "Test");
+            var principal = new ClaimsPrincipal(identity);
+            var ticket = new AuthenticationTicket(principal, "Test");
+
+            var result = AuthenticateResult.Success(ticket);
+
+            return Task.FromResult(result);
+        }
+    }
+
+    internal class UnathorizedAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    {
+        public UnathorizedAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+            : base(options, logger, encoder, clock)
+        {
+        }
+
+        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        {
+            var result = AuthenticateResult.Fail("Test Unathorized request");
+
+            return Task.FromResult(result);
         }
     }
 }

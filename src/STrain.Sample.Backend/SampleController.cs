@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using STrain.Core.Exceptions;
 using STrain.Sample.Api;
 
 namespace STrain.Sample.Backend
@@ -34,11 +35,30 @@ namespace STrain.Sample.Backend
             return Ok(await _sender.SendAsync<ExternalSampleRequest, string>(new ExternalSampleRequest(criteria), cancellationToken));
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Unathorized")]
         [HttpGet("authorized-endpoint")]
         public Task<IActionResult> AuthorizeAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult((IActionResult)Ok());
+        }
+
+        [HttpGet("internal-server-error")]
+        public Task<IActionResult> InternalServerErrorAsync(CancellationToken cancellationToken)
+        {
+            throw new InvalidOperationException();
+        }
+
+        [HttpGet("verification-error")]
+        public Task<IActionResult> VerificationErrorAsync(CancellationToken cancellationToken)
+        {
+            throw new VerificationException("/errors/custom-verification-error", "Verification error.", "Custom verification error. Can be used for business logic related errors.");
+        }
+
+        [HttpGet("Forbidden")]
+        [Authorize(AuthenticationSchemes = "Forbidden", Policy = "forbidden-policy")]
+        public Task<IActionResult> ForbiddenAsync(CancellationToken cancellationToken)
+        {
+            throw new VerificationException("/errors/custom-verification-error", "Verification error.", "Custom verification error. Can be used for business logic related errors.");
         }
     }
 }

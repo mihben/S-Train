@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Formatters;
-using STrain.Core.Enumerations;
+﻿using STrain.Core.Enumerations;
 
 namespace STrain.CQS.NetCore.ErrorHandling
 {
@@ -8,6 +7,10 @@ namespace STrain.CQS.NetCore.ErrorHandling
         public string Type { get; }
         public string Title { get; }
         public string Detail { get; }
+
+        public static ErrorEnumeration Unathorized => new(401, "Unathorized", "/errors/unathorized", "Unathorized request.", "Authentication is required for access '{0}' endpoint.");
+        public static ErrorEnumeration Forbidden => new(403, "Forbidden", "/errors/forbidden", "Forbidden.", "Specific permission is required for access '{0}' endpoint.");
+        public static ErrorEnumeration InternalServerError => new ErrorEnumeration(500, "Internal Server Error", "/errors/internal-server-error", "Internal server error.", "Unexpected error happened. Please, call the support.");
 
         public ErrorEnumeration(int id, string name, string type, string title, string detail)
             : base(id, name)
@@ -24,15 +27,6 @@ namespace STrain.CQS.NetCore.ErrorHandling
 
             public NotFound(int id, string name, string type, string title, string detail)
                 : base(id, name, type, title, detail)
-            {
-            }
-        }
-
-        public class Authentication : ErrorEnumeration
-        {
-            public static Authentication Unathorized => new(0, "Unathorized", "/errors/unathorized", "Unathorized request.", "Authentication is required for access '{0}' endpoint.");
-
-            public Authentication(int id, string name, string type, string title, string detail) : base(id, name, type, title, detail)
             {
             }
         }
