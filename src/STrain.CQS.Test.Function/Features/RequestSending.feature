@@ -82,8 +82,43 @@ Sending request to external service. Currently only HTTP is supported.
 		@api
 		Scenario: [API][RQS/ERH-001] - Not found
 			When Generic request response
-			| Code | ContentType              | Type                       | Title               | Status | Detail                               | Instance |
-			| 404  | application/problem+json | /errors/resource-not-found | Resource not found. | 404    | Resource '{resource}' was not found. | /api     |
-		Then Error response should be
-			| Description | Code | ContentType              | Type                       | Title               | Status | Detail                               | Instance |
-			| Error       | 404  | application/problem+json | /errors/resource-not-found | Resource not found. | 404    | Resource '{resource}' was not found. | /api     |
+				| Code | ContentType              | Type                       | Title               | Status | Detail                               | Instance |
+				| 404  | application/problem+json | /errors/resource-not-found | Resource not found. | 404    | Resource '{resource}' was not found. | /api     |
+			Then Error response should be
+				| Code | ContentType              | Type                       | Title               | Status | Detail                               | Instance |
+				| 404  | application/problem+json | /errors/resource-not-found | Resource not found. | 404    | Resource '{resource}' was not found. | /api     |
+
+		@issue-23
+		@api
+		Scenario Outline: [API][RQS/ERH-002] - Internal server error
+			When Generic request response
+				| Code   | ContentType              | Type   | Title   | Status   | Detail   | Instance   |
+				| <Code> | application/problem+json | <Type> | <Title> | <Status> | <Detail> | <Instance> |
+			Then Error response should be
+				| Code | ContentType              | Type                          | Title                  | Status | Detail                                               | Instance |
+				| 500  | application/problem+json | /errors/internal-server-error | Internal server error. | 500    | Unexpected error happened. Please, call the support. | /api     |
+		
+		Examples: 
+			| Description           | Code | Type                          | Title                  | Status | Detail                                                                            | Instance                                   |
+			| Unathorized           | 401  | /errors/unathorized           | Unathorized request.   | 401    | Authentication is required for access '/api/Sample/authorized-endpoint' endpoint. | /api/Sample/authorized-endpoint            |
+			| Forbidden             | 403  | /errors/forbidden             | Forbidden.             | 403    | Specific permission is required for access '/api/Sample/forbidden' endpoint.      | /api/Sample/forbidden-endpoint             |
+			| Internal Server Error | 500ˇ | /errors/internal-server-error | Internal server error. | 500    | Unexpected error happened. Please, call the support.                              | /api/Sample/internal-server-error-endpoint |
+
+		@issue-23
+		@api
+		Scenario: [API][RQS/ERH-003] - Validation error
+			When Generic request response
+				| Code | ContentType              | Type                    | Title            | Status | Detail                           | Instance                    | Errors.Property | Errors.Message                 |
+				| 400  | application/problem+json | /errors/invalid-request | Invalid request. | 400    | Invalid request. See the errors. | /api/Sample/invalid-request | Parameter       | 'Parameter' must not be empty. |
+			Then Error response should be
+				| Code | ContentType              | Type                    | Title            | Status | Detail                           | Instance | Errors.Property | Errors.Message                 |
+				| 400  | application/problem+json | /errors/invalid-request | Invalid request. | 400    | Invalid request. See the errors. | /api     | Parameter       | 'Parameter' must not be empty. |
+		@issue-23
+		@api
+		Scenario: [API][RQS/ERH-004] - Verification error
+			When Generic request response
+				| Code | ContentType              | Type                              | Title                      | Status | Detail                                        | Instance                              |
+				| 400  | application/problem+json | /errors/custom-verification-error | Custom verification error. | 400    | This is a custom verification error for test. | /api/Sample/custom-verification-error |
+			Then Error response should be
+				| Code | ContentType              | Type                              | Title                      | Status | Detail                                        | Instance |
+				| 400  | application/problem+json | /errors/custom-verification-error | Custom verification error. | 400    | This is a custom verification error for test. | /api     |

@@ -44,7 +44,6 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 			{
 				Content = JsonContent.Create(problem, new MediaTypeHeaderValue(MediaTypeNames.Application.Json.Problem))
 			}, default));
-			Assert.NotNull(exception.InnerException);
 		}
 
 		[Fact(DisplayName = "[UNIT][GRH-003] - Unathorized")]

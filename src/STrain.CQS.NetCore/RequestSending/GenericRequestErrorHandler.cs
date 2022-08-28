@@ -20,7 +20,7 @@ namespace STrain.CQS.NetCore.RequestSending
             switch (response.StatusCode)
             {
                 case HttpStatusCode.NotFound:
-                    throw new NotFoundException(problem!.Type!, problem!.Title!, problem!.Detail!);
+                    throw new NotFoundException(problem.Type!, problem.Title!, problem.Detail!);
                 case HttpStatusCode.BadRequest:
                     if (problem.Type?.Equals(ErrorEnumeration.Validation.Type, StringComparison.OrdinalIgnoreCase) ?? false)
                         throw problem.AsValidationException();
@@ -38,14 +38,14 @@ namespace STrain.CQS.NetCore.RequestSending
     {
         public static ValidationException AsValidationException(this ProblemDetails problem)
         {
-            if (problem.Extensions.TryGetValue("Errors", out var errors))
-                return new ValidationException(errors as IReadOnlyDictionary<string, string> ?? new Dictionary<string, string>());
+            if (problem.Extensions.TryGetValue("errors", out var errors))
+                return new ValidationException((errors as IEnumerable<(string Property, string Message)>)?.ToDictionary(e => e.Property, e => e.Message) ?? new Dictionary<string, string>());
             return new ValidationException();
         }
 
         public static VerificationException AsVerificationException(this ProblemDetails problem)
         {
-            return new VerificationException(problem.Type = null!, problem.Title = null!, problem.Detail = null!);
+            return new VerificationException(problem.Type!, problem.Title!, problem.Detail!);
         }
     }
 }
