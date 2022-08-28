@@ -67,14 +67,14 @@ namespace STrain.CQS.NetCore.ErrorHandling
         {
             var problem = new ProblemDetails
             {
-                Type = exception.Type,
-                Title = exception.Title,
-                Detail = exception.Detail,
+                Type = ErrorEnumeration.Validation.Type,
+                Title = ErrorEnumeration.Validation.Title,
+                Detail = ErrorEnumeration.Validation.Detail,
                 Instance = instance,
-                Status = StatusCodes.Status400BadRequest
+                Status = ErrorEnumeration.Validation.Id
             };
             problem.Extensions.Add("Errors", exception.Errors.Select(e => new { Property = e.Key, Message = e.Value }));
-            await response.WriteAsProblemAsync(problem, StatusCodes.Status400BadRequest, cancellationToken);
+            await response.WriteAsProblemAsync(problem, ErrorEnumeration.Validation.Id, cancellationToken);
         }
 
         public static async Task WriteAsProblemAsync(this HttpResponse response, VerificationException exception, string instance, CancellationToken cancellationToken)

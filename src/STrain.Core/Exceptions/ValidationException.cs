@@ -4,12 +4,10 @@ using System.Runtime.Serialization;
 namespace STrain.Core.Exceptions
 {
     [ExcludeFromCodeCoverage]
+    [Serializable]
     public class ValidationException : Exception
     {
-        public string Type => "/errors/invalid-request";
-        public string Title => "Invalid request.";
-        public string Detail => "Invalid request. See the errors.";
-        public IReadOnlyDictionary<string, string> Errors { get; }
+        public IReadOnlyDictionary<string, string> Errors { get; } = new Dictionary<string, string>();
 
         public ValidationException()
         {

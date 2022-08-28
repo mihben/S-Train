@@ -20,7 +20,7 @@ namespace STrain.Core.Enumerations
                      .Select(f => f.GetValue(null))
                      .Cast<T>();
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is not Enumeration otherValue)
             {
@@ -33,7 +33,7 @@ namespace STrain.Core.Enumerations
             return typeMatches && valueMatches;
         }
 
-        public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);
+        public int CompareTo(object? obj) => Id.CompareTo((obj as Enumeration)?.Id);
 
         public override int GetHashCode()
         {

@@ -1,15 +1,17 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace STrain.Core.Exceptions
 {
     [ExcludeFromCodeCoverage]
+    [Serializable]
     public class VerificationException : Exception
     {
-        public string Type { get; }
-        public string Title { get; }
-        public string Detail { get; }
+        public string Type { get; } = null!;
+        public string Title { get; } = null!;
+        public string Detail { get; } = null!;
 
-        public VerificationException() : base()
+        public VerificationException()
         {
         }
 
@@ -26,6 +28,12 @@ namespace STrain.Core.Exceptions
             Type = type;
             Title = title;
             Detail = detail;
+        }
+
+        protected VerificationException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
+        {
+
         }
     }
 }

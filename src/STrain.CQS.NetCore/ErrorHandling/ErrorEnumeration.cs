@@ -10,6 +10,7 @@ namespace STrain.CQS.NetCore.ErrorHandling
         public string Title { get; }
         public string Detail { get; }
 
+        public static ErrorEnumeration Validation => new(400, "Invalid", "/errors/invalid-request", "Invalid request.", "Invalid request. See the errors.");
         public static ErrorEnumeration Unathorized => new(401, "Unathorized", "/errors/unathorized", "Unathorized request.", "Authentication is required for access '{0}' endpoint.");
         public static ErrorEnumeration Forbidden => new(403, "Forbidden", "/errors/forbidden", "Forbidden.", "Specific permission is required for access '{0}' endpoint.");
         public static ErrorEnumeration InternalServerError => new(500, "Internal Server Error", "/errors/internal-server-error", "Internal server error.", "Unexpected error happened. Please, call the support.");
