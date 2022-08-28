@@ -22,8 +22,8 @@ namespace STrain.Core.Exceptions
         }
 
         protected NotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
         {
-            throw new NotImplementedException();
         }
 
         public NotFoundException(string type, string title, string detail) : base(type, title, detail)
