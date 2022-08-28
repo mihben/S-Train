@@ -1,7 +1,9 @@
 ﻿using STrain.Core.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace STrain.CQS.NetCore.ErrorHandling
 {
+    [ExcludeFromCodeCoverage]
     public class ErrorEnumeration : Enumeration
     {
         public string Type { get; }
@@ -10,7 +12,7 @@ namespace STrain.CQS.NetCore.ErrorHandling
 
         public static ErrorEnumeration Unathorized => new(401, "Unathorized", "/errors/unathorized", "Unathorized request.", "Authentication is required for access '{0}' endpoint.");
         public static ErrorEnumeration Forbidden => new(403, "Forbidden", "/errors/forbidden", "Forbidden.", "Specific permission is required for access '{0}' endpoint.");
-        public static ErrorEnumeration InternalServerError => new ErrorEnumeration(500, "Internal Server Error", "/errors/internal-server-error", "Internal server error.", "Unexpected error happened. Please, call the support.");
+        public static ErrorEnumeration InternalServerError => new(500, "Internal Server Error", "/errors/internal-server-error", "Internal server error.", "Unexpected error happened. Please, call the support.");
 
         public ErrorEnumeration(int id, string name, string type, string title, string detail)
             : base(id, name)

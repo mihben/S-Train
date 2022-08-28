@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace STrain.CQS.NetCore.Builders
 {
+    [ExcludeFromCodeCoverage]
     public class FluentValidatorBuilder
     {
         public WebApplicationBuilder Builder { get; }

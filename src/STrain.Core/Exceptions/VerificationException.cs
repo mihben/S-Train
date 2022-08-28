@@ -1,5 +1,8 @@
-﻿namespace STrain.Core.Exceptions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace STrain.Core.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     public class VerificationException : Exception
     {
         public string Type { get; }

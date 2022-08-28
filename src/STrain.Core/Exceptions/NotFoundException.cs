@@ -1,7 +1,8 @@
-﻿using STrain.CQS;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace STrain.Core.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     public class NotFoundException : VerificationException
     {
         public NotFoundException()

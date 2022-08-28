@@ -1,7 +1,9 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace STrain.Core.Enumerations
 {
+    [ExcludeFromCodeCoverage]
     public abstract class Enumeration : IComparable
     {
         public string Name { get; }

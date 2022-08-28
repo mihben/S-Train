@@ -1,7 +1,9 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace STrain.Core.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     public class ValidationException : Exception
     {
         public string Type => "/errors/invalid-request";
