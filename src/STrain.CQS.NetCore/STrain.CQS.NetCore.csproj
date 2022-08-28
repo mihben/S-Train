@@ -11,6 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.2.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\STrain.Core\STrain.Core.csproj" />
     <ProjectReference Include="..\STrain.CQS.Attributes\STrain.CQS.Attributes.csproj" />
     <ProjectReference Include="..\STrain.CQS.Extensions.DependencyInjection\STrain.CQS.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\STrain.CQS.MVC\STrain.CQS.MVC.csproj" />

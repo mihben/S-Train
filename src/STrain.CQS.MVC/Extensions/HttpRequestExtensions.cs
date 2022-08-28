@@ -6,7 +6,7 @@ namespace Microsoft.AspNetCore.Http
     {
         public static async ValueTask<object?> ReadAsJsonAsync(this HttpRequest request, Type type, CancellationToken cancellationToken)
         {
-            return await JsonSerializer.DeserializeAsync(request.Body, type, cancellationToken: cancellationToken);
+            return await JsonSerializer.DeserializeAsync(request.Body, type, options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }, cancellationToken: cancellationToken);
         }
     }
 }

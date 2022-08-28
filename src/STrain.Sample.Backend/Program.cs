@@ -1,3 +1,9 @@
+using FluentValidation;
+using LightInject;
+using STrain.CQS.Dispatchers;
+using STrain.CQS.NetCore.Validation;
+using STrain.CQS.Validations;
+using STrain.Sample.Api;
 using STrain.Sample.Backend.Services;
 using STrain.Sample.Backend.Wireup;
 
@@ -13,6 +19,11 @@ builder.AddCQS(CQSWireUp.Build);
 builder.Services.AddTransient<ISampleService, SampleService>();
 
 var app = builder.Build();
+
+app.UseDefaultExceptionHandler();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGenericRequestController();
 

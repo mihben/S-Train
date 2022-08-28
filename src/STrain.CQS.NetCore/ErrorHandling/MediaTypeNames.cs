@@ -1,4 +1,4 @@
-﻿namespace STrain.CQS.MVC.Constants
+﻿namespace STrain.CQS.NetCore.ErrorHandling
 {
     public static class MediaTypeNames
     {
@@ -6,7 +6,7 @@
         {
             public static class Json
             {
-                public const string Command = "application/command+json";
+                public const string Problem = "application/problem+json";
             }
         }
     }

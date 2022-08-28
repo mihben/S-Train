@@ -5,6 +5,7 @@ using STrain.CQS.MVC.Options;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Parsers;
 using STrain.CQS.NetCore.RequestSending.Providers;
+using STrain.CQS.NetCore.Validation;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Extensions.DependencyInjection
