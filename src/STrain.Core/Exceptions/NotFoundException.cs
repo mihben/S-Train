@@ -11,13 +11,13 @@ namespace STrain.Core.Exceptions
         {
         }
 
-        public NotFoundException(string? message, Exception? innerException)
-            : base(message, innerException)
+        public NotFoundException(string resource, Exception? innerException)
+            : base("/errors/resource-not-found", "Resource not found.", $"Resource '{resource}' was not found.", innerException)
         {
         }
 
         public NotFoundException(string resource)
-            : base("/errors/resource-not-found", "Resource not found.", $"Resource '{resource}' was not found.")
+            : this(resource, null)
         {
         }
 
@@ -26,7 +26,13 @@ namespace STrain.Core.Exceptions
         {
         }
 
-        public NotFoundException(string type, string title, string detail) : base(type, title, detail)
+        public NotFoundException(string type, string title, string detail)
+            : base(type, title, detail)
+        {
+        }
+
+        public NotFoundException(string type, string title, string detail, Exception? innerException)
+            : base(type, title, detail, innerException)
         {
         }
     }

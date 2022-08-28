@@ -5,6 +5,7 @@ using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Attributive;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.NetCore.RequestSending.Providers.Attributive;
+using STrain.CQS.Senders;
 
 namespace STrain.CQS.NetCore.LigtInject
 {
@@ -16,6 +17,8 @@ namespace STrain.CQS.NetCore.LigtInject
             builder.UseAttributeMethodProvider();
             builder.UseAttributiveParameterProviders();
             builder.UseResponseReaders();
+
+            builder.UseGenericErrorHandler();
 
             return builder;
         }
@@ -67,5 +70,13 @@ namespace STrain.CQS.NetCore.LigtInject
             });
             return builder;
         }
+
+        public static HttpRequestSenderBuilder UseErrorHandler<TErrorHandler>(this HttpRequestSenderBuilder builder)
+            where TErrorHandler : IRequestErrorHandler
+        {
+            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IRequestErrorHandler, TErrorHandler>(builder.Key));
+            return builder;
+        }
+        public static HttpRequestSenderBuilder UseGenericErrorHandler(this HttpRequestSenderBuilder builder) => builder.UseErrorHandler<GenericRequestErrorHandler>();
     }
 }

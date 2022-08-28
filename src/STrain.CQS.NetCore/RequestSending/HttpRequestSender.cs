@@ -14,9 +14,17 @@ namespace STrain.CQS.NetCore.RequestSending
         private readonly IMethodProvider _methodProvider;
         private readonly IEnumerable<IParameterProvider> _parameterProviders;
         private readonly IResponseReaderProvider _responseReaderProvider;
+        private readonly IRequestErrorHandler _requestErrorHandler;
         private readonly ILogger<HttpRequestSender> _logger;
 
-        public HttpRequestSender(HttpClient httpClient, IServiceProvider serviceProvider, IPathProvider pathProvider, IMethodProvider methodProvider, IEnumerable<IParameterProvider> parameterProviders, IResponseReaderProvider responseReaderProvider, ILogger<HttpRequestSender> logger)
+        public HttpRequestSender(HttpClient httpClient,
+                                 IServiceProvider serviceProvider,
+                                 IPathProvider pathProvider,
+                                 IMethodProvider methodProvider,
+                                 IEnumerable<IParameterProvider> parameterProviders,
+                                 IResponseReaderProvider responseReaderProvider,
+                                 IRequestErrorHandler requestErrorHandler,
+                                 ILogger<HttpRequestSender> logger)
         {
             _httpClient = httpClient;
             _serviceProvider = serviceProvider;
@@ -24,6 +32,7 @@ namespace STrain.CQS.NetCore.RequestSending
             _methodProvider = methodProvider;
             _parameterProviders = parameterProviders;
             _responseReaderProvider = responseReaderProvider;
+            _requestErrorHandler = requestErrorHandler;
             _logger = logger;
         }
 
@@ -45,8 +54,9 @@ namespace STrain.CQS.NetCore.RequestSending
             _logger.LogDebug("Sending request to {uri}", message.RequestUri);
             _logger.LogTrace("Request message: {message}", message);
             var response = await _httpClient.SendAsync(message, cancellationToken);
+            if (!response.IsSuccessStatusCode) await _requestErrorHandler.HandleAsync(response, cancellationToken);
+
             if (response.Content.Headers.ContentLength == 0) return default;
-            response.EnsureSuccessStatusCode();
             return (T?)(await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType?.MediaType])).ReadAsync<T>(response, cancellationToken));
         }
     }

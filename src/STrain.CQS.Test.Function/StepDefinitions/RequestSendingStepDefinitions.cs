@@ -4,8 +4,11 @@ using Moq;
 using Moq.Protected;
 using STrain.CQS.Attributes.RequestSending.Http.Parameters;
 using STrain.CQS.Test.Function.Drivers;
+using STrain.CQS.Test.Function.Support;
 using STrain.CQS.Test.Function.Workarounds;
 using STrain.Sample.Api;
+using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
 using Xunit.Abstractions;
 
@@ -16,11 +19,12 @@ namespace STrain.CQS.Test.Function.StepDefinitions
     {
         private readonly Mock<HttpMessageHandler> _messageHandlerMock = new();
 
-        private string _externalBaseAddress = "http://test-service/";
+        private readonly string _externalBaseAddress = "http://test-service/";
         private readonly string _path = "api";
-        private string _genericBaseAddress = "http://strain-service/";
+        private readonly string _genericBaseAddress = "http://strain-service/";
 
         private readonly WebApplicationFactory<Program> _driver;
+        private readonly RequestContext _requestContext;
         private SampleCommand? _command;
         private SampleQuery? _query;
 
@@ -29,8 +33,9 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         private ExternalPutRequest? _putRequest;
         private ExternalPatchRequest? _patchRequest;
         private ExternalDeleteRequest? _deleteRequest;
+        private SampleForwardCommand? _forwardCommand;
 
-        public RequestSendingStepDefinitions(ITestOutputHelper outputHelper)
+        public RequestSendingStepDefinitions(RequestContext requestContext, ITestOutputHelper outputHelper)
         {
             _messageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
@@ -39,6 +44,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
                         .Initialize(outputHelper)
                         .MockHttpSender("external", _messageHandlerMock.Object, _path, _externalBaseAddress)
                         .MockHttpSender("internal", _messageHandlerMock.Object, _path, _genericBaseAddress);
+            _requestContext = requestContext;
         }
 
 
@@ -86,6 +92,19 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             }
         }
 
+        [When("Generic request response")]
+        public async Task GenericRequestResponseAsync(Table dataTable)
+        {
+            _forwardCommand = new Fixture().Create<SampleForwardCommand>();
+            _messageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .Returns(Task.FromResult(new HttpResponseMessage(dataTable.GetEnum<HttpStatusCode>("Status"))
+                {
+                    Content = JsonContent.Create(dataTable.AsProblem(_forwardCommand.Resource))
+                }));
+            _requestContext.Parameter = _forwardCommand.Resource;
+            _requestContext.Response = await _driver.ReceiveCommandAsync(_forwardCommand, TimeSpan.FromSeconds(1));
+        }
+
         [Given("Configured generic request sender to {string}")]
         public void ConfigureGenericRequestSender(string endpoint)
         {
@@ -95,7 +114,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [Given("Configured external request sender to {string}")]
         public void ConfigureExternalRequestSender(string endpoint)
         {
-            
+
         }
 
         [When("Sending generic request")]

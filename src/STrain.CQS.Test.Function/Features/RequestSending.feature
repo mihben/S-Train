@@ -73,3 +73,17 @@ Sending request to external service. Currently only HTTP is supported.
 			And Configured external request sender to 'http://test-service/'
 			When Sending external request
 			Then Request should be sent to 'http://test-service/'
+
+	Rule: [RQS/ERH] - Generic error response handling
+
+		Error response handler can be injected to the http request sender.
+
+		@issue-23
+		@api
+		Scenario: [API][RQS/ERH-001] - Not found
+			When Generic request response
+			| Code | ContentType              | Type                       | Title               | Status | Detail                               | Instance |
+			| 404  | application/problem+json | /errors/resource-not-found | Resource not found. | 404    | Resource '{resource}' was not found. | /api     |
+		Then Error response should be
+			| Description | Code | ContentType              | Type                       | Title               | Status | Detail                               | Instance |
+			| Error       | 404  | application/problem+json | /errors/resource-not-found | Resource not found. | 404    | Resource '{resource}' was not found. | /api     |
