@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Providers;
-using STrain.CQS.Test.Function.Workarounds;
+using STrain.CQS.Senders;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -57,7 +57,10 @@ namespace STrain.CQS.Test.Function.Drivers
                                  scope.GetInstance<IParameterProvider>($"{key}.body")
                              };
                              var responseReaderProvider = scope.GetInstance<IResponseReaderProvider>(key);
-                             registration.Value = new HttpRequestSender(httpClient, scope.GetInstance<IServiceProvider>(), pathProvider, methodProvider, parameterProviders, responseReaderProvider, scope.GetInstance<ILogger<HttpRequestSender>>());
+                             var requestErrorHandler = scope.GetInstance<IRequestErrorHandler>(key);
+
+
+                             registration.Value = new HttpRequestSender(httpClient, scope.GetInstance<IServiceProvider>(), pathProvider, methodProvider, parameterProviders, responseReaderProvider, requestErrorHandler, scope.GetInstance<ILogger<HttpRequestSender>>());
                          }
 
                          return registration;

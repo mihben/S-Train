@@ -1,9 +1,3 @@
-using FluentValidation;
-using LightInject;
-using STrain.CQS.Dispatchers;
-using STrain.CQS.NetCore.Validation;
-using STrain.CQS.Validations;
-using STrain.Sample.Api;
 using STrain.Sample.Backend.Services;
 using STrain.Sample.Backend.Wireup;
 
@@ -11,7 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseLightInject();
 
-builder.Services.AddMvc();
+builder.Services.AddMvc()
+    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
 builder.Services.AddHttpClient();
 builder.AddCQS(CQSWireUp.Build);
