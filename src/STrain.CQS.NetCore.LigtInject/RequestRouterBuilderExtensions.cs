@@ -6,9 +6,11 @@ using STrain.CQS.NetCore.Builders;
 using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.Senders;
+using System.Diagnostics.CodeAnalysis;
 
 namespace STrain.CQS.NetCore.LigtInject
 {
+    [ExcludeFromCodeCoverage]
     public static class RequestRouterBuilderExtensions
     {
         public static HttpRequestSenderBuilder AddHttpSender(this RequestRouterBuilder builder, string key, Action<HttpRequestSenderOptions, IConfiguration> configure)

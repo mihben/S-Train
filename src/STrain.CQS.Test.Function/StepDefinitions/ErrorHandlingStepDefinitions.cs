@@ -30,7 +30,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public async Task ThrowNotFoundExceptionAsync()
         {
             _requestContext.Parameter = new Fixture().Create<string>();
-            _requestContext.Response = await _driver.ReceiveCommandAsync(new SampleNotFoundCommand(_requestContext.Parameter.ToString()), TimeSpan.FromSeconds(1));
+            _requestContext.Response = await _driver.ReceiveCommandAsync(new SampleNotFoundCommand(_requestContext.Parameter.ToString()!), TimeSpan.FromSeconds(1));
         }
 
         [When("Calling {string} endpoint")]

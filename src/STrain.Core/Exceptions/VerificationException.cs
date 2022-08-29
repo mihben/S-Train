@@ -7,9 +7,9 @@ namespace STrain.Core.Exceptions
     [Serializable]
     public class VerificationException : Exception
     {
-        public string Type { get; } = null!;
-        public string Title { get; } = null!;
-        public string Detail { get; } = null!;
+        public string? Type { get; }
+        public string? Title { get; }
+        public string? Detail { get; }
 
         public VerificationException()
         {

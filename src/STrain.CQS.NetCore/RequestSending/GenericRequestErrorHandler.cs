@@ -31,8 +31,8 @@ namespace STrain.CQS.NetCore.RequestSending
             }
         }
 
-        private HttpRequestException RequestException(HttpStatusCode statusCode) => new("Error during calling external service", null, statusCode);
-        private InvalidOperationException InvalidOperationException() => new("Error during reading response");
+        private static HttpRequestException RequestException(HttpStatusCode statusCode) => new("Error during calling external service", null, statusCode);
+        private static InvalidOperationException InvalidOperationException() => new("Error during reading response");
     }
 
     internal static class GenericResponseHandlerExtensions

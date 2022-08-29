@@ -15,15 +15,14 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             _requestContext = requestContext;
         }
 
-
         [Then("Error response should be")]
         public async Task ErrorResponseShouldBe(Table dataTable)
         {
-            var problem = dataTable.AsProblem(_requestContext.Parameter?.ToString());
+            var problem = dataTable.AsProblem(_requestContext.Parameter?.ToString()!);
             var code = dataTable.GetEnum<HttpStatusCode>("Status");
             var contentType = dataTable.GetValue<string>("ContentType");
 
-            Assert.Equal(code, _requestContext.Response.StatusCode);
+            Assert.Equal(code, _requestContext.Response!.StatusCode);
             Assert.Equal(contentType, _requestContext.Response.Content.Headers.ContentType?.MediaType);
             Assert.Equal(problem, await _requestContext.Response.Content.ReadFromJsonAsync<Problem>(), new ProblemEqualityComparer());
         }
