@@ -4,6 +4,7 @@ using STrain.CQS.NetCore.ErrorHandling;
 using STrain.CQS.Senders;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace STrain.CQS.NetCore.RequestSending
 {
@@ -39,13 +40,32 @@ namespace STrain.CQS.NetCore.RequestSending
         public static ValidationException AsValidationException(this ProblemDetails problem)
         {
             if (problem.Extensions.TryGetValue("errors", out var errors))
-                return new ValidationException((errors as IEnumerable<(string Property, string Message)>)?.ToDictionary(e => e.Property, e => e.Message) ?? new Dictionary<string, string>());
+                return new ValidationException(errors.AsReadOnlyDictionary());
             return new ValidationException();
         }
 
         public static VerificationException AsVerificationException(this ProblemDetails problem)
         {
             return new VerificationException(problem.Type!, problem.Title!, problem.Detail!);
+        }
+
+        public static IReadOnlyDictionary<string, string> AsReadOnlyDictionary(this object? errors)
+        {
+            if (errors is null) return new Dictionary<string, string>();
+
+            return ((JsonElement)errors).Deserialize<IEnumerable<Error>>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true })?.ToDictionary(e => e.Property, e => e.Message) ?? new Dictionary<string, string>();
+        }
+    }
+
+    internal class Error
+    {
+        public string Property { get; }
+        public string Message { get; }
+
+        public Error(string property, string message)
+        {
+            Property = property;
+            Message = message;
         }
     }
 }
