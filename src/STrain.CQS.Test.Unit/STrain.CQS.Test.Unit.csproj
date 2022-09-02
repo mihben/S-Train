@@ -33,4 +33,8 @@
     <ProjectReference Include="..\STrain.Sample.Api\STrain.Sample.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MVC\Authorize\" />
+  </ItemGroup>
+
 </Project>

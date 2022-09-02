@@ -1,6 +1,9 @@
-﻿using Moq;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Moq;
 using STrain.CQS.Dispatchers;
+using STrain.CQS.Test.Function.Drivers;
 using STrain.CQS.Test.Function.Support;
+using STrain.CQS.Test.Function.Workarounds;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Function.StepDefinitions
@@ -14,16 +17,24 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         private readonly Mock<IServiceProvider> _serviceProviderMock = new();
         private readonly Mock<ICommandPerformer<TestCommand>> _commandPerformerMock = new();
         private readonly Mock<IQueryPerformer<TestQuery, string>> _queryPerformerMock = new();
+        private readonly RequestContext _requestContext;
         private readonly ExceptionContext _exceptionContext;
-
+        private readonly WebApplicationFactory<Program> _driver;
         private TestCommand? _command;
         private TestQuery? _query;
 
-        public DispatchStepDefinitions(ITestOutputHelper outputHelper, ExceptionContext exceptionContext)
+        public DispatchStepDefinitions(ITestOutputHelper outputHelper, RequestContext requestContext, ExceptionContext exceptionContext)
         {
             _commandDispatcher = new CommandDispatcher(_serviceProviderMock.Object, TestLoggerFactory.CreateLogger<CommandDispatcher>(outputHelper));
             _queryDispatcher = new QueryDispatcher(_serviceProviderMock.Object, TestLoggerFactory.CreateLogger<QueryDispatcher>(outputHelper));
+            _requestContext = requestContext;
             _exceptionContext = exceptionContext;
+
+            _driver = new LightinjectWebApplicationFactory<Program>()
+                        .Initialize(outputHelper)
+                        .MockAuthentication(builder => builder.Authorized()
+                                                                .Unathorized()
+                                                                .Forbidden());
         }
 
 
@@ -82,6 +93,30 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             {
                 _exceptionContext.Exception = ex;
             }
+        }
+
+        [When("Dispatching authorized request")]
+        public async Task DispatchingAuthorizedRequest()
+        {
+            _requestContext.Response = await _driver.SendAsync("/api/Authorization/authorized", TimeSpan.FromSeconds(1));
+        }
+
+        [When("Dispatching unauthorized request")]
+        public async Task DispatchingUnauthorizedRequest()
+        {
+            _requestContext.Response = await _driver.SendAsync("/api/Authorization/unauthorized", TimeSpan.FromSeconds(1));
+        }
+
+        [When("Dispatching forbidden request")]
+        public async Task DispatchingForbiddenRequest()
+        {
+            _requestContext.Response = await _driver.SendAsync("/api/Authorization/forbidden", TimeSpan.FromSeconds(1));
+        }
+
+        [When("Dispatching allow anonymus request")]
+        public async Task DispatchingAllowAnonymisRequest()
+        {
+            _requestContext.Response = await _driver.SendAsync("/api/Authorization/allow-anonymus", TimeSpan.FromSeconds(1));
         }
 
         [Then("Command performer should be performed")]

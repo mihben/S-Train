@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using STrain.CQS.Dispatchers;
-using STrain.CQS.MVC.Receiving;
 
 namespace STrain.CQS.Test.Unit.MVC.Receiving
 {

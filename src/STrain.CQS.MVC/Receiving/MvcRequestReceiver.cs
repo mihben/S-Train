@@ -2,7 +2,7 @@
 using STrain.CQS.Dispatchers;
 using STrain.CQS.Receivers;
 
-namespace STrain.CQS.MVC.Receiving
+namespace STrain
 {
     public interface IMvcRequestReceiver : IRequestReceiver<IActionResult> { }
 

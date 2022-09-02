@@ -128,64 +128,87 @@ namespace STrain.CQS.Test.Function.Drivers
             return await client.GetAsync(endpoint, cancellationTokenSource.Token);
         }
 
-        public static WebApplicationFactory<Program> Forbidden(this WebApplicationFactory<Program> driver)
+        public static AuthenticationBuilder Forbidden(this AuthenticationBuilder builder)
+        {
+            return builder.AddScheme<AuthenticationSchemeOptions, ForbiddenAuthenticationHandler>("Forbidden", _ => { });
+        }
+
+        public static AuthenticationBuilder Unathorized(this AuthenticationBuilder builder)
+        {
+            return builder.AddScheme<AuthenticationSchemeOptions, UnathorizedAuthenticationHandler>("Unathorized", _ => { });
+        }
+
+        public static AuthenticationBuilder Authorized(this AuthenticationBuilder builder)
+        {
+            return builder.AddScheme<AuthenticationSchemeOptions, AuthorizedAuthenticationHandler>("Authorized", _ => { });
+        }
+
+        public static WebApplicationFactory<Program> MockAuthentication(this WebApplicationFactory<Program> driver, Action<AuthenticationBuilder> build)
         {
             return driver.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
                 {
                     services.AddAuthorization(options => options.AddPolicy("forbidden-policy", policy => policy.RequireUserName("forbidden-user")));
-                    services.AddAuthentication("Forbidden")
-                        .AddScheme<AuthenticationSchemeOptions, ForbiddenAuthenticationHandler>("Forbidden", _ => { });
+                    services.AddAuthorization(options => options.AddPolicy("Authorized", builder => builder.RequireClaim("Test")));
+                    build(services.AddAuthentication("Authorized"));
                 });
             });
         }
 
-        public static WebApplicationFactory<Program> Unathorized(this WebApplicationFactory<Program> driver)
+        internal class AuthorizedAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
         {
-            return driver.WithWebHostBuilder(builder =>
+            public AuthorizedAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+                : base(options, logger, encoder, clock)
             {
-                builder.ConfigureTestServices(services =>
-                {
-                    services.AddAuthentication("Unathorized")
-                        .AddScheme<AuthenticationSchemeOptions, UnathorizedAuthenticationHandler>("Unathorized", _ => { });
-                });
-            });
-        }
-    }
+            }
 
-    internal class ForbiddenAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
-    {
-        public ForbiddenAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
-            : base(options, logger, encoder, clock)
-        {
-        }
+            protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+            {
+                var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
+                var identity = new ClaimsIdentity(claims, "Test");
+                var principal = new ClaimsPrincipal(identity);
+                var ticket = new AuthenticationTicket(principal, "Test");
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-        {
-            var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
-            var identity = new ClaimsIdentity(claims, "Test");
-            var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, "Test");
+                var result = AuthenticateResult.Success(ticket);
 
-            var result = AuthenticateResult.Success(ticket);
-
-            return Task.FromResult(result);
-        }
-    }
-
-    internal class UnathorizedAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
-    {
-        public UnathorizedAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
-            : base(options, logger, encoder, clock)
-        {
+                return Task.FromResult(result);
+            }
         }
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        internal class ForbiddenAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
         {
-            var result = AuthenticateResult.Fail("Test Unathorized request");
+            public ForbiddenAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+                : base(options, logger, encoder, clock)
+            {
+            }
 
-            return Task.FromResult(result);
+            protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+            {
+                var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
+                var identity = new ClaimsIdentity(claims, "Test");
+                var principal = new ClaimsPrincipal(identity);
+                var ticket = new AuthenticationTicket(principal, "Test");
+
+                var result = AuthenticateResult.Success(ticket);
+
+                return Task.FromResult(result);
+            }
+        }
+
+        internal class UnathorizedAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+        {
+            public UnathorizedAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+                : base(options, logger, encoder, clock)
+            {
+            }
+
+            protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+            {
+                var result = AuthenticateResult.Fail("Test Unathorized request");
+
+                return Task.FromResult(result);
+            }
         }
     }
 }
