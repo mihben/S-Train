@@ -26,7 +26,6 @@ namespace STrain.Sample.Backend.Wireup
                             builder.AddHttpSender("external", (options, configuration) => configuration.Bind("Senders:External", options)).UseDefaults();
                             builder.AddHttpSender("internal", (options, configuraion) => configuraion.Bind("Senders:Internal", options)).UseDefaults();
                         });
-
         }
     }
 }
