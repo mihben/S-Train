@@ -4,7 +4,7 @@ using STrain.Core.Exceptions;
 using STrain.CQS.Dispatchers;
 using STrain.Sample.Api;
 
-namespace STrain.Sample.Backend
+namespace STrain.Sample.Backend.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]

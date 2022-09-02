@@ -21,8 +21,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         {
             _driver = new LightinjectWebApplicationFactory<Program>()
                         .Initialize(outputHelper)
-                        .Forbidden()
-                        .Unathorized();
+                        .MockAuthentication(builder => builder.Forbidden().Unathorized());
             _requestContext = requestContext;
         }
 
