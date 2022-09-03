@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using STrain.CQS.Attributes.RequestSending.Http.Parameters;
 using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Reflection;
@@ -10,13 +10,23 @@ namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
 {
     public class AttributiveBodyParameterProvider : IParameterProvider
     {
+        private readonly ILogger<AttributiveBodyParameterProvider> _logger;
+
+        public AttributiveBodyParameterProvider(ILogger<AttributiveBodyParameterProvider> logger)
+        {
+            _logger = logger;
+        }
+
         public Task SetParametersAsync<TRequest>(HttpRequestMessage message, TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest
         {
+            _logger.LogDebug("Setting HTTP request body");
+
             var type = typeof(TRequest);
             if (type.IsGenericRequest() || type.GetCustomAttribute<BodyParameterAttribute>() is not null)
             {
                 message.Content = JsonContent.Create(request);
+                DoneLogMessage();
                 return Task.CompletedTask;
             }
 
@@ -24,7 +34,13 @@ namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
             {
                 ContractResolver = new RequestContractResolver()
             }), Encoding.UTF8, MediaTypeNames.Application.Json);
+            DoneLogMessage();
             return Task.CompletedTask;
+        }
+
+        private void DoneLogMessage()
+        {
+            _logger.LogDebug("Done setting HTTP request body");
         }
     }
 

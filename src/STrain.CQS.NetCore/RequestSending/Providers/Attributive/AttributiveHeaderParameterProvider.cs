@@ -1,13 +1,22 @@
-﻿using STrain.CQS.Attributes.RequestSending.Http.Parameters;
+﻿using Microsoft.Extensions.Logging;
+using STrain.CQS.Attributes.RequestSending.Http.Parameters;
 using System.Reflection;
 
 namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
 {
     public class AttributiveHeaderParameterProvider : IParameterProvider
     {
+        private readonly ILogger<AttributiveHeaderParameterProvider> _logger;
+
+        public AttributiveHeaderParameterProvider(ILogger<AttributiveHeaderParameterProvider> logger)
+        {
+            _logger = logger;
+        }
+
         public Task SetParametersAsync<TRequest>(HttpRequestMessage message, TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest
         {
+            _logger.LogDebug("Setting HTTP header parameter(s)");
             var type = typeof(TRequest);
             if (type.IsGenericRequest())
             {
@@ -32,6 +41,7 @@ namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
                 }
             }
 
+            _logger.LogDebug("Done setting HTTP header parameter(s)");
             return Task.CompletedTask;
         }
     }

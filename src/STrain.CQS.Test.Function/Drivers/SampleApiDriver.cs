@@ -22,10 +22,7 @@ namespace STrain.CQS.Test.Function.Drivers
         public static WebApplicationFactory<Program> Initialize(this WebApplicationFactory<Program> driver, ITestOutputHelper outputHelper)
         {
             return driver
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureLogging(builder => builder.AddXUnit(outputHelper));
-                });
+                .WithWebHostBuilder(builder => builder.ConfigureLogging(builder => builder.AddXUnit(outputHelper)));
         }
 
         public static WebApplicationFactory<Program> MockHttpSender(this WebApplicationFactory<Program> driver, string key, HttpMessageHandler messageHandler, string path, string baseAddress)

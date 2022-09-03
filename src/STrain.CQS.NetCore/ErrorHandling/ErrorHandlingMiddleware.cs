@@ -27,12 +27,15 @@ namespace STrain.CQS.NetCore.ErrorHandling
                     switch (context.Response.StatusCode)
                     {
                         case StatusCodes.Status401Unauthorized:
+                            _logger.LogError("Unathorized request");
                             await context.Response.WriteAsProblemAsync(ErrorEnumeration.Unathorized, context.Request.Path, context.RequestAborted);
                             break;
                         case StatusCodes.Status403Forbidden:
+                            _logger.LogError("Forbidden request");
                             await context.Response.WriteAsProblemAsync(ErrorEnumeration.Forbidden, context.Request.Path, context.RequestAborted);
                             break;
                         case StatusCodes.Status404NotFound:
+                            _logger.LogError("Endpoint not found");
                             await context.Response.WriteAsProblemAsync(ErrorEnumeration.NotFound.Endpoint, context.Request.Path, context.RequestAborted);
                             break;
                     }

@@ -1,15 +1,26 @@
 ﻿using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using STrain.CQS.NetCore.RequestSending.Providers.Attributive;
 using System.Net.Http.Json;
+using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
     public class AttributiveBodyParameterProviderTest
     {
+        private readonly ILogger<AttributiveBodyParameterProvider> _logger;
+
+        public AttributiveBodyParameterProviderTest(ITestOutputHelper outputHelper)
+        {
+            _logger = new LoggerFactory()
+                            .AddXUnit(outputHelper)
+                            .CreateLogger<AttributiveBodyParameterProvider>();
+        }
+
         private AttributiveBodyParameterProvider CreateSUT()
         {
-            return new AttributiveBodyParameterProvider();
+            return new AttributiveBodyParameterProvider(_logger);
         }
 
         public static IEnumerable<object[]> WholeObjectTestData = new List<object[]>
@@ -17,6 +28,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             new object[] { new Fixture().Create<BodyRequest>() },
             new object[] { new Fixture().Create<GenericRequest>() }
         };
+
         [Theory(DisplayName = "[UNIT][ABPP-001] - Convert the Whole Object")]
         [MemberData(nameof(WholeObjectTestData))]
         public async Task AttributiveBodyParameterProvider_SetParametersAsync_ConvertTheWholeObject<TRequest>(TRequest request)

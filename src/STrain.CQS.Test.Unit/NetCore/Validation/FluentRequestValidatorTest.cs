@@ -1,14 +1,25 @@
 ﻿using AutoFixture;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
 using Moq;
 using STrain.CQS.NetCore.Validation;
+using Xunit.Abstractions;
 using ValidationException = STrain.Core.Exceptions.ValidationException;
 
 namespace STrain.CQS.Test.Unit.NetCore.Validation
 {
 	public class FluentRequestValidatorTest
 	{
+		private readonly ILogger<FluentRequestValidator> _logger;
+
+		public FluentRequestValidatorTest(ITestOutputHelper outputHelper)
+		{
+			_logger = new LoggerFactory()
+							.AddXUnit(outputHelper)
+							.CreateLogger<FluentRequestValidator>();
+		}
+
 		private FluentRequestValidator CreateSUT(IValidator<TestCommand>? validator)
 		{
 
@@ -16,7 +27,7 @@ namespace STrain.CQS.Test.Unit.NetCore.Validation
 			serviceProviderMock.Setup(sp => sp.GetService(typeof(IValidator<TestCommand>)))
 				.Returns(validator);
 
-			return new FluentRequestValidator(serviceProviderMock.Object);
+			return new FluentRequestValidator(serviceProviderMock.Object, _logger);
 		}
 
 		[Fact(DisplayName = "[UNIT][FRV-001] - Valid request")]

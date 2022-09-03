@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace STrain.CQS.Dispatchers
 {
@@ -16,13 +15,17 @@ namespace STrain.CQS.Dispatchers
 
         public async Task<T> DispatchAsync<T>(Query<T> query, CancellationToken cancellationToken)
         {
-            _logger.LogDebug("Dispatching {query}", query.LogEntry());
+            _logger.LogDebug("Attempting to dispatch query");
             var type = typeof(IQueryPerformer<,>).MakeGenericType(query.GetType(), typeof(T));
             var performer = _provider.GetService(type);
 
             if (performer is null) throw new NotImplementedException($"Performer was not found for {query.LogEntry()}");
 
-            return await ((dynamic)performer).PerformAsync((dynamic)query, cancellationToken);
+            var result = await ((dynamic)performer).PerformAsync((dynamic)query, cancellationToken);
+            _logger.LogDebug("Done attempting to dispatch query");
+            _logger.LogTrace("Result object: {@ResultObject}", result as object);
+
+            return result;
         }
     }
 }

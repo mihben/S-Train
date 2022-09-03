@@ -1,4 +1,5 @@
 ﻿using LightInject;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using STrain.CQS.NetCore.Builders;
 using STrain.CQS.NetCore.RequestSending;
@@ -25,7 +26,7 @@ namespace STrain.CQS.NetCore.LigtInject
 
         public static HttpRequestSenderBuilder UseAttributivePathProvider(this HttpRequestSenderBuilder builder)
         {
-            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IPathProvider>(factory => new AttributivePathProvider(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path), builder.Key));
+            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IPathProvider>(factory => new AttributivePathProvider(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path, factory.GetInstance<ILogger<AttributivePathProvider>>()), builder.Key));
             return builder;
         }
         public static HttpRequestSenderBuilder UsePathProvider<TPathProvider>(this HttpRequestSenderBuilder builder)

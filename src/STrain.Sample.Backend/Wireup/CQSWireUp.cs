@@ -14,19 +14,22 @@ namespace STrain.Sample.Backend.Wireup
             builder.AddRequestValidator()
                 .UseFluentRequestValidator(builder => builder.RegistrateFrom<SampleCommandValidator>());
 
+            builder.AddMvcRequestReceiver()
+                .UseAuthorization()
+                .UseLogger();
+
             builder.AddGenericRequestHandler("api");
 
             builder.AddRequestRouter(request =>
-                                                            {
-                                                                if (request.GetType().Name.StartsWith("External")) return "external";
-                                                                else return "internal";
-                                                            },
+            {
+                if (request.GetType().Name.StartsWith("External")) return "external";
+                else return "internal";
+            },
                 builder =>
                         {
                             builder.AddHttpSender("external", (options, configuration) => configuration.Bind("Senders:External", options)).UseDefaults();
                             builder.AddHttpSender("internal", (options, configuraion) => configuraion.Bind("Senders:Internal", options)).UseDefaults();
                         });
-
         }
     }
 }

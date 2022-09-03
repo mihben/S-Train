@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -8,18 +9,29 @@ namespace STrain.CQS.NetCore.RequestSending.Attributive
     public class AttributivePathProvider : IPathProvider
     {
         private readonly string? _path;
+        private readonly ILogger<AttributivePathProvider> _logger;
 
-        public AttributivePathProvider(string? path)
+        public AttributivePathProvider(string? path, ILogger<AttributivePathProvider> logger)
         {
             _path = path;
+            _logger = logger;
         }
 
         public string GetPath<TRequest>(TRequest request) where TRequest : IRequest
         {
+            _logger.LogDebug("Attempting to determine HTTP request path");
             var type = typeof(TRequest);
             var attribute = type.GetRouteAttribute();
-            if (attribute is null) return _path ?? throw new InvalidOperationException($"Path of the {request} request cannot be determined. It must be configured via request attribute or in the configuration");
-            return attribute.Path.ReplaceParameters(request);
+
+            var result = attribute?.Path.ReplaceParameters(request) ?? _path;
+            if (result is null)
+            {
+                _logger.LogDebug("Fail attempting to determine HTTP request path");
+                throw new InvalidOperationException($"Path of the {request} request cannot be determined. It must be configured via request attribute or in the configuration");
+            }
+
+            _logger.LogDebug("Done attempting to determine HTTP request path");
+            return result;
         }
     }
 

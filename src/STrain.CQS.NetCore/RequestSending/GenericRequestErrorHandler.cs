@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using STrain.Core.Exceptions;
 using STrain.CQS.NetCore.ErrorHandling;
 using STrain.CQS.Senders;
@@ -10,10 +11,19 @@ namespace STrain.CQS.NetCore.RequestSending
 {
     public class GenericRequestErrorHandler : IRequestErrorHandler
     {
+        private readonly ILogger<GenericRequestErrorHandler> _logger;
+
+        public GenericRequestErrorHandler(ILogger<GenericRequestErrorHandler> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task HandleAsync(HttpResponseMessage response, CancellationToken cancellationToken)
         {
+            _logger.LogDebug("Mapping HTTP error response ({StatusCode})", response.StatusCode);
             if (response.Content.Headers.ContentType is null
-                || response.Content.Headers.ContentType.Equals(MediaTypeNames.Application.Json.Problem)) throw RequestException(response.StatusCode);
+                || response.Content.Headers.ContentType.MediaType is null
+                || !response.Content.Headers.ContentType.MediaType.Equals(MediaTypeNames.Application.Json.Problem, StringComparison.OrdinalIgnoreCase)) throw RequestException(response.StatusCode);
 
             var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(cancellationToken: cancellationToken);
             if (problem is null) throw InvalidOperationException();

@@ -1,16 +1,24 @@
 ﻿using AutoFixture;
-using Microsoft.Extensions.Options;
-using Moq;
-using STrain.CQS.NetCore.RequestSending;
+using Microsoft.Extensions.Logging;
 using STrain.CQS.NetCore.RequestSending.Attributive;
+using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
     public class AttributivePathProviderTest
     {
+        private readonly ILogger<AttributivePathProvider> _logger;
+
+        public AttributivePathProviderTest(ITestOutputHelper outputHelper)
+        {
+            _logger = new LoggerFactory()
+                            .AddXUnit(outputHelper)
+                            .CreateLogger<AttributivePathProvider>();
+        }
+
         private AttributivePathProvider CreateSUT(string? path = null)
         {
-            return new AttributivePathProvider(path);
+            return new AttributivePathProvider(path, _logger);
         }
 
         [Fact(DisplayName = "[UNIT][ABPP-001] - Get Path from Attribute")]

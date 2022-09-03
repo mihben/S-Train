@@ -1,5 +1,6 @@
 ﻿using LightInject;
 using STrain.CQS.Dispatchers;
+using STrain.CQS.Performers;
 using STrain.CQS.Senders;
 using STrain.CQS.Validations;
 using System.Diagnostics.CodeAnalysis;
@@ -16,6 +17,9 @@ namespace STrain.CQS.NetCore.Builders
             {
                 registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().Any(i => i.Name.Equals(typeof(ICommandPerformer<>).Name)));
                 registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().Any(i => i.Name.Equals(typeof(IQueryPerformer<,>).Name)));
+
+                registry.Decorate(typeof(ICommandPerformer<>), typeof(CommandPerformerLogger<>));
+                registry.Decorate(typeof(IQueryPerformer<,>), typeof(QueryPerformerLogger<,>));
             });
         }
         public static void AddPerformerFrom<T>(this CQSBuilder builder) => builder.AddPerformersFrom(typeof(T).Assembly);

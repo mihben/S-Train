@@ -1,15 +1,26 @@
 ﻿using AutoFixture;
+using Microsoft.Extensions.Logging;
 using STrain.CQS.Attributes.RequestSending.Http.Parameters;
 using STrain.CQS.NetCore.RequestSending.Providers.Attributive;
 using STrain.CQS.Test.Unit.Supports;
+using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
     public class AttributiveHeaderParameterProviderTest
     {
+        private readonly ILogger<AttributiveHeaderParameterProvider> _logger;
+
+        public AttributiveHeaderParameterProviderTest(ITestOutputHelper outputHelper)
+        {
+            _logger = new LoggerFactory()
+                            .AddXUnit(outputHelper)
+                            .CreateLogger<AttributiveHeaderParameterProvider>();
+        }
+
         private AttributiveHeaderParameterProvider CreateSUT()
         {
-            return new AttributiveHeaderParameterProvider();
+            return new AttributiveHeaderParameterProvider(_logger);
         }
 
         [Fact(DisplayName = "[UNIT][AHPP-001] - Set 'Request-Type' header")]

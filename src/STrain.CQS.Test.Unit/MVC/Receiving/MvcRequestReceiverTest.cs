@@ -18,20 +18,20 @@ namespace STrain.CQS.Test.Unit.MVC.Receiving
         }
 
         [Fact(DisplayName = "[UNIT][MRR-001] - Receiving command")]
-        public async Task MvcRequestReceiver_ReceiveAsync_ReceivingCommand()
+        public async Task MvcRequestReceiver_ReceiveCommandAsync_ReceivingCommand()
         {
             // Arrange
             var sut = CreateSUT();
 
             // Act
-            var response = await sut.ReceiveAsync(new TestCommand(), default);
+            var response = await sut.ReceiveCommandAsync(new TestCommand(), default);
 
             // Assert
             Assert.IsType<AcceptedResult>(response);
         }
 
         [Fact(DisplayName = "[UNIT][MRR-002] - Receiving query")]
-        public async Task MvcRequestReceiver_ReceiveAsync_ReceivingQuery()
+        public async Task MvcRequestReceiver_ReceiveQueryAsync_ReceivingQuery()
         {
             // Arrange
             var sut = CreateSUT();
@@ -41,7 +41,7 @@ namespace STrain.CQS.Test.Unit.MVC.Receiving
                 .ReturnsAsync(result);
 
             // Act
-            var response = await sut.ReceiveAsync<TestQuery, object>(new TestQuery(), default);
+            var response = await sut.ReceiveQueryAsync(new TestQuery(), default);
 
             // Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(response);

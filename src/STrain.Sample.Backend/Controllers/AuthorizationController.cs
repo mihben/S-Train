@@ -17,25 +17,25 @@ namespace STrain.Sample.Backend.Controllers
         [HttpGet("authorized")]
         public async Task<IActionResult> AuthorizedAsync(CancellationToken cancellationToken)
         {
-            return await _requestReceiver.ReceiveAsync(new AuthorizedCommand(), cancellationToken);
+            return await _requestReceiver.ReceiveCommandAsync(new AuthorizedCommand(), cancellationToken);
         }
 
         [HttpGet("unauthorized")]
         public async Task<IActionResult> UnauthorizedAsync(CancellationToken cancellationToken)
         {
-            return await _requestReceiver.ReceiveAsync(new UnathorizedCommand(), cancellationToken);
+            return await _requestReceiver.ReceiveCommandAsync(new UnathorizedCommand(), cancellationToken);
         }
 
         [HttpGet("forbidden")]
         public async Task<IActionResult> ForbiddenAsync(CancellationToken cancellationToken)
         {
-            return await _requestReceiver.ReceiveAsync(new ForbiddenCommand(), cancellationToken);
+            return await _requestReceiver.ReceiveCommandAsync(new ForbiddenCommand(), cancellationToken);
         }
 
         [HttpGet("allow-anonymus")]
         public async Task<IActionResult> AllowAnonymusAsync(CancellationToken cancellationToken)
         {
-            return await _requestReceiver.ReceiveAsync(new AllowAnonymusCommand(), cancellationToken);
+            return await _requestReceiver.ReceiveCommandAsync(new AllowAnonymusCommand(), cancellationToken);
         }
     }
 }

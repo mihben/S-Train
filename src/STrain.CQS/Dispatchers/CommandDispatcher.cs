@@ -17,12 +17,13 @@ namespace STrain.CQS.Dispatchers
         public async Task DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
             where TCommand : Command
         {
-            _logger.LogDebug("Dispatching {command}", command.LogEntry());
+            _logger.LogDebug("Attempting to dispatch command", command.LogEntry());
             var performer = _provider.GetService<ICommandPerformer<TCommand>>();
 
             if (performer is null) throw new NotImplementedException($"Performer was not found for {command.LogEntry()}");
 
             await performer.PerformAsync(command, cancellationToken);
+            _logger.LogDebug("Done attempting to dispatch command");
         }
     }
 }

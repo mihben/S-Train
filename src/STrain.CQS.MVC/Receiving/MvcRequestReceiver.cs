@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using STrain.CQS.Api;
 using STrain.CQS.Dispatchers;
 using STrain.CQS.Receivers;
 
@@ -17,15 +18,15 @@ namespace STrain
             _queryDispatcher = queryDispatcher;
         }
 
-        public async Task<IActionResult> ReceiveAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : Command
+        public async Task<IActionResult> ReceiveCommandAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : ICommand
         {
-            await _commandDispatcher.DispatchAsync(command, cancellationToken);
+            await _commandDispatcher.DispatchAsync((dynamic)command, cancellationToken);
             return new AcceptedResult();
         }
 
-        public async Task<IActionResult> ReceiveAsync<TQuery, T>(TQuery query, CancellationToken cancellationToken) where TQuery : Query<T>
+        public async Task<IActionResult> ReceiveQueryAsync<TQuery>(TQuery query, CancellationToken cancellationToken) where TQuery : IQuery
         {
-            return new OkObjectResult(await _queryDispatcher.DispatchAsync(query, cancellationToken));
+            return new OkObjectResult(await _queryDispatcher.DispatchAsync((dynamic)query, cancellationToken));
         }
     }
 }

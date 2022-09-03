@@ -1,13 +1,22 @@
-﻿using STrain.CQS.NetCore.RequestSending.Attributive;
+﻿using Microsoft.Extensions.Logging;
+using STrain.CQS.NetCore.RequestSending.Attributive;
 using STrain.CQS.Test.Unit.Supports;
+using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
     public class AttributiveMethodProviderTest
     {
+        public AttributiveMethodProviderTest(ITestOutputHelper outputHelper)
+        {
+            _logger = new LoggerFactory()
+                            .AddXUnit(outputHelper)
+                            .CreateLogger<AttributiveMethodProvider>();
+        }
+
         private AttributiveMethodProvider CreateSUT()
         {
-            return new AttributiveMethodProvider();
+            return new AttributiveMethodProvider(_logger);
         }
 
         public static IEnumerable<object[]> GetMethodFromAttributeData = new List<object[]>
@@ -18,6 +27,8 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
             new object[] { new PutRequest(), HttpMethod.Put },
             new object[] { new DeleteRequest(), HttpMethod.Delete }
         };
+        private readonly ILogger<AttributiveMethodProvider> _logger;
+
         [Theory(DisplayName = "[UNIT][ABMP-001] - Get Method from attribute")]
         [MemberData(nameof(GetMethodFromAttributeData))]
 #pragma warning disable RCS1163 // Unused parameter.
