@@ -15,15 +15,17 @@ namespace STrain.CQS.Dispatchers
 
         public async Task<T> DispatchAsync<T>(Query<T> query, CancellationToken cancellationToken)
         {
-            using var scope = _logger.BeginScope<Dictionary<string, object>>(new Dictionary<string, object> { ["Query"] = query.GetType() });
-            _logger.LogTrace("Object: {@QueryObject}", query);
+            _logger.LogDebug("Attempting to dispatch query");
             var type = typeof(IQueryPerformer<,>).MakeGenericType(query.GetType(), typeof(T));
             var performer = _provider.GetService(type);
 
             if (performer is null) throw new NotImplementedException($"Performer was not found for {query.LogEntry()}");
 
-            _logger.LogDebug("Performing {Performer}", performer);
-            return await ((dynamic)performer).PerformAsync((dynamic)query, cancellationToken);
+            var result = await ((dynamic)performer).PerformAsync((dynamic)query, cancellationToken);
+            _logger.LogDebug("Done attempting to dispatch query");
+            _logger.LogTrace("Result object: {@ResultObject}", result as object);
+
+            return result;
         }
     }
 }

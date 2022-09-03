@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using STrain.CQS.Api;
-using STrain.CQS.Dispatchers;
 using System.Diagnostics.CodeAnalysis;
 
 namespace STrain.CQS.MVC.GenericRequestHandling
@@ -8,26 +8,26 @@ namespace STrain.CQS.MVC.GenericRequestHandling
     [ExcludeFromCodeCoverage]
     public class GenericRequestController : ControllerBase
     {
-        private readonly ICommandDispatcher _commandDispatcher;
-        private readonly IQueryDispatcher _queryDispatcher;
+        private readonly IMvcRequestReceiver _requestReceiver;
+        private readonly ILogger<GenericRequestController> _logger;
 
-        public GenericRequestController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+        public GenericRequestController(IMvcRequestReceiver requestReceiver, ILogger<GenericRequestController> logger)
         {
-            _commandDispatcher = commandDispatcher;
-            _queryDispatcher = queryDispatcher;
+            _requestReceiver = requestReceiver;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> PostAsync(ICommand command, CancellationToken cancellationToken)
         {
-            await _commandDispatcher.DispatchAsync((dynamic)command, cancellationToken);
-            return Accepted();
+            _logger.LogDebug("Receiving ");
+            return await _requestReceiver.ReceiveCommandAsync((dynamic)command, cancellationToken).ConfigureAwait(false);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync(IQuery query, CancellationToken cancellationToken)
         {
-            return Ok(await _queryDispatcher.DispatchAsync((dynamic)query, cancellationToken));
+            return await _requestReceiver.ReceiveQueryAsync((dynamic)query, cancellationToken);
         }
     }
 }

@@ -1,7 +1,11 @@
 using LightInject;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using STrain;
 using STrain.CQS.MVC.Authorization;
+using STrain.CQS.MVC.Receiving;
+using STrain.CQS.Performers;
+using STrain.CQS.Receivers;
 using STrain.Sample.Backend.Services;
 using STrain.Sample.Backend.Wireup;
 using System.Diagnostics;
@@ -17,12 +21,7 @@ builder.Services.AddMvc()
     .AddControllersAsServices();
 builder.Services.AddControllers();
 
-Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
-
 builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddTransient<IMvcRequestReceiver, MvcRequestReceiver>();
-builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.Decorate<IMvcRequestReceiver, MvcRequestAuthorizer>());
 
 builder.Services.AddHttpClient();
 builder.AddCQS(CQSWireUp.Build);
