@@ -1,14 +1,25 @@
 ﻿using AutoFixture;
+using Microsoft.Extensions.Logging;
 using STrain.CQS.NetCore.RequestSending.Attributive;
 using STrain.CQS.Test.Unit.Supports;
+using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
     public class AttributiveQueryParameterProviderTest
     {
+        private readonly ILogger<AttributiveQueryParameterProvider> _logger;
+
+        public AttributiveQueryParameterProviderTest(ITestOutputHelper outputHelper)
+        {
+            _logger = new LoggerFactory()
+                            .AddXUnit(outputHelper)
+                            .CreateLogger<AttributiveQueryParameterProvider>();
+        }
+
         private AttributiveQueryParameterProvider CreateSUT()
         {
-            return new AttributiveQueryParameterProvider();
+            return new AttributiveQueryParameterProvider(_logger);
         }
 
         [Fact(DisplayName = "[UNIT][ABQPP-001] - Add whole object to query parameter")]

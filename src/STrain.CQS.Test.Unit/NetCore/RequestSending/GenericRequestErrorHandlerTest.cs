@@ -1,24 +1,35 @@
 ﻿using AutoFixture;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using STrain.Core.Exceptions;
 using STrain.CQS.NetCore.ErrorHandling;
 using STrain.CQS.NetCore.RequestSending;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {
-	public class GenericResponseHandlerTest
+	public class GenericRequestErrorHandlerTest
 	{
+		private readonly ILogger<GenericRequestErrorHandler> _logger;
+
+		public GenericRequestErrorHandlerTest(ITestOutputHelper outputHelper)
+		{
+			_logger = new LoggerFactory()
+							.AddXUnit(outputHelper)
+							.CreateLogger<GenericRequestErrorHandler>();
+		}
+
 		private GenericRequestErrorHandler CreateSUT()
 		{
-			return new GenericRequestErrorHandler();
+			return new GenericRequestErrorHandler(_logger);
 		}
 
 		[Fact(DisplayName = "[UNIT][GRH-001] - Invalid content type")]
-		public async Task GenericResposneHandler_HandleErrorAsync_InvalidContentType()
+		public async Task GenericResponseHandler_HandleErrorAsync_InvalidContentType()
 		{
 			// Arrange
 			var sut = CreateSUT();
@@ -29,7 +40,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 		}
 
 		[Fact(DisplayName = "[UNIT][GRH-002] - Not found")]
-		public async Task GenericResposneHandler_HandleErrorAsync_NotFound()
+		public async Task GenericResponseHandler_HandleErrorAsync_NotFound()
 		{
 			// Arrange
 			var sut = CreateSUT();
@@ -47,7 +58,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 		}
 
 		[Fact(DisplayName = "[UNIT][GRH-003] - Unathorized")]
-		public async Task GenericResposneHandler_HandleErrorAsync_Unathorized()
+		public async Task GenericResponseHandler_HandleErrorAsync_Unathorized()
 		{
 			// Arrange
 			var sut = CreateSUT();
@@ -67,7 +78,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 		}
 
 		[Fact(DisplayName = "[UNIT][GRH-004] - Forbidden")]
-		public async Task GenericResposneHandler_HandleErrorAsync_Forbidden()
+		public async Task GenericResponseHandler_HandleErrorAsync_Forbidden()
 		{
 			// Arrange
 			var sut = CreateSUT();
@@ -87,7 +98,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 		}
 
 		[Fact(DisplayName = "[UNIT][GRH-005] - Verification error")]
-		public async Task GenericResposneHandler_HandleErrorAsync_VerificationError()
+		public async Task GenericResponseHandler_HandleErrorAsync_VerificationError()
 		{
 			// Arrange
 			var sut = CreateSUT();
@@ -107,7 +118,7 @@ namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 		}
 
 		[Fact(DisplayName = "[UNIT][GRH-006] - Validation error")]
-		public async Task GenericResposneHandler_HandleErrorAsync_ValidationError()
+		public async Task GenericResponseHandler_HandleErrorAsync_ValidationError()
 		{
 			// Arrange
 			var sut = CreateSUT();

@@ -10,9 +10,9 @@ namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
 {
     public class AttributiveBodyParameterProvider : IParameterProvider
     {
-        private readonly ILogger<AttributiveHeaderParameterProvider> _logger;
+        private readonly ILogger<AttributiveBodyParameterProvider> _logger;
 
-        public AttributiveBodyParameterProvider(ILogger<AttributiveHeaderParameterProvider> logger)
+        public AttributiveBodyParameterProvider(ILogger<AttributiveBodyParameterProvider> logger)
         {
             _logger = logger;
         }

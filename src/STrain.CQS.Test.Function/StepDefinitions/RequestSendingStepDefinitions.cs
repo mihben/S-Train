@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Moq;
 using Moq.Protected;
 using STrain.CQS.Attributes.RequestSending.Http.Parameters;
+using STrain.CQS.NetCore.ErrorHandling;
 using STrain.CQS.Test.Function.Drivers;
 using STrain.CQS.Test.Function.Support;
 using STrain.CQS.Test.Function.Workarounds;
 using STrain.Sample.Api;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Xunit.Abstractions;
@@ -99,7 +101,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             _messageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .Returns(Task.FromResult(new HttpResponseMessage(dataTable.GetEnum<HttpStatusCode>("Status"))
                 {
-                    Content = JsonContent.Create(dataTable.AsProblem(_forwardCommand.Resource))
+                    Content = JsonContent.Create(dataTable.AsProblem(_forwardCommand.Resource), mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json.Problem))
                 }));
             _requestContext.Parameter = _forwardCommand.Resource;
             _requestContext.Response = await _driver.ReceiveCommandAsync(_forwardCommand, TimeSpan.FromSeconds(1));
