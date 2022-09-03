@@ -1,4 +1,6 @@
-﻿namespace STrain.CQS.Test.Function.Support.Hooks
+﻿using STrain.CQS.Test.Function.Drivers;
+
+namespace STrain.CQS.Test.Function.Support.Hooks
 {
     [Binding]
     public class GenericHooks
@@ -10,10 +12,11 @@
             _context = context;
         }
 
-        [BeforeScenario]
+        [BeforeScenario(Order = -1)]
         public void Registrate()
         {
             _context.ScenarioContainer.RegisterTypeAs<RequestContext, RequestContext>().InstancePerContext();
+            _context.ScenarioContainer.RegisterTypeAs<ApiDriver, ApiDriver>().InstancePerContext();
         }
     }
 }

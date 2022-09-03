@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace STrain.CQS.Test.Function.Workarounds
 {
-    internal class LightinjectWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup>
+    public class LightinjectWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup>
         where TStartup : class
     {
         protected override IHost CreateHost(IHostBuilder builder)
@@ -17,7 +17,7 @@ namespace STrain.CQS.Test.Function.Workarounds
         }
     }
 
-    internal class CustomServiceProviderFactory : IServiceProviderFactory<IServiceContainer>
+    public class CustomServiceProviderFactory : IServiceProviderFactory<IServiceContainer>
     {
         private IServiceCollection? _services;
 
@@ -33,7 +33,7 @@ namespace STrain.CQS.Test.Function.Workarounds
         }
     }
 
-    internal class CustomServiceContainer : ServiceContainer
+    public class CustomServiceContainer : ServiceContainer
     {
         private readonly IServiceCollection _services;
 
