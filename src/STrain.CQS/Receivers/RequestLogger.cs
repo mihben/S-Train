@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using STrain.CQS.Api;
+using STrain.CQS.Extensions;
 using System.Diagnostics;
 
 namespace STrain.CQS.Receivers
@@ -17,22 +18,10 @@ namespace STrain.CQS.Receivers
 
         public async Task<TResponse> ReceiveCommandAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : ICommand
         {
-            var stopwatch = Stopwatch.StartNew();
-
-            try
-            {
-                using var _ = _logger.BeginScope(new Dictionary<string, object> { ["Command"] = command.GetType() });
-                _logger.LogDebug("Receiving command");
-
-                var response = await _requestReceiver.ReceiveCommandAsync(command, cancellationToken).ConfigureAwait(false);
-                _logger.LogTrace("Response object: {@ResponseObject}", response);
-                return response;    
-            }
-            finally
-            {
-                stopwatch.Stop();
-                _logger.LogDebug("Received command in {ElapsedTime}  ms", stopwatch.ElapsedMilliseconds);
-            }
+            using var stopwatch = _logger.LogStopwatch("Received command in {ElapsedTime} ms");
+            var response = await _requestReceiver.ReceiveCommandAsync(command, cancellationToken).ConfigureAwait(false);
+            _logger.LogTrace("Response object: {@ResponseObject}", response);
+            return response;
         }
 
         public async Task<TResponse> ReceiveQueryAsync<TQuery>(TQuery query, CancellationToken cancellationToken) where TQuery : IQuery
