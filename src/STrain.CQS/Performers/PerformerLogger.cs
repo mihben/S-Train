@@ -18,7 +18,9 @@ namespace STrain.CQS.Performers
 
         public async Task PerformAsync(TCommand command, CancellationToken cancellationToken)
         {
+#pragma warning disable CA2017 // Parameter count mismatch
             using var stopwatch = _logger.LogStopwatch("Performed command in {ElapsedTime} ms");
+#pragma warning restore CA2017 // Parameter count mismatch
             using var scope = _logger.BeginScope(new Dictionary<string, object> { ["Performer"] = GetType() });
             _logger.LogDebug("Performing command");
             await _commandPerformer.PerformAsync(command, cancellationToken).ConfigureAwait(false);
@@ -39,7 +41,9 @@ namespace STrain.CQS.Performers
 
         public async Task<TResponse> PerformAsync(TQuery query, CancellationToken cancellationToken)
         {
-            using var stopwatch = _logger.LogStopwatch(LogLevel.Debug, "Performed query in {ElapsedTime} ms");
+#pragma warning disable CA2017 // Parameter count mismatch
+            using var stopwatch = _logger.LogStopwatch("Performed query in {ElapsedTime} ms");
+#pragma warning restore CA2017 // Parameter count mismatch
             using var scope = _logger.BeginScope(new Dictionary<string, object> { ["Performer"] = GetType() });
             var result = await _queryPerformer.PerformAsync(query, cancellationToken).ConfigureAwait(false);
             return result;

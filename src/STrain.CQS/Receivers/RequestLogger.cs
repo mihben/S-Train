@@ -18,7 +18,9 @@ namespace STrain.CQS.Receivers
 
         public async Task<TResponse> ReceiveCommandAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : ICommand
         {
+#pragma warning disable CA2017 // Parameter count mismatch
             using var stopwatch = _logger.LogStopwatch("Received command in {ElapsedTime} ms");
+#pragma warning restore CA2017 // Parameter count mismatch
             var response = await _requestReceiver.ReceiveCommandAsync(command, cancellationToken).ConfigureAwait(false);
             _logger.LogTrace("Response object: {@ResponseObject}", response);
             return response;
