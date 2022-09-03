@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace STrain.CQS.Extensions
 {
-    internal class StopwatchLogger : IDisposable
+    public class StopwatchLogger : IDisposable
     {
         private readonly ILogger _logger;
         private readonly LogLevel _level;

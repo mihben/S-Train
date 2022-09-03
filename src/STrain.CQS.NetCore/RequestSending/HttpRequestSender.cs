@@ -45,19 +45,24 @@ namespace STrain.CQS.NetCore.RequestSending
         public async Task<T?> SendAsync<TRequest, T>(TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest
         {
-            var message = new HttpRequestMessage(_methodProvider.GetMethod<TRequest>(), $"{_httpClient.BaseAddress}{_pathProvider.GetPath(request)}");
-            foreach (var parameterProvider in _parameterProviders)
+            _logger.LogDebug("Creating HTTP request");
+            using (_logger.LogStopwatch("Sent HTTP request in {ElapsedTime} ms"))
             {
-                await parameterProvider.SetParametersAsync(message, request, cancellationToken);
+                var message = new HttpRequestMessage(_methodProvider.GetMethod<TRequest>(), $"{_httpClient.BaseAddress}{_pathProvider.GetPath(request)}");
+                foreach (var parameterProvider in _parameterProviders)
+                {
+                    await parameterProvider.SetParametersAsync(message, request, cancellationToken);
+                }
+
+                _logger.LogDebug("Sending HTTP request to {RequestUri}", message.RequestUri);
+                _logger.LogTrace("Request message: {@Message}", message);
+                var response = await _httpClient.SendAsync(message, cancellationToken);
+                _logger.LogTrace("Response message: {@Message}", response);
+                if (!response.IsSuccessStatusCode) await _requestErrorHandler.HandleAsync(response, cancellationToken);
+
+                if (response.Content.Headers.ContentLength == 0) return default;
+                return (T?)(await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType?.MediaType])).ReadAsync<T>(response, cancellationToken));
             }
-
-            _logger.LogDebug("Sending request to {uri}", message.RequestUri);
-            _logger.LogTrace("Request message: {message}", message);
-            var response = await _httpClient.SendAsync(message, cancellationToken);
-            if (!response.IsSuccessStatusCode) await _requestErrorHandler.HandleAsync(response, cancellationToken);
-
-            if (response.Content.Headers.ContentLength == 0) return default;
-            return (T?)(await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType?.MediaType])).ReadAsync<T>(response, cancellationToken));
         }
     }
 }

@@ -18,7 +18,7 @@ namespace STrain.CQS.Performers
 
         public async Task PerformAsync(TCommand command, CancellationToken cancellationToken)
         {
-            using var stopwatch = _logger.LogStopwatch("Performed command in {ElapsedTime}");
+            using var stopwatch = _logger.LogStopwatch("Performed command in {ElapsedTime} ms");
             using var scope = _logger.BeginScope(new Dictionary<string, object> { ["Performer"] = GetType() });
             _logger.LogDebug("Performing command");
             await _commandPerformer.PerformAsync(command, cancellationToken).ConfigureAwait(false);

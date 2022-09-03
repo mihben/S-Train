@@ -1,4 +1,5 @@
-﻿using STrain.CQS.NetCore.RequestSending.Providers;
+﻿using Microsoft.Extensions.Logging;
+using STrain.CQS.NetCore.RequestSending.Providers;
 using System.Reflection;
 using System.Web;
 
@@ -6,16 +7,27 @@ namespace STrain.CQS.NetCore.RequestSending.Attributive
 {
     public class AttributiveQueryParameterProvider : IParameterProvider
     {
+        private readonly ILogger<AttributiveQueryParameterProvider> _logger;
+
+        public AttributiveQueryParameterProvider(ILogger<AttributiveQueryParameterProvider> logger)
+        {
+            _logger = logger;
+        }
+
         public Task SetParametersAsync<TRequest>(HttpRequestMessage message, TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest
         {
             if (message.RequestUri is null) throw new ArgumentException("Uri is required");
 
+            _logger.LogDebug("Setting HTTP query parameter(s)");
             var type = typeof(TRequest);
-            if (type.IsGenericRequest()) return Task.CompletedTask;
+            if (!type.IsGenericRequest())
+            {
+                if (type.GetCustomAttribute<QueryParameterAttribute>() is not null) message.RequestUri = message.RequestUri.SetQuery(type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty), request);
+                else message.RequestUri = message.RequestUri.SetQuery(type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty).Where(p => p.GetCustomAttribute<QueryParameterAttribute>() is not null), request);
+            }
 
-            if (type.GetCustomAttribute<QueryParameterAttribute>() is not null) message.RequestUri = message.RequestUri.SetQuery(type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty), request);
-            else message.RequestUri = message.RequestUri.SetQuery(type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty).Where(p => p.GetCustomAttribute<QueryParameterAttribute>() is not null), request);
+            _logger.LogDebug("Done setting HTTP query parameter(s)");
             return Task.CompletedTask;
         }
     }
