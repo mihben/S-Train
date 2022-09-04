@@ -1,14 +1,25 @@
-﻿namespace STrain.Sample.Api
+﻿using FluentValidation;
+
+namespace STrain.Sample.Api
 {
     public static class Error
     {
-        public record NotFoundCommand : Command
+        public record ValidatedCommand : Command
         {
-            public string Resource { get; }
+            public string Value { get; }
 
-            public NotFoundCommand(string resource)
+            public ValidatedCommand(string value)
             {
-                Resource = resource;
+                Value = value;
+            }
+        }
+
+        public class ValidatedCommandValidator : AbstractValidator<ValidatedCommand>
+        {
+            public ValidatedCommandValidator()
+            {
+                RuleFor(c => c.Value)
+                    .NotEmpty();
             }
         }
     }

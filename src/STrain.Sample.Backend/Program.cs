@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authentication;
 using Serilog;
 using STrain.Sample.Backend.Controllers;
 using STrain.Sample.Backend.Services;
+using STrain.Sample.Backend.Supports;
 using STrain.Sample.Backend.Wireup;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,11 @@ builder.Services.AddMvc()
     .AddControllersAsServices()
     .AddApplicationPart(typeof(ExternalController).Assembly);
 builder.Services.AddControllers();
+
+builder.Services.AddAuthorization(options => options.AddPolicy("Forbidden", policy => policy.RequireUserName("Admin")));
+builder.Services.AddAuthentication()
+    .AddScheme<AuthenticationSchemeOptions, UnathorizedAuthenticationHandler>("Unathorized", null, null)
+    .AddScheme<AuthenticationSchemeOptions, ForbiddenAuthenticationHandler>("Forbidden", null, null);
 
 builder.Services.AddHttpContextAccessor();
 

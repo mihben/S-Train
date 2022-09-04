@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
-using System.Web;
 using Xunit.Abstractions;
 
 namespace STrain.Extensions.Testing.Drivers
@@ -43,20 +42,9 @@ namespace STrain.Extensions.Testing.Drivers
             return await client.SendAsync(requestMessage, cancellationTokenSource.Token);
         }
 
-        public async Task<HttpResponseMessage> GetAsync(string path, TimeSpan timeout, params KeyValuePair<string, string>[] parameters)
+        public async Task<HttpResponseMessage> GetAsync(string path, TimeSpan timeout)
         {
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, path);
-
-            var uriBuilder = new UriBuilder(requestMessage.RequestUri);
-            var queryParameters = HttpUtility.ParseQueryString(requestMessage.RequestUri.Query);
-            foreach (var parameter in parameters)
-            {
-                queryParameters.Add(parameter.Key, parameter.Value);
-            }
-            uriBuilder.Query = queryParameters.ToString();
-
-            requestMessage.RequestUri = uriBuilder.Uri;
-
             return await SendAsync(requestMessage, timeout);
         }
 

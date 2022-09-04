@@ -1,40 +1,35 @@
-﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc.Testing;
-using STrain.CQS.Test.Function.Drivers;
-using STrain.CQS.Test.Function.Support;
-using STrain.Sample.Api;
+﻿using STrain.CQS.Test.Function.Drivers;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using Xunit.Abstractions;
-using Error = STrain.CQS.Test.Function.StepDefinitions.ErrorHandlingStepDefinitions.Problem.Error;
+using System.Net.Http.Json;
+using static STrain.CQS.Test.Function.StepDefinitions.ErrorHandlingStepDefinitions.Problem;
 
 namespace STrain.CQS.Test.Function.StepDefinitions
 {
     [Binding]
     public class ErrorHandlingStepDefinitions
     {
-        private readonly WebApplicationFactory<Program> _driver;
-        private readonly RequestContext _requestContext;
+        private readonly ApiDriver _driver;
+        private string _resource;
+        private HttpResponseMessage _response;
 
-        public ErrorHandlingStepDefinitions(RequestContext requestContext, ITestOutputHelper outputHelper)
+        public ErrorHandlingStepDefinitions(ApiDriver driver)
         {
-            _driver = new LightinjectWebApplicationFactory<Program>()
-                        .Initialize(outputHelper)
-                        .MockAuthentication(builder => builder.Forbidden().Unathorized());
-            _requestContext = requestContext;
-        }
-
-        [When("Throwing NotFoundException")]
-        public async Task ThrowNotFoundExceptionAsync()
-        {
-            _requestContext.Request = new Fixture().Create<string>();
-            _requestContext.Response = await _driver.ReceiveCommandAsync(new SampleNotFoundCommand(_requestContext.Request.ToString()!), TimeSpan.FromSeconds(1));
+            _driver = driver;
         }
 
         [When("Calling {string} endpoint")]
-        public async Task SendingRequestToUnkownEndpointAsync(string endpoint)
+        public async Task CallingAsync(string endpoint)
         {
-            _requestContext.Response = await _driver.SendAsync(endpoint, TimeSpan.FromSeconds(1));
+            _resource = "NotFoundedResource";
+            _response = await _driver.GetAsync(endpoint, TimeSpan.FromSeconds(1));
+        }
+
+
+        [Then("Error response should be")]
+        public async Task ShouldBeErrorResponseAsync(Table dataTable)
+        {
+            Assert.Equal(dataTable.AsProblem(_resource), await _response.Content.ReadFromJsonAsync<Problem>(), new ProblemEqualityComparer());
         }
 
         internal class ProblemEqualityComparer : IEqualityComparer<Problem?>
