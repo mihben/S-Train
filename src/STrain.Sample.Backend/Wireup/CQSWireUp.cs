@@ -1,6 +1,5 @@
 ﻿using STrain.CQS.NetCore.Builders;
 using STrain.CQS.NetCore.LigtInject;
-using STrain.Sample.Api;
 using STrain.Sample.Backend.Performers;
 
 namespace STrain.Sample.Backend.Wireup
@@ -11,8 +10,8 @@ namespace STrain.Sample.Backend.Wireup
         {
             builder.AddPerformerFrom<SampleCommandPerformer>();
 
-            builder.AddRequestValidator()
-                .UseFluentRequestValidator(builder => builder.RegistrateFrom<SampleCommandValidator>());
+            //builder.AddRequestValidator()
+            //    .UseFluentRequestValidator(builder => builder.RegistrateFrom<SampleCommandValidator>());
 
             builder.AddMvcRequestReceiver()
                 .UseAuthorization()
@@ -22,13 +21,13 @@ namespace STrain.Sample.Backend.Wireup
 
             builder.AddRequestRouter(request =>
             {
-                if (request.GetType().Name.StartsWith("External")) return "external";
-                else return "internal";
+                if (request.GetType().Name.Contains("External")) return "External";
+                else return "Generic";
             },
                 builder =>
                         {
-                            builder.AddHttpSender("external", (options, configuration) => configuration.Bind("Senders:External", options)).UseDefaults();
-                            builder.AddHttpSender("internal", (options, configuraion) => configuraion.Bind("Senders:Internal", options)).UseDefaults();
+                            builder.AddHttpSender("External", (options, configuration) => configuration.Bind("Senders:External", options)).UseDefaults();
+                            builder.AddHttpSender("Generic", (options, configuraion) => configuraion.Bind("Senders:Generic", options)).UseGenericDefaults();
                         });
         }
     }

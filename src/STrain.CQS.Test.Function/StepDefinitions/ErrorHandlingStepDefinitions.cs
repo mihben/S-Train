@@ -2,12 +2,11 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using STrain.CQS.Test.Function.Drivers;
 using STrain.CQS.Test.Function.Support;
-using STrain.CQS.Test.Function.Workarounds;
 using STrain.Sample.Api;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using Xunit.Abstractions;
-using static STrain.CQS.Test.Function.StepDefinitions.ErrorHandlingStepDefinitions.Problem;
+using Error = STrain.CQS.Test.Function.StepDefinitions.ErrorHandlingStepDefinitions.Problem.Error;
 
 namespace STrain.CQS.Test.Function.StepDefinitions
 {
@@ -28,8 +27,8 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [When("Throwing NotFoundException")]
         public async Task ThrowNotFoundExceptionAsync()
         {
-            _requestContext.Parameter = new Fixture().Create<string>();
-            _requestContext.Response = await _driver.ReceiveCommandAsync(new SampleNotFoundCommand(_requestContext.Parameter.ToString()!), TimeSpan.FromSeconds(1));
+            _requestContext.Request = new Fixture().Create<string>();
+            _requestContext.Response = await _driver.ReceiveCommandAsync(new SampleNotFoundCommand(_requestContext.Request.ToString()!), TimeSpan.FromSeconds(1));
         }
 
         [When("Calling {string} endpoint")]
@@ -106,9 +105,10 @@ namespace STrain.CQS.Test.Function.StepDefinitions
                 dataTable.GetValue<string>("Detail").Replace("{resource}", resource), dataTable.GetValue<string>("Instance"), errors);
         }
 
-        public static T GetValue<T>(this Table dataTable, string header)
+        public static T? GetValue<T>(this Table dataTable, string header)
             where T : class, IConvertible
         {
+            if (!dataTable.Rows[0].ContainsKey(header)) return null;
             return (T)Convert.ChangeType(dataTable.Rows[0][header], typeof(T));
         }
 

@@ -1,10 +1,8 @@
-﻿using STrain.Sample.Api;
-
-namespace STrain.Sample.Backend.Services
+﻿namespace STrain.Sample.Backend.Services
 {
     public interface ISampleService
     {
-        Task DoSampleAsync(SampleCommand command, CancellationToken cancellationToken);
+        Task DoSampleAsync(Api.Sample.GenericCommand command, CancellationToken cancellationToken);
     }
 
     public class SampleService : ISampleService
@@ -16,7 +14,7 @@ namespace STrain.Sample.Backend.Services
             _logger = logger;
         }
 
-        public Task DoSampleAsync(SampleCommand command, CancellationToken cancellationToken)
+        public Task DoSampleAsync(Api.Sample.GenericCommand command, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Called {command}", command.LogEntry());
             return Task.CompletedTask;

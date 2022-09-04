@@ -18,7 +18,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         [Then("Error response should be")]
         public async Task ErrorResponseShouldBe(Table dataTable)
         {
-            var problem = dataTable.AsProblem(_requestContext.Parameter?.ToString()!);
+            var problem = dataTable.AsProblem(_requestContext.Request?.ToString()!);
             var code = dataTable.GetEnum<HttpStatusCode>("Status");
             var contentType = dataTable.GetValue<string>("ContentType");
 

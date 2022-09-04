@@ -1,11 +1,10 @@
 ﻿using LightInject;
 using LightInject.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace STrain.CQS.Test.Function.Workarounds
+namespace Microsoft.AspNetCore.Mvc.Testing
 {
     public class LightinjectWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup>
         where TStartup : class

@@ -12,6 +12,14 @@ namespace STrain.CQS.NetCore.LigtInject
 {
     public static class HttpRequestSenderBuilderExtensions
     {
+        public static HttpRequestSenderBuilder UseGenericDefaults(this HttpRequestSenderBuilder builder)
+        {
+            builder.UseDefaults();
+            builder.UseGenericErrorHandler();
+
+            return builder;
+        }
+
         public static HttpRequestSenderBuilder UseDefaults(this HttpRequestSenderBuilder builder)
         {
             builder.UseAttributivePathProvider();
@@ -19,7 +27,7 @@ namespace STrain.CQS.NetCore.LigtInject
             builder.UseAttributiveParameterProviders();
             builder.UseResponseReaders();
 
-            builder.UseGenericErrorHandler();
+            builder.UseDefaultErrorHandler();
 
             return builder;
         }
@@ -78,6 +86,7 @@ namespace STrain.CQS.NetCore.LigtInject
             builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IRequestErrorHandler, TErrorHandler>(builder.Key));
             return builder;
         }
+        public static HttpRequestSenderBuilder UseDefaultErrorHandler(this HttpRequestSenderBuilder builder) => builder.UseErrorHandler<DefaultErrorHandler>();
         public static HttpRequestSenderBuilder UseGenericErrorHandler(this HttpRequestSenderBuilder builder) => builder.UseErrorHandler<GenericRequestErrorHandler>();
     }
 }

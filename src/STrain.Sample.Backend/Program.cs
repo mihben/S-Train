@@ -1,4 +1,5 @@
 using Serilog;
+using STrain.Sample.Backend.Controllers;
 using STrain.Sample.Backend.Services;
 using STrain.Sample.Backend.Wireup;
 
@@ -10,7 +11,8 @@ builder.Logging.AddSerilog(new LoggerConfiguration().ReadFrom.Configuration(buil
 
 builder.Services.AddMvc()
     .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true)
-    .AddControllersAsServices();
+    .AddControllersAsServices()
+    .AddApplicationPart(typeof(ExternalController).Assembly);
 builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();

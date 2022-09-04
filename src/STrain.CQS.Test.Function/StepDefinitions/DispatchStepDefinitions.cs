@@ -3,7 +3,6 @@ using Moq;
 using STrain.CQS.Dispatchers;
 using STrain.CQS.Test.Function.Drivers;
 using STrain.CQS.Test.Function.Support;
-using STrain.CQS.Test.Function.Workarounds;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Function.StepDefinitions

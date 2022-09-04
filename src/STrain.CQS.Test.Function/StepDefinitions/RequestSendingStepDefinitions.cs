@@ -1,311 +1,237 @@
 ﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc.Testing;
+using LightInject;
+using Microsoft.AspNetCore.TestHost;
 using Moq;
-using Moq.Protected;
-using STrain.CQS.Attributes.RequestSending.Http.Parameters;
+using STrain.Core.Exceptions;
 using STrain.CQS.NetCore.ErrorHandling;
 using STrain.CQS.Test.Function.Drivers;
-using STrain.CQS.Test.Function.Support;
-using STrain.CQS.Test.Function.Workarounds;
-using STrain.Sample.Api;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
-using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Function.StepDefinitions
 {
     [Binding]
-    internal class RequestSendingStepDefinitions
+    public class RequestSendingStepDefinitions
     {
-        private readonly Mock<HttpMessageHandler> _messageHandlerMock = new();
+        private readonly ApiDriver _apiDriver;
+        private Mock<HttpMessageHandler> _messageHandlerMock = null!;
+        private Sample.Api.Sample.GenericCommand _command = null!;
+        private Sample.Api.Sample.GenericQuery _query = null!;
 
-        private readonly string _externalBaseAddress = "http://test-service/";
-        private readonly string _path = "api";
-        private readonly string _genericBaseAddress = "http://strain-service/";
+        private GetRequest _getRequest = null!;
+        private PostRequest _postRequest;
+        private PutRequest _putRequest;
+        private PatchRequest _patchRequest;
+        private DeleteRequest _deleteRequest;
 
-        private readonly WebApplicationFactory<Program> _driver;
-        private readonly RequestContext _requestContext;
-        private SampleCommand? _command;
-        private SampleQuery? _query;
-
-        private ExternalGetRequest? _getRequest;
-        private ExternalPostRequest? _postRequest;
-        private ExternalPutRequest? _putRequest;
-        private ExternalPatchRequest? _patchRequest;
-        private ExternalDeleteRequest? _deleteRequest;
-        private SampleForwardCommand? _forwardCommand;
-
-        public RequestSendingStepDefinitions(RequestContext requestContext, ITestOutputHelper outputHelper)
+        public RequestSendingStepDefinitions(ApiDriver apiDriver)
         {
-            _messageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
-
-            _driver = new LightinjectWebApplicationFactory<Program>()
-                        .Initialize(outputHelper)
-                        .MockHttpSender("external", _messageHandlerMock.Object, _path, _externalBaseAddress)
-                        .MockHttpSender("internal", _messageHandlerMock.Object, _path, _genericBaseAddress);
-            _requestContext = requestContext;
+            _apiDriver = apiDriver;
         }
 
 
-        [When("Sending command to STrain service")]
-        public async Task SendingCommandToStrainServiceAsync()
+        [Given("Configured HTTP sender")]
+        public void ConfigureHTTPSender(Table dataTable)
         {
-            _command = new Fixture().Create<SampleCommand>();
-            await _driver.SendCommandAsync(_command, TimeSpan.FromSeconds(1));
+            var key = dataTable.GetValue<string>("Key")!;
+            var baseAddress = dataTable.GetValue<string>("BaseAddress")!;
+            var path = dataTable.GetValue<string>("Path");
+
+            _apiDriver.SetConfiguration($"Senders:{key}:BaseAddress", baseAddress);
+            if (path is not null) _apiDriver.SetConfiguration($"Senders:{key}:Path", path);
+            _messageHandlerMock = _apiDriver.MockHttpSender(key, baseAddress);
+            _messageHandlerMock.SetupSend();
+
+            Func<IRequest, string> keySelector = _ => key;
+            _apiDriver.WithWebHostBuilder(builder => builder.ConfigureTestContainer<IServiceContainer>(registry => registry.Override(registration => registration.ServiceType.Equals(typeof(Func<IRequest, string>)), (_, registration) =>
+            {
+                registration.Value = keySelector; return registration;
+            })));
         }
 
-        [When("Sending query to STrain service")]
-        public async Task SendingQueryToStrainServiceAsync()
+        [When("Sending generic command")]
+        public async Task SendingGenericCommandAsync()
         {
-            _query = new Fixture().Create<SampleQuery>();
-            await _driver.SendQueryAsync<SampleQuery, SampleQuery.Result>(_query, TimeSpan.FromSeconds(1));
+            _command = new Fixture().Create<Sample.Api.Sample.GenericCommand>();
+            await _apiDriver.SendAsync(_command, TimeSpan.FromSeconds(1));
         }
 
-        [When("Sending {string} request to external endpoint")]
-        public async Task SendindRequestToExternalServiceAsync(string method)
+        [When("Sending generic query")]
+        public async Task SendingGenericQueryAsync()
+        {
+            _query = new Fixture().Create<Sample.Api.Sample.GenericQuery>();
+            await _apiDriver.GetAsync<Sample.Api.Sample.GenericQuery, string>(_query, TimeSpan.FromSeconds(1));
+        }
+
+
+        [When("Sending external {string} request")]
+        public async Task SendingExternalRequestAsync(string method)
         {
             switch (method)
             {
                 case "GET":
-                    _getRequest = new Fixture().Create<ExternalGetRequest>();
-                    await _driver.SendRequestAsync<ExternalGetRequest, string>(_getRequest, TimeSpan.FromSeconds(1));
+                    _getRequest = new Fixture().Create<GetRequest>();
+                    await _apiDriver.SendAsync<GetRequest, object>(_getRequest, TimeSpan.FromSeconds(1));
                     break;
                 case "POST":
-                    _postRequest = new Fixture().Create<ExternalPostRequest>();
-                    await _driver.SendRequestAsync<ExternalPostRequest, string>(_postRequest, TimeSpan.FromSeconds(1));
+                    _postRequest = new Fixture().Create<PostRequest>();
+                    await _apiDriver.SendAsync<PostRequest, object>(_postRequest, TimeSpan.FromSeconds(1));
                     break;
                 case "PUT":
-                    _putRequest = new Fixture().Create<ExternalPutRequest>();
-                    await _driver.SendRequestAsync<ExternalPutRequest, string>(_putRequest, TimeSpan.FromSeconds(1));
+                    _putRequest = new Fixture().Create<PutRequest>();
+                    await _apiDriver.SendAsync<PutRequest, object>(_putRequest, TimeSpan.FromSeconds(1));
                     break;
                 case "PATCH":
-                    _patchRequest = new Fixture().Create<ExternalPatchRequest>();
-                    await _driver.SendRequestAsync<ExternalPatchRequest, string>(_patchRequest, TimeSpan.FromSeconds(1));
+                    _patchRequest = new Fixture().Create<PatchRequest>();
+                    await _apiDriver.SendAsync<PatchRequest, object>(_patchRequest, TimeSpan.FromSeconds(1));
                     break;
                 case "DELETE":
-                    _deleteRequest = new Fixture().Create<ExternalDeleteRequest>();
-                    await _driver.SendRequestAsync<ExternalDeleteRequest, string>(_deleteRequest, TimeSpan.FromSeconds(1));
+                    _deleteRequest = new Fixture().Create<DeleteRequest>();
+                    await _apiDriver.SendAsync<DeleteRequest, object>(_deleteRequest, TimeSpan.FromSeconds(1));
                     break;
                 default:
-                    throw new InvalidOperationException($"{method} method is unsupported");
+                    throw new NotSupportedException($"{method} is unsupported");
             }
         }
 
-        [When("Generic request response")]
-        public async Task GenericRequestResponseAsync(Table dataTable)
+
+        [When("Generic request is responding")]
+        public void GenericRequestIsResponding(Table dataTable)
         {
-            _forwardCommand = new Fixture().Create<SampleForwardCommand>();
-            _messageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .Returns(Task.FromResult(new HttpResponseMessage(dataTable.GetEnum<HttpStatusCode>("Status"))
+            _command = new Fixture().Create<Sample.Api.Sample.GenericCommand>();
+            var problem = dataTable.AsProblem(_command.Value);
+
+            _messageHandlerMock = _apiDriver.MockHttpSender("Generic", "http://generic-service/");
+            _messageHandlerMock.SetupSend(_ => true, new HttpResponseMessage(problem.Status) { Content = JsonContent.Create(problem, new MediaTypeHeaderValue(MediaTypeNames.Application.Json.Problem)) });
+        }
+
+        [Then("Request should be sent to")]
+        public void ShouldSentTo(Table dataTable)
+        {
+            var baseAddress = dataTable.GetValue<string>("BaseAddress");
+            var method = dataTable.GetValue<string>("Method");
+            var path = dataTable.GetValue<string>("Path");
+
+            if (_command is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path, _command));
+            if (_query is not null) _messageHandlerMock.VerifySend(message => message.Verify<Sample.Api.Sample.GenericQuery, string>(method, baseAddress, path, _query));
+            if (_getRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, $"{path}?value={_getRequest.Value}"));
+            if (_postRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path, new PostRequest.Parameter(_postRequest.Value)));
+            if (_putRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path));
+            if (_patchRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path));
+            if (_deleteRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path));
+        }
+
+
+        [Then("Should be thrown {string}")]
+        public async Task ShoudlBeThrown(string exception)
+        {
+            switch (exception)
+            {
+                case "NotFoundException":
+                    await Assert.ThrowsAsync<NotFoundException>(() => _apiDriver.SendAsync(_command, TimeSpan.FromSeconds(1)));
+                    break;
+                case "HttpRequestException":
+                    await Assert.ThrowsAsync<HttpRequestException>(() => _apiDriver.SendAsync(_command, TimeSpan.FromSeconds(1)));
+                    break;
+                case "ValidationException":
+                    await Assert.ThrowsAsync<ValidationException>(() => _apiDriver.SendAsync(_command, TimeSpan.FromSeconds(1)));
+                    break;
+                case "VerificationException":
+                    await Assert.ThrowsAsync<VerificationException>(() => _apiDriver.SendAsync(_command, TimeSpan.FromSeconds(1)));
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        #region Requests
+        [Get("external-api/{Path}")]
+        internal class GetRequest : IRequest
+        {
+            public string Path { get; } = "get-endpoint";
+
+            [QueryParameter]
+            public string Value { get; }
+
+            public GetRequest(string value)
+            {
+                Value = value;
+            }
+        }
+
+        [Post("external-api/{Path}")]
+        internal class PostRequest : IRequest
+        {
+            public string Path { get; } = "post-endpoint";
+
+            [BodyParameter]
+            public string Value { get; }
+
+            public PostRequest(string value)
+            {
+                Value = value;
+            }
+
+            public record Parameter
+            {
+                public string Value { get; }
+
+                public Parameter(string value)
                 {
-                    Content = JsonContent.Create(dataTable.AsProblem(_forwardCommand.Resource), mediaType: new MediaTypeHeaderValue(MediaTypeNames.Application.Json.Problem))
-                }));
-            _requestContext.Parameter = _forwardCommand.Resource;
-            _requestContext.Response = await _driver.ReceiveCommandAsync(_forwardCommand, TimeSpan.FromSeconds(1));
-        }
-
-        [Given("Configured generic request sender to {string}")]
-        public void ConfigureGenericRequestSender(string endpoint)
-        {
-            _driver.MockHttpSender("internal", _messageHandlerMock.Object, "", endpoint);
-        }
-
-        [Given("Configured external request sender to {string}")]
-        public void ConfigureExternalRequestSender(string endpoint)
-        {
-
-        }
-
-        [When("Sending generic request")]
-        public async Task SendingGenericRequestAsync()
-        {
-            await _driver.SendCommandAsync(new Fixture().Create<SampleCommand>(), TimeSpan.FromSeconds(5));
-        }
-
-        [When("Sending external request")]
-        public async Task SendingExternalRequestAsync()
-        {
-            await _driver.SendRequestAsync<ExternalSampleRequest, object>(new Fixture().Create<ExternalSampleRequest>(), TimeSpan.FromSeconds(5));
-        }
-
-        [Then("Request should be sent")]
-        public void ShouldSentRequest(Table dataTable)
-        {
-            var uri = new Uri($"{dataTable.Rows[0]["BaseAddress"]}{dataTable.Rows[0]["Path"]}");
-            if (_command is not null) _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(m => m.VerifyGenericRequest(dataTable.Rows[0]["Method"], uri, _command)), ItExpr.IsAny<CancellationToken>());
-            if (_query is not null) _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(m => m.VerifyGenericRequest(dataTable.Rows[0]["Method"], uri, _query)), ItExpr.IsAny<CancellationToken>());
-        }
-
-        [Then("Request should be sent to external endpoint")]
-        public void ShouldSentRequestToExternalEndpoint(Table dataTable)
-        {
-            var method = dataTable.Rows[0]["Method"];
-            var baseAddress = dataTable.Rows[0]["BaseAddress"];
-            var path = dataTable.Rows[0]["Path"];
-
-            switch (method)
-            {
-                case "GET":
-                    Assert.NotNull(_getRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _getRequest!.HeaderParameter, $"?query-parameter={_getRequest.QueryParameter}", $"{{\"{nameof(ExternalGetRequest.BodyParameter)}\":\"{_getRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
-                    break;
-                case "POST":
-                    Assert.NotNull(_postRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _postRequest!.HeaderParameter, $"?query-parameter={_postRequest.QueryParameter}", $"{{\"{nameof(ExternalPostRequest.BodyParameter)}\":\"{_postRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
-                    break;
-                case "PUT":
-                    Assert.NotNull(_putRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _putRequest!.HeaderParameter, $"?query-parameter={_putRequest.QueryParameter}", $"{{\"{nameof(ExternalPutRequest.BodyParameter)}\":\"{_putRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
-                    break;
-                case "PATCH":
-                    Assert.NotNull(_patchRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _patchRequest!.HeaderParameter, $"?query-parameter={_patchRequest.QueryParameter}", $"{{\"{nameof(ExternalPatchRequest.BodyParameter)}\":\"{_patchRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
-                    break;
-                case "DELETE":
-                    Assert.NotNull(_deleteRequest);
-                    _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.VerifyExternalRequest(method, new Uri($"{baseAddress}{path}"), _deleteRequest!.HeaderParameter, $"?query-parameter={_deleteRequest.QueryParameter}", $"{{\"{nameof(ExternalDeleteRequest.BodyParameter)}\":\"{_deleteRequest.BodyParameter}\"}}")), ItExpr.IsAny<CancellationToken>());
-                    break;
-                default:
-                    throw new InvalidOperationException($"{method} method is unsupported");
+                    Value = value;
+                }
             }
         }
 
-
-        [Then("Request should be sent to {string}")]
-        public void ShouldSentRequestTo(string endpoint)
+        [Put("external-api/{Path}")]
+        internal class PutRequest : IRequest
         {
-            _messageHandlerMock.Protected().Verify("SendAsync", Times.Once(), ItExpr.Is<HttpRequestMessage>(hrm => hrm.RequestUri != null
-                                                                                                                                        && hrm.RequestUri.AbsoluteUri.StartsWith(endpoint)), ItExpr.IsAny<CancellationToken>());
+            public string Path { get; } = "put-endpoint";
         }
+
+        [Patch("external-api/{Path}")]
+        internal class PatchRequest : IRequest
+        {
+            public string Path { get; } = "patch-endpoint";
+        }
+
+        [Delete("external-api/{Path}")]
+        internal class DeleteRequest : IRequest
+        {
+            public string Path { get; } = "delete-endpoint";
+        }
+        #endregion
     }
 
-    internal static class HttpRequestSendingStepDefinitionsExtensions
+    internal static class RequestSendingExtensions
     {
-        public static bool VerifyExternalRequest(this HttpRequestMessage message, string method, Uri uri, string header, string query, string body)
+        public static bool Verify(this HttpRequestMessage message, string method, string baseAddress, string path)
         {
+            if (message.RequestUri is null) return false;
+            if (message.Content is null) return false;
+
             return message.Method.Method.Equals(method)
-                && (message.RequestUri?.AbsoluteUri.StartsWith(uri.AbsoluteUri) ?? false)
-                && message.Headers.GetValues("header-parameter").Contains(header)
-                && message.RequestUri.Query.Equals(query)
-                && (message.Content?.ReadAsStringAsync().Result.Equals(body) ?? false);
+                && message.RequestUri.AbsoluteUri.Equals($"{baseAddress}{path}");
         }
 
-        public static bool VerifyGenericRequest<TRequest>(this HttpRequestMessage message, string method, Uri uri, TRequest request)
-            where TRequest : IRequest
+        public static bool Verify<TCommand>(this HttpRequestMessage message, string method, string baseAddress, string path, TCommand command)
+            where TCommand : Command
         {
-            return message.Method.Method.Equals(method)
-                && (message.RequestUri?.AbsoluteUri.StartsWith(uri.AbsoluteUri) ?? false)
-                && message.Headers.GetValues("request-type").First().Equals($"{request.GetType().FullName}, {request.GetType().Assembly.GetName().Name}")
-                && message.Content is not null
-                && (JsonSerializer.Deserialize<TRequest>(message.Content.ReadAsStream(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true })?.Equals(request) ?? false);
+            return message.Verify(method, baseAddress, path)
+                && message.Content.ReadFromJsonAsync<TCommand>().GetAwaiter().GetResult().Equals(command);
         }
-    }
 
-    [Get("get-endpoint/{id}")]
-    internal record ExternalGetRequest : IRequest
-    {
-        public int Id => 1;
-
-        [HeaderParameter(Name = "header-parameter")]
-        public string HeaderParameter { get; }
-
-        [QueryParameter(Name = "query-parameter")]
-        public string QueryParameter { get; }
-        [BodyParameter]
-        public string BodyParameter { get; }
-
-        public ExternalGetRequest(string headerParameter, string queryParameter, string bodyParameter)
+        public static bool Verify<TQuery, T>(this HttpRequestMessage message, string method, string baseAddress, string path, TQuery query)
+            where TQuery : Query<T>
         {
-            HeaderParameter = headerParameter;
-            QueryParameter = queryParameter;
-            BodyParameter = bodyParameter;
+            return message.Verify(method, baseAddress, path)
+                && message.Content.ReadFromJsonAsync<TQuery>().GetAwaiter().GetResult().Equals(query);
         }
-    }
 
-    [Post("post-endpoint/{id}")]
-    internal record ExternalPostRequest : IRequest
-    {
-        public int Id => 2;
-
-        [HeaderParameter(Name = "header-parameter")]
-        public string HeaderParameter { get; }
-
-        [QueryParameter(Name = "query-parameter")]
-        public string QueryParameter { get; }
-        [BodyParameter]
-        public string BodyParameter { get; }
-
-        public ExternalPostRequest(string headerParameter, string queryParameter, string bodyParameter)
+        public static bool Verify(this HttpRequestMessage message, string method, string baseAddress, string path, RequestSendingStepDefinitions.PostRequest.Parameter parameter)
         {
-            HeaderParameter = headerParameter;
-            QueryParameter = queryParameter;
-            BodyParameter = bodyParameter;
-        }
-    }
-
-    [Put("put-endpoint/{id}")]
-    internal record ExternalPutRequest : IRequest
-    {
-        public int Id => 3;
-
-        [HeaderParameter(Name = "header-parameter")]
-        public string HeaderParameter { get; }
-
-        [QueryParameter(Name = "query-parameter")]
-        public string QueryParameter { get; }
-        [BodyParameter]
-        public string BodyParameter { get; }
-
-        public ExternalPutRequest(string headerParameter, string queryParameter, string bodyParameter)
-        {
-            HeaderParameter = headerParameter;
-            QueryParameter = queryParameter;
-            BodyParameter = bodyParameter;
-        }
-    }
-
-    [Patch("patch-endpoint/{id}")]
-    internal record ExternalPatchRequest : IRequest
-    {
-        public int Id => 4;
-
-        [HeaderParameter(Name = "header-parameter")]
-        public string HeaderParameter { get; }
-
-        [QueryParameter(Name = "query-parameter")]
-        public string QueryParameter { get; }
-        [BodyParameter]
-        public string BodyParameter { get; }
-
-        public ExternalPatchRequest(string headerParameter, string queryParameter, string bodyParameter)
-        {
-            HeaderParameter = headerParameter;
-            QueryParameter = queryParameter;
-            BodyParameter = bodyParameter;
-        }
-    }
-
-    [Delete("delete-endpoint/{id}")]
-    internal record ExternalDeleteRequest : IRequest
-    {
-        public int Id => 5;
-
-        [HeaderParameter(Name = "header-parameter")]
-        public string HeaderParameter { get; }
-
-        [QueryParameter(Name = "query-parameter")]
-        public string QueryParameter { get; }
-        [BodyParameter]
-        public string BodyParameter { get; }
-
-        public ExternalDeleteRequest(string headerParameter, string queryParameter, string bodyParameter)
-        {
-            HeaderParameter = headerParameter;
-            QueryParameter = queryParameter;
-            BodyParameter = bodyParameter;
+            return message.Verify(method, baseAddress, path)
+                && message.Content.ReadFromJsonAsync<RequestSendingStepDefinitions.PostRequest.Parameter>().GetAwaiter().GetResult().Equals(parameter);
         }
     }
 }
