@@ -1,48 +1,37 @@
 ﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc.Testing;
 using STrain.CQS.Test.Function.Drivers;
-using STrain.CQS.Test.Function.Support;
 using System.Net;
 
 namespace STrain.CQS.Test.Function.StepDefinitions
 {
     [Binding]
-    internal class GenericRequestHandlingStepDefinitions
+    public class GenericRequestHandlingStepDefinitions
     {
-        private readonly WebApplicationFactory<Program> _driver;
-        private readonly RequestContext _requestContext;
-        private Sample.Api.Sample.GenericCommand? _command;
-        private readonly Sample.Api.Sample.GenericQuery? _query;
+        private readonly ApiDriver _apiDriver;
+        private HttpResponseMessage _response = null!;
 
-        public GenericRequestHandlingStepDefinitions(RequestContext requestContext)
+        public GenericRequestHandlingStepDefinitions(ApiDriver apiDriver)
         {
-            _driver = new WebApplicationFactory<Program>();
-            _requestContext = requestContext;
+            _apiDriver = apiDriver;
         }
 
-        [When("Receiving command")]
-        public async Task ReceiveCommandAsync()
+        [When("Receiving command via generic controller")]
+        public async Task ReceivingCommandAsync()
         {
-            _command = new Fixture().Create<Sample.Api.Sample.GenericCommand>();
-            _requestContext.Response = await _driver.ReceiveCommandAsync(_command, TimeSpan.FromSeconds(1));
+            _response = await _apiDriver.ReceiveAsync(new Fixture().Create<Sample.Api.Sample.GenericCommand>(), TimeSpan.FromSeconds(1));
         }
 
-
-        [When("Receiving query")]
-        public async Task ReceiveQueryAsync()
+        [When("Receiving query via generic controller")]
+        public async Task ReceivingQueryAsync()
         {
-            //_query = new SampleQuery(new Fixture().Create<string>());
-            //_requestContext.Response = await _driver.ReceiveQueryAsync<SampleQuery, SampleQuery.Result>(_query, TimeSpan.FromSeconds(1));
+            _response = await _apiDriver.ReceiveAsync<Sample.Api.Sample.GenericQuery, string>(new Fixture().Create<Sample.Api.Sample.GenericQuery>(), TimeSpan.FromSeconds(1));
         }
 
         [Then("Response should be")]
-        public async Task ResponseShouldBeAsync(Table dataTable)
+        public async Task ShouldResponseAsync(Table dataTable)
         {
-            Assert.NotNull(_requestContext.Response);
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            Assert.Equal(Enum.Parse<HttpStatusCode>(dataTable.Rows[0]["StatusCode"]), _requestContext.Response.StatusCode);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-            if (dataTable.Rows[0].ContainsKey("Content")) Assert.Equal(dataTable.Rows[0]["Content"], await _requestContext.Response.Content.ReadAsStringAsync());
+            Assert.Equal(dataTable.GetEnum<HttpStatusCode>("StatusCode"), _response.StatusCode);
+            Assert.Equal(dataTable.GetValue<string>("Content"), await _response.Content.ReadAsStringAsync());
         }
     }
 }

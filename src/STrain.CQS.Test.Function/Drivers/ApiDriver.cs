@@ -7,6 +7,7 @@ using STrain.CQS.NetCore.RequestSending;
 using STrain.CQS.NetCore.RequestSending.Providers;
 using STrain.CQS.Senders;
 using STrain.Extensions.Testing.Drivers;
+using System.Net.Http.Json;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Function.Drivers
@@ -87,6 +88,26 @@ namespace STrain.CQS.Test.Function.Drivers
             var sender = Host.Services.GetRequiredService<IRequestSender>();
             using var cancellationTokenSource = new CancellationTokenSource(timeout);
             return await sender.GetAsync<TQuery, T>(query, cancellationTokenSource.Token);
+        }
+
+        public async Task<HttpResponseMessage> ReceiveAsync<TCommand>(TCommand command, TimeSpan timeout)
+            where TCommand : Command
+        {
+            var client = Host.CreateClient();
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            var content = JsonContent.Create(command);
+            content.Headers.Add("Request-Type", $"{command.GetType().FullName}, {command.GetType().Assembly.GetName().Name}");
+            return await client.PostAsync("api", content, cancellationTokenSource.Token);
+        }
+
+        public async Task<HttpResponseMessage> ReceiveAsync<TQuery, T>(TQuery query, TimeSpan timeout)
+            where TQuery : Query<T>
+        {
+            var client = Host.CreateClient();
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            var content = JsonContent.Create(query);
+            content.Headers.Add("Request-Type", $"{query.GetType().FullName}, {query.GetType().Assembly.GetName().Name}");
+            return await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "api") { Content = content }, cancellationTokenSource.Token);
         }
     }
 }
