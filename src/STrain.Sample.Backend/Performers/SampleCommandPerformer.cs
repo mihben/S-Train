@@ -1,9 +1,8 @@
-﻿using STrain.Sample.Api;
-using STrain.Sample.Backend.Services;
+﻿using STrain.Sample.Backend.Services;
 
 namespace STrain.Sample.Backend.Performers
 {
-    public class SampleCommandPerformer : ICommandPerformer<SampleCommand>
+    public class SampleCommandPerformer : ICommandPerformer<Api.Sample.GenericCommand>
     {
         private readonly ISampleService _sampleService;
 
@@ -12,7 +11,7 @@ namespace STrain.Sample.Backend.Performers
             _sampleService = sampleService;
         }
 
-        public async Task PerformAsync(SampleCommand command, CancellationToken cancellationToken)
+        public async Task PerformAsync(Api.Sample.GenericCommand command, CancellationToken cancellationToken)
         {
             await _sampleService.DoSampleAsync(command, cancellationToken);
         }

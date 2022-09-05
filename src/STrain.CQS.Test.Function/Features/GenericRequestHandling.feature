@@ -12,7 +12,7 @@ Possible to recieve request via generic endpoint. The request type is determined
 		@issue-14
 		@api
 		Scenario: [API][GRH/HC-001] - Receive Command
-			When Receiving command
+			When Receiving command via generic controller
 			Then Response should be
 				| StatusCode | Content |
 				| 202        |         |
@@ -27,7 +27,7 @@ Possible to recieve request via generic endpoint. The request type is determined
 		@issue-14
 		@api
 		Scenario: [API][[GRH/HQ-001] - Receive Query
-			When Receiving query
+			When Receiving query via generic controller
 			Then Response should be
-				| StatusCode | Content                |
-				| 200        | {"response":"Handled"} |
+				| StatusCode | Content              |
+				| 200        | Handled by performer |

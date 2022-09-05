@@ -2,7 +2,7 @@
 {
     public class RequestContext
     {
-        public object? Parameter { get; set; }
+        public object? Request { get; set; }
         public HttpResponseMessage? Response { get; set; }
     }
 }

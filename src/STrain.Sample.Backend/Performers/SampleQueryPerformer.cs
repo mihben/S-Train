@@ -1,12 +1,10 @@
-﻿using STrain.Sample.Api;
-
-namespace STrain.Sample.Backend.Performers
+﻿namespace STrain.Sample.Backend.Performers
 {
-    public class SampleQueryPerformer : IQueryPerformer<SampleQuery, SampleQuery.Result>
+    public class SampleQueryPerformer : IQueryPerformer<Api.Sample.GenericQuery, string>
     {
-        public Task<SampleQuery.Result> PerformAsync(SampleQuery query, CancellationToken cancellationToken)
+        public Task<string> PerformAsync(Api.Sample.GenericQuery query, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new SampleQuery.Result("Handled"));
+            return Task.FromResult("Handled by performer");
         }
     }
 }

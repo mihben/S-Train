@@ -1,0 +1,279 @@
+{
+	"info": {
+		"_postman_id": "92ce1968-8b87-450c-b4de-a4c742b3a230",
+		"name": "S-Train",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Error",
+			"item": [
+				{
+					"name": "Unathorized",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5100/api/error/unathorized",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5100",
+							"path": [
+								"api",
+								"error",
+								"unathorized"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forbidden",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5100/api/error/forbidden",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5100",
+							"path": [
+								"api",
+								"error",
+								"forbidden"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EndpointNotFound",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5100/api/error/fake-endpoint",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5100",
+							"path": [
+								"api",
+								"error",
+								"fake-endpoint"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ResourceNotFound",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5100/api/error/not-found",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5100",
+							"path": [
+								"api",
+								"error",
+								"not-found"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ValidationError",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5100/api/error/validation-error",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5100",
+							"path": [
+								"api",
+								"error",
+								"validation-error"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VerificationError",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5100/api/error/verification-error",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5100",
+							"path": [
+								"api",
+								"error",
+								"verification-error"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InternalServerError",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5100/api/error/internal-server-error",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5100",
+							"path": [
+								"api",
+								"error",
+								"internal-server-error"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GenericCommand",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Request-Type",
+						"value": "STrain.Sample.Api.Sample+GenericCommand, STrain.Sample.Api",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Value\": \"TestValue\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5100/api/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GenericQuery",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Request-Type",
+						"value": "STrain.Sample.Api.Sample+GenericQuery, STrain.Sample.Api",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5100/api/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						""
+					],
+					"query": [
+						{
+							"key": null,
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExternalRequest",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Size\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5100/api/external?Size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						"external"
+					],
+					"query": [
+						{
+							"key": "Size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

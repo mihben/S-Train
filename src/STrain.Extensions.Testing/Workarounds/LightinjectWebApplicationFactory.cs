@@ -1,13 +1,12 @@
 ﻿using LightInject;
 using LightInject.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace STrain.CQS.Test.Function.Workarounds
+namespace Microsoft.AspNetCore.Mvc.Testing
 {
-    internal class LightinjectWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup>
+    public class LightinjectWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup>
         where TStartup : class
     {
         protected override IHost CreateHost(IHostBuilder builder)
@@ -17,7 +16,7 @@ namespace STrain.CQS.Test.Function.Workarounds
         }
     }
 
-    internal class CustomServiceProviderFactory : IServiceProviderFactory<IServiceContainer>
+    public class CustomServiceProviderFactory : IServiceProviderFactory<IServiceContainer>
     {
         private IServiceCollection? _services;
 
@@ -33,7 +32,7 @@ namespace STrain.CQS.Test.Function.Workarounds
         }
     }
 
-    internal class CustomServiceContainer : ServiceContainer
+    public class CustomServiceContainer : ServiceContainer
     {
         private readonly IServiceCollection _services;
 

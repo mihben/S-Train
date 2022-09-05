@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="StepDefinitions\RequestSendingStepDefinitions.old.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="coverlet.collector" Version="3.1.2">
       <PrivateAssets>all</PrivateAssets>
@@ -27,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS\STrain.CQS.csproj" />
+    <ProjectReference Include="..\STrain.Extensions.Testing\STrain.Extensions.Testing.csproj" />
     <ProjectReference Include="..\STrain.Sample.Backend\STrain.Sample.Backend.csproj" />
   </ItemGroup>
 

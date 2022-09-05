@@ -1,12 +1,7 @@
-﻿using AutoFixture;
-using Microsoft.AspNetCore.Mvc.Testing;
-using STrain.CQS.Test.Function.Drivers;
-using STrain.CQS.Test.Function.Support;
-using STrain.CQS.Test.Function.Workarounds;
-using STrain.Sample.Api;
+﻿using STrain.CQS.Test.Function.Drivers;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using Xunit.Abstractions;
+using System.Net.Http.Json;
 using static STrain.CQS.Test.Function.StepDefinitions.ErrorHandlingStepDefinitions.Problem;
 
 namespace STrain.CQS.Test.Function.StepDefinitions
@@ -14,28 +9,28 @@ namespace STrain.CQS.Test.Function.StepDefinitions
     [Binding]
     public class ErrorHandlingStepDefinitions
     {
-        private readonly WebApplicationFactory<Program> _driver;
-        private readonly RequestContext _requestContext;
+        private readonly ApiDriver _driver;
 
-        public ErrorHandlingStepDefinitions(RequestContext requestContext, ITestOutputHelper outputHelper)
-        {
-            _driver = new LightinjectWebApplicationFactory<Program>()
-                        .Initialize(outputHelper)
-                        .MockAuthentication(builder => builder.Forbidden().Unathorized());
-            _requestContext = requestContext;
-        }
+        private string _resource = null!;
+        private HttpResponseMessage _response = null!;
 
-        [When("Throwing NotFoundException")]
-        public async Task ThrowNotFoundExceptionAsync()
+        public ErrorHandlingStepDefinitions(ApiDriver driver)
         {
-            _requestContext.Parameter = new Fixture().Create<string>();
-            _requestContext.Response = await _driver.ReceiveCommandAsync(new SampleNotFoundCommand(_requestContext.Parameter.ToString()!), TimeSpan.FromSeconds(1));
+            _driver = driver;
         }
 
         [When("Calling {string} endpoint")]
-        public async Task SendingRequestToUnkownEndpointAsync(string endpoint)
+        public async Task CallingAsync(string endpoint)
         {
-            _requestContext.Response = await _driver.SendAsync(endpoint, TimeSpan.FromSeconds(1));
+            _resource = "NotFoundedResource";
+            _response = await _driver.GetAsync(endpoint, TimeSpan.FromSeconds(1));
+        }
+
+
+        [Then("Error response should be")]
+        public async Task ShouldBeErrorResponseAsync(Table dataTable)
+        {
+            Assert.Equal(dataTable.AsProblem(_resource), await _response.Content.ReadFromJsonAsync<Problem>(), new ProblemEqualityComparer());
         }
 
         internal class ProblemEqualityComparer : IEqualityComparer<Problem?>
@@ -99,16 +94,17 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public static ErrorHandlingStepDefinitions.Problem AsProblem(this Table dataTable, string resource)
         {
             IEnumerable<Error>? errors = null;
-            if (dataTable.Rows[0].TryGetValue("Errors.Property", out var property)) errors = new List<Error> { new Error(property, dataTable.GetValue<string>("Errors.Message")) };
+            if (dataTable.Rows[0].TryGetValue("Errors.Property", out var property)) errors = new List<Error> { new Error(property, dataTable.GetValue<string>("Errors.Message")!) };
 
-            return new ErrorHandlingStepDefinitions.Problem(dataTable.GetValue<string>("Type"),
-                dataTable.GetValue<string>("Title"), dataTable.GetEnum<HttpStatusCode>("Status"),
-                dataTable.GetValue<string>("Detail").Replace("{resource}", resource), dataTable.GetValue<string>("Instance"), errors);
+            return new ErrorHandlingStepDefinitions.Problem(dataTable.GetValue<string>("Type")!,
+                dataTable.GetValue<string>("Title")!, dataTable.GetEnum<HttpStatusCode>("Status"),
+                dataTable.GetValue<string>("Detail")!.Replace("{resource}", resource), dataTable.GetValue<string>("Instance")!, errors);
         }
 
-        public static T GetValue<T>(this Table dataTable, string header)
+        public static T? GetValue<T>(this Table dataTable, string header)
             where T : class, IConvertible
         {
+            if (!dataTable.Rows[0].ContainsKey(header)) return null;
             return (T)Convert.ChangeType(dataTable.Rows[0][header], typeof(T));
         }
 
