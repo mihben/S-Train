@@ -1,4 +1,5 @@
 ﻿using LightInject;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -90,7 +91,7 @@ namespace STrain.CQS.Test.Function.Drivers
             return await sender.GetAsync<TQuery, T>(query, cancellationTokenSource.Token);
         }
 
-        public async Task<HttpResponseMessage> ReceiveAsync<TCommand>(TCommand command, TimeSpan timeout)
+        public async Task<HttpResponseMessage> ReceiveViaGenericHandlerAsync<TCommand>(TCommand command, TimeSpan timeout)
             where TCommand : Command
         {
             var client = Host.CreateClient();
@@ -100,7 +101,7 @@ namespace STrain.CQS.Test.Function.Drivers
             return await client.PostAsync("api", content, cancellationTokenSource.Token);
         }
 
-        public async Task<HttpResponseMessage> ReceiveAsync<TQuery, T>(TQuery query, TimeSpan timeout)
+        public async Task<HttpResponseMessage> ReceiveViaGenericHandlerAsync<TQuery, T>(TQuery query, TimeSpan timeout)
             where TQuery : Query<T>
         {
             var client = Host.CreateClient();
@@ -108,6 +109,22 @@ namespace STrain.CQS.Test.Function.Drivers
             var content = JsonContent.Create(query);
             content.Headers.Add("Request-Type", $"{query.GetType().FullName}, {query.GetType().Assembly.GetName().Name}");
             return await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "api") { Content = content }, cancellationTokenSource.Token);
+        }
+
+        public async Task<IActionResult> ReceiveViaReceierAsync<TCommand>(TCommand command, TimeSpan timeout)
+            where TCommand : Command
+        {
+            var receiver = Host.Services.GetRequiredService<IMvcRequestReceiver>();
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            return await receiver.ReceiveCommandAsync(command, cancellationTokenSource.Token);
+        }
+
+        public async Task<IActionResult> ReceiveViaReceierAsync<TQuery, T>(TQuery query, TimeSpan timeout)
+            where TQuery : Query<T>
+        {
+            var receiver = Host.Services.GetRequiredService<IMvcRequestReceiver>();
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            return await receiver.ReceiveQueryAsync(query, cancellationTokenSource.Token);
         }
     }
 }

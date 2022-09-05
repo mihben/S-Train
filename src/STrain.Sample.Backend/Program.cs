@@ -19,7 +19,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddAuthorization(options => options.AddPolicy("Forbidden", policy => policy.RequireUserName("Admin")));
 builder.Services.AddAuthentication()
-    .AddScheme<AuthenticationSchemeOptions, UnathorizedAuthenticationHandler>("Unathorized", null, null)
+    .AddScheme<AuthenticationSchemeOptions, AuthorizedAuthenticationHandler>(authenticationScheme: "Authorized", null, null)
+    .AddScheme<AuthenticationSchemeOptions, UnauthorizedAuthenticationHandler>("Unathorized", null, null)
     .AddScheme<AuthenticationSchemeOptions, ForbiddenAuthenticationHandler>("Forbidden", null, null);
 
 builder.Services.AddHttpContextAccessor();
