@@ -10,8 +10,9 @@ namespace STrain.CQS.Test.Function.StepDefinitions
     public class ErrorHandlingStepDefinitions
     {
         private readonly ApiDriver _driver;
-        private string _resource;
-        private HttpResponseMessage _response;
+
+        private string _resource = null!;
+        private HttpResponseMessage _response = null!;
 
         public ErrorHandlingStepDefinitions(ApiDriver driver)
         {
@@ -93,11 +94,11 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public static ErrorHandlingStepDefinitions.Problem AsProblem(this Table dataTable, string resource)
         {
             IEnumerable<Error>? errors = null;
-            if (dataTable.Rows[0].TryGetValue("Errors.Property", out var property)) errors = new List<Error> { new Error(property, dataTable.GetValue<string>("Errors.Message")) };
+            if (dataTable.Rows[0].TryGetValue("Errors.Property", out var property)) errors = new List<Error> { new Error(property, dataTable.GetValue<string>("Errors.Message")!) };
 
-            return new ErrorHandlingStepDefinitions.Problem(dataTable.GetValue<string>("Type"),
-                dataTable.GetValue<string>("Title"), dataTable.GetEnum<HttpStatusCode>("Status"),
-                dataTable.GetValue<string>("Detail").Replace("{resource}", resource), dataTable.GetValue<string>("Instance"), errors);
+            return new ErrorHandlingStepDefinitions.Problem(dataTable.GetValue<string>("Type")!,
+                dataTable.GetValue<string>("Title")!, dataTable.GetEnum<HttpStatusCode>("Status"),
+                dataTable.GetValue<string>("Detail")!.Replace("{resource}", resource), dataTable.GetValue<string>("Instance")!, errors);
         }
 
         public static T? GetValue<T>(this Table dataTable, string header)

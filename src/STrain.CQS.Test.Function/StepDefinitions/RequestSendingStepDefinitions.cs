@@ -19,10 +19,10 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         private Sample.Api.Sample.GenericQuery _query = null!;
 
         private GetRequest _getRequest = null!;
-        private PostRequest _postRequest;
-        private PutRequest _putRequest;
-        private PatchRequest _patchRequest;
-        private DeleteRequest _deleteRequest;
+        private PostRequest _postRequest = null!;
+        private PutRequest _putRequest = null!;
+        private PatchRequest _patchRequest = null!;
+        private DeleteRequest _deleteRequest = null!;
 
         public RequestSendingStepDefinitions(ApiDriver apiDriver)
         {
@@ -112,13 +112,13 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             var method = dataTable.GetValue<string>("Method");
             var path = dataTable.GetValue<string>("Path");
 
-            if (_command is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path, _command));
-            if (_query is not null) _messageHandlerMock.VerifySend(message => message.Verify<Sample.Api.Sample.GenericQuery, string>(method, baseAddress, path, _query));
-            if (_getRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, $"{path}?value={_getRequest.Value}"));
-            if (_postRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path, new PostRequest.Parameter(_postRequest.Value)));
-            if (_putRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path));
-            if (_patchRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path));
-            if (_deleteRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method, baseAddress, path));
+            if (_command is not null) _messageHandlerMock.VerifySend(message => message.Verify(method!, baseAddress!, path!, _command));
+            if (_query is not null) _messageHandlerMock.VerifySend(message => message.Verify<Sample.Api.Sample.GenericQuery, string>(method!, baseAddress!, path!, _query));
+            if (_getRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method!, baseAddress!, $"{path}?value={_getRequest.Value}"));
+            if (_postRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method!, baseAddress!, path!, new PostRequest.Parameter(_postRequest.Value)));
+            if (_putRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method!, baseAddress!, path!));
+            if (_patchRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method!, baseAddress!, path!));
+            if (_deleteRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method!, baseAddress!, path!));
         }
 
 
@@ -217,21 +217,32 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public static bool Verify<TCommand>(this HttpRequestMessage message, string method, string baseAddress, string path, TCommand command)
             where TCommand : Command
         {
+            var content = message.Content?.ReadFromJsonAsync<TCommand>().GetAwaiter().GetResult();
+            if (content is null) return false;
+
             return message.Verify(method, baseAddress, path)
-                && message.Content.ReadFromJsonAsync<TCommand>().GetAwaiter().GetResult().Equals(command);
+                && content.Equals(command);
         }
 
         public static bool Verify<TQuery, T>(this HttpRequestMessage message, string method, string baseAddress, string path, TQuery query)
             where TQuery : Query<T>
         {
+            if (message.Content is null) return false;
+
+            var content = message.Content.ReadFromJsonAsync<TQuery>().GetAwaiter().GetResult();
+            if (content is null) return false;
+
             return message.Verify(method, baseAddress, path)
-                && message.Content.ReadFromJsonAsync<TQuery>().GetAwaiter().GetResult().Equals(query);
+                && content.Equals(query);
         }
 
         public static bool Verify(this HttpRequestMessage message, string method, string baseAddress, string path, RequestSendingStepDefinitions.PostRequest.Parameter parameter)
         {
+            var content = message.Content?.ReadFromJsonAsync<RequestSendingStepDefinitions.PostRequest.Parameter>().GetAwaiter().GetResult();
+            if (content is null) return false;
+
             return message.Verify(method, baseAddress, path)
-                && message.Content.ReadFromJsonAsync<RequestSendingStepDefinitions.PostRequest.Parameter>().GetAwaiter().GetResult().Equals(parameter);
+                && content.Equals(parameter);
         }
     }
 }

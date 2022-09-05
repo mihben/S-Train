@@ -37,7 +37,7 @@ namespace STrain.Sample.Backend.Controllers
         [HttpGet("validation-error")]
         public Task<IActionResult> ValidationErrorAsync(CancellationToken cancellationToken)
         {
-            return _receiver.ReceiveCommandAsync(new Error.ValidatedCommand(null), cancellationToken);
+            return _receiver.ReceiveCommandAsync(new Error.ValidatedCommand(string.Empty), cancellationToken);
         }
 
         [Authorize(AuthenticationSchemes = "Unathorized")]

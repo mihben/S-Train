@@ -14,9 +14,9 @@ namespace STrain.CQS.Test.Function.StepDefinitions
 
         private Mock<ICommandPerformer<Sample.Api.Sample.GenericCommand>> _commandPerformerMock = null!;
         private Sample.Api.Sample.GenericCommand _command = null!;
-        private Sample.Api.Sample.GenericQuery _query;
+        private Sample.Api.Sample.GenericQuery _query = null!;
         private HttpResponseMessage _response = null!;
-        private Mock<IQueryPerformer<Sample.Api.Sample.GenericQuery, string>> _queryPerformerMock;
+        private Mock<IQueryPerformer<Sample.Api.Sample.GenericQuery, string>> _queryPerformerMock = null!;
 
         public RequestReceivingStepDefinitions(ApiDriver apiDriver)
         {
