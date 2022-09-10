@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LightInject" Version="6.5.2" />
+    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.4.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\STrain.CQS.Extensions.DependencyInjection\STrain.CQS.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\STrain.CQS.Lightinject\STrain.CQS.Lightinject.csproj" />
+    <ProjectReference Include="..\STrain.CQS.NetCore.LigtInject\STrain.CQS.NetCore.LigtInject.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LightInject" Version="6.4.1" />
+    <PackageReference Include="LightInject" Version="6.5.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\STrain.CQS.Lightinject\STrain.CQS.Lightinject.csproj" />
     <ProjectReference Include="..\STrain.CQS.NetCore\STrain.CQS.NetCore.csproj" />
   </ItemGroup>
 
