@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using STrain.CQS.Api;
 
-namespace STrain.CQS.Http.RequestSending.Providers.Generic
+namespace STrain.CQS.Http.RequestSending.Binders.Generic
 {
     public class GenericQueryParameterBinder : IQueryParameterBinder
     {
@@ -15,6 +16,7 @@ namespace STrain.CQS.Http.RequestSending.Providers.Generic
             where TRequest : IRequest
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
+            if (typeof(TRequest).IsAssignableTo(typeof(ICommand))) return Task.FromResult<string?>(null);
 
             return Task.FromResult(request.AsQueryString());
         }

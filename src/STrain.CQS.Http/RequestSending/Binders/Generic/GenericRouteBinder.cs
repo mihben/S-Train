@@ -1,4 +1,4 @@
-﻿namespace STrain.CQS.Http.RequestSending.Providers.Generic
+﻿namespace STrain.CQS.Http.RequestSending.Binders.Generic
 {
     public class GenericRouteBinder : IRouteBinder
     {

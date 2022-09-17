@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using STrain.CQS.Http.RequestSending;
 using STrain.CQS.Http.RequestSending.Binders;
-using STrain.CQS.Http.RequestSending.Providers;
 using STrain.CQS.Senders;
 using STrain.Extensions.Testing.Drivers;
 using System.Net.Http.Json;
@@ -53,6 +52,7 @@ namespace STrain.CQS.Test.Function.Drivers
                                 scope.GetInstance<IMethodBinder>(key),
                                 scope.GetInstance<IQueryParameterBinder>(key),
                                 scope.GetInstance<IHeaderParameterBinder>(key),
+                                scope.GetInstance<IBodyParameterBinder>(key),
                                 scope.GetInstance<IResponseReaderProvider>(key),
                                 scope.GetInstance<IRequestErrorHandler>(key),
                                 scope.GetInstance<ILogger<HttpRequestSender>>());

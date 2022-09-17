@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using STrain.CQS.Http.RequestSending;
-using STrain.CQS.Http.RequestSending.Providers;
 using STrain.CQS.Http.RequestSending.Readers;
 using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.CQS.MVC.Options;

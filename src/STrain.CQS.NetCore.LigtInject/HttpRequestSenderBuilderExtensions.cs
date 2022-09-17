@@ -1,7 +1,8 @@
 ﻿using LightInject;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using STrain.CQS.Http.RequestSending;
+using STrain.CQS.Http.RequestSending.Binders;
+using STrain.CQS.Http.RequestSending.Binders.Generic;
 using STrain.CQS.NetCore.Builders;
 using STrain.CQS.NetCore.ErrorHandling;
 using STrain.CQS.Senders;
@@ -10,6 +11,36 @@ namespace STrain.CQS.NetCore.LigtInject
 {
     public static class HttpRequestSenderBuilderExtensions
     {
+        public static HttpRequestSenderBuilder UseGenericRouteBinder(this HttpRequestSenderBuilder builder)
+        {
+            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) => container.RegisterTransient<IRouteBinder>(factory => new GenericRouteBinder(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path), builder.Key));
+            return builder;
+        }
+
+        public static HttpRequestSenderBuilder UseGenericMethodBinder(this HttpRequestSenderBuilder builder)
+        {
+            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) => container.AddMethodBinder<GenericMethodBinder>(builder.Key));
+            return builder;
+        }
+
+        public static HttpRequestSenderBuilder UseGenericHeaderParameterBinder(this HttpRequestSenderBuilder builder)
+        {
+            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) => container.AddHeaderParameterBinder<GenericHeaderParameterBinder>(builder.Key));
+            return builder;
+        }
+
+        public static HttpRequestSenderBuilder UseGenericBodyParameterBinder(this HttpRequestSenderBuilder builder)
+        {
+            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) => container.AddBodyParameterBinder<GenericBodyParameterBinder>(builder.Key));
+            return builder;
+        }
+
+        public static HttpRequestSenderBuilder UseGenericQueryParameterBinder(this HttpRequestSenderBuilder builder)
+        {
+            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) => container.AddQueryParameterBinder<GenericQueryParameterBinder>(builder.Key));
+            return builder;
+        }
+
         public static HttpRequestSenderBuilder UseResponseReaders(this HttpRequestSenderBuilder builder) => builder.UseResponseReaders(register => register.UseDefaults());
         public static HttpRequestSenderBuilder UseResponseReaders(this HttpRequestSenderBuilder builder, Action<ResponseReadersRegister> registrate)
         {

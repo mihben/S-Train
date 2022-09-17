@@ -23,6 +23,7 @@ namespace STrain
                                                                             .UseGenericMethodBinder()
                                                                             .UseGenericQueryParameterBinder()
                                                                             .UseGenericHeaderParameterBinder()
+                                                                            .UseGenericBodyParameterBinder()
                                                                             .UseDefaultResponseReader()
                                                                             .UseRequestErrorHandler());
     }

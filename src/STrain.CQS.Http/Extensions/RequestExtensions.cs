@@ -4,7 +4,7 @@ using System.Web;
 
 namespace STrain
 {
-    internal static class RequestExtensions
+    public static class RequestExtensions
     {
         public static string? AsQueryString<TRequest>(this TRequest request)
             where TRequest : IRequest

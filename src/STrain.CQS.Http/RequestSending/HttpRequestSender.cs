@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using STrain.CQS.Http.RequestSending.Binders;
-using STrain.CQS.Http.RequestSending.Providers;
 using STrain.CQS.Http.RequestSending.Readers;
 using STrain.CQS.Senders;
 
@@ -15,6 +14,7 @@ namespace STrain.CQS.Http.RequestSending
         private readonly IMethodBinder _methodBinder;
         private readonly IQueryParameterBinder _queryParameterBinder;
         private readonly IHeaderParameterBinder _headerParameterBinder;
+        private readonly IBodyParameterBinder _bodyParameterBinder;
         private readonly IResponseReaderProvider _responseReaderProvider;
         private readonly IRequestErrorHandler _requestErrorHandler;
         private readonly ILogger<HttpRequestSender> _logger;
@@ -25,6 +25,7 @@ namespace STrain.CQS.Http.RequestSending
                                  IMethodBinder methodBinder,
                                  IQueryParameterBinder queryParameterBinder,
                                  IHeaderParameterBinder headerParameterBinder,
+                                 IBodyParameterBinder bodyParameterBinder,
                                  IResponseReaderProvider responseReaderProvider,
                                  IRequestErrorHandler requestErrorHandler,
                                  ILogger<HttpRequestSender> logger)
@@ -35,6 +36,7 @@ namespace STrain.CQS.Http.RequestSending
             _methodBinder = methodBinder;
             _queryParameterBinder = queryParameterBinder;
             _headerParameterBinder = headerParameterBinder;
+            _bodyParameterBinder = bodyParameterBinder;
             _responseReaderProvider = responseReaderProvider;
             _requestErrorHandler = requestErrorHandler;
             _logger = logger;
@@ -61,7 +63,8 @@ namespace STrain.CQS.Http.RequestSending
                 var message = new HttpRequestMessage
                 {
                     RequestUri = uriBuilder.Uri,
-                    Method = await _methodBinder.BindAsync(request, cancellationToken)
+                    Method = await _methodBinder.BindAsync(request, cancellationToken),
+                    Content = await _bodyParameterBinder.BindAsync(request, cancellationToken)
                 };
                 await _headerParameterBinder.BindAsync(request, message.Headers, cancellationToken);
 

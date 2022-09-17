@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Options;
 using STrain.CQS.Blazor.Builders;
 using STrain.CQS.Http.RequestSending;
-using STrain.CQS.Http.RequestSending.Providers;
-using STrain.CQS.Http.RequestSending.Providers.Generic;
+using STrain.CQS.Http.RequestSending.Binders;
+using STrain.CQS.Http.RequestSending.Binders.Generic;
 using STrain.CQS.Http.RequestSending.Readers;
 using STrain.CQS.Senders;
 using System.Net.Mime;
@@ -34,6 +34,12 @@ namespace STrain.CQS.Blazor.Lightinject
         public static HttpRequestSenderBuilder UseGenericHeaderParameterBinder(this HttpRequestSenderBuilder builder)
         {
             builder.Builder.ConfigureContainer(container => container.AddHeaderParameterBinder<GenericHeaderParameterBinder>(builder.Key));
+            return builder;
+        }
+
+        public static HttpRequestSenderBuilder UseGenericBodyParameterBinder(this HttpRequestSenderBuilder builder)
+        {
+            builder.Builder.ConfigureContainer(container => container.AddBodyParameterBinder<GenericBodyParameterBinder>(builder.Key));
             return builder;
         }
 

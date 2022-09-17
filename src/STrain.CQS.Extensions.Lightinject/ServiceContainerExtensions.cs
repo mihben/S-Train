@@ -2,14 +2,13 @@
 using STrain;
 using STrain.CQS.Http.RequestSending;
 using STrain.CQS.Http.RequestSending.Binders;
-using STrain.CQS.Http.RequestSending.Providers;
 using STrain.CQS.Senders;
 
 namespace LightInject
 {
     public static class ServiceContainerExtensions
     {
-        public static void AddPathBinder<TRouteBinder>(this IServiceContainer container, string key)
+        public static void AddRouteBinder<TRouteBinder>(this IServiceContainer container, string key)
             where TRouteBinder : class, IRouteBinder
         {
             container.RegisterTransient<IRouteBinder, TRouteBinder>(key);
@@ -33,6 +32,12 @@ namespace LightInject
             container.RegisterTransient<IHeaderParameterBinder, THeaderParameterBinder>(key);
         }
 
+        public static void AddBodyParameterBinder<TBodyParameterBinder>(this IServiceContainer container, string key)
+            where TBodyParameterBinder : IBodyParameterBinder
+        {
+            container.RegisterTransient<IBodyParameterBinder, TBodyParameterBinder>(key);
+        }
+
         public static void AddHttpSender(this IServiceContainer container, string key)
         {
             container.RegisterTransient<IRequestSender>(factory =>
@@ -45,6 +50,7 @@ namespace LightInject
                                                 factory.GetInstance<IMethodBinder>(key),
                                                 factory.GetInstance<IQueryParameterBinder>(key),
                                                 factory.GetInstance<IHeaderParameterBinder>(key),
+                                                factory.GetInstance<IBodyParameterBinder>(key),
                                                 factory.GetInstance<IResponseReaderProvider>(key),
                                                 factory.GetInstance<IRequestErrorHandler>(key),
                                                 factory.GetInstance<ILogger<HttpRequestSender>>());

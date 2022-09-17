@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using STrain.CQS.Http.RequestSending.Providers.Generic;
+using STrain.CQS.Http.RequestSending.Binders.Generic;
 using STrain.CQS.Test.Unit.Supports;
 
 namespace STrain.CQS.Test.Unit.Http.RequestSending

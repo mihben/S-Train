@@ -1,10 +1,11 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.Logging;
-using STrain.CQS.Http.RequestSending.Providers.Generic;
+using STrain.CQS.Http.RequestSending.Binders.Generic;
+using STrain.CQS.Test.Unit.Supports;
 using System.Reflection;
 using System.Web;
 using Xunit.Abstractions;
-using static STrain.CQS.Test.Unit.Http.RequestSending.GenericQueryParameterBinderTest;
+using TestQuery = STrain.CQS.Test.Unit.Http.RequestSending.GenericQueryParameterBinderTest.TestQuery;
 
 namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
@@ -24,8 +25,8 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             return new GenericQueryParameterBinder(_logger);
         }
 
-        [Fact(DisplayName = "[UNIT][GQPB-001] - Bind properties")]
-        public async Task GenericQueryParameterBinder_BindAsync_BindProperties()
+        [Fact(DisplayName = "[UNIT][GQPB-001] - Bind query")]
+        public async Task GenericQueryParameterBinder_BindAsync_BindQuery()
         {
             // Arrange
             var sut = CreateSUT();
@@ -61,6 +62,20 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 
             // Assert
             Assert.DoesNotContain(nameof(TestQuery.Parameter), result);
+        }
+
+        [Fact(DisplayName = "[UNIT][GQPB-004] - Bind command")]
+        public async Task GenericQueryParameterBinder_BindAsync_BindCommand()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var command = new Fixture().Create<TestCommand>();
+
+            // Act
+            var result = await sut.BindAsync(command, default);
+
+            // Assert
+            Assert.Null(result);
         }
 
         public record TestQuery : Query<object>

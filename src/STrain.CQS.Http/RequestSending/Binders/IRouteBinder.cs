@@ -1,4 +1,4 @@
-﻿namespace STrain.CQS.Http.RequestSending.Providers
+﻿namespace STrain.CQS.Http.RequestSending.Binders
 {
     public interface IRouteBinder
     {
