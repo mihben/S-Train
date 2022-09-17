@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using Moq;
 using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.CQS.Test.Unit.Supports;
@@ -11,20 +12,20 @@ using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
 {
-    public class RequestModelBinderTest
+    public class CommandModelBinderTest
     {
-        private readonly ILogger<RequestModelBinder> _logger;
+        private readonly ILogger<CommandModelBinder> _logger;
 
-        public RequestModelBinderTest(ITestOutputHelper outputHelper)
+        public CommandModelBinderTest(ITestOutputHelper outputHelper)
         {
             _logger = new LoggerFactory()
                             .AddXUnit(outputHelper)
-                            .CreateLogger<RequestModelBinder>();
+                            .CreateLogger<CommandModelBinder>();
         }
 
-        private RequestModelBinder CreateSUT()
+        private CommandModelBinder CreateSUT()
         {
-            return new RequestModelBinder(_logger);
+            return new CommandModelBinder(_logger);
         }
 
         [Fact(DisplayName = "[UNIT][CMB-001]: Bind based on 'request-type' header")]
@@ -36,7 +37,11 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
             var modelBindingContextMock = new Mock<ModelBindingContext>();
 
             modelBindingContextMock.MockHttpContext()
-                .UseHeaders(new Dictionary<string, StringValues> { ["request-type"] = "STrain.CQS.Test.Unit.Supports.TestCommand, STrain.CQS.Test.Unit" })
+                .UseHeaders(new Dictionary<string, StringValues>
+                {
+                    ["request-type"] = "STrain.CQS.Test.Unit.Supports.TestCommand, STrain.CQS.Test.Unit",
+                    [HeaderNames.ContentLength] = "1"
+                })
                 .UseBody(command);
 
             // Act
@@ -56,7 +61,10 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
 
             modelBindingContextMock.SetModelType<TestCommand>();
             modelBindingContextMock.MockHttpContext()
-                .UseHeaders(new Dictionary<string, StringValues>())
+                .UseHeaders(new Dictionary<string, StringValues>()
+                {
+                    [HeaderNames.ContentLength] = "1"
+                })
                 .UseBody(command);
 
             // Act
@@ -75,6 +83,21 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
 
             modelBindingContextMock.MockHttpContext()
                 .UseHeaders(new Dictionary<string, StringValues> { ["request-type"] = "FakeType" });
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.BindModelAsync(modelBindingContextMock.Object));
+        }
+
+        [Fact(DisplayName = "[UNIT][CMB-004]: Empty content")]
+        public async Task CommandModelBinder_BindModelAsync_EmptyContent()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var modelBindingContextMock = new Mock<ModelBindingContext>();
+
+            modelBindingContextMock.MockHttpContext()
+                .UseHeaders(new Dictionary<string, StringValues> { ["request-type"] = "STrain.CQS.Test.Unit.Supports.TestCommand, STrain.CQS.Test.Unit" });
 
             // Act
             // Assert
