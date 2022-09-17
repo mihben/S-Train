@@ -48,7 +48,7 @@
     public async Task SendQueryAsync()
     {
         var stopwatch = Stopwatch.StartNew();
-        var request = new Sample.Api.Sample.GenericQuery();
+        var request = new Sample.Api.Sample.GenericQuery("Called from Blazor Application");
         var response = await RequestSender.GetAsync<Sample.Api.Sample.GenericQuery, string>(request, default);
         stopwatch.Stop();
 

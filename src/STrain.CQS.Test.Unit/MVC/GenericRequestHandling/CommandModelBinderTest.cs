@@ -8,6 +8,7 @@ using Moq;
 using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.CQS.Test.Unit.Supports;
 using System.Text.Json;
+using System.Web;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
@@ -155,6 +156,22 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
 
             _httpRequestMock.SetupGet(hr => hr.Body)
                 .Returns(stream);
+
+            return this;
+        }
+
+        public ModelBindingContextBuilder UseQueryString<TRequest>(TRequest request)
+        {
+            if (request is null) return this;
+
+            var properties = request.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var collection = HttpUtility.ParseQueryString(string.Empty);
+            foreach (var property in properties)
+            {
+                collection.Add(property.Name, property.GetValue(request)?.ToString());
+            }
+            _httpRequestMock.Setup(request => request.QueryString)
+                .Returns(new QueryString($"?{collection}"));
 
             return this;
         }

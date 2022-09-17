@@ -9,6 +9,7 @@ using STrain.CQS.Http.RequestSending.Providers;
 using STrain.CQS.Senders;
 using STrain.Extensions.Testing.Drivers;
 using System.Net.Http.Json;
+using System.Web;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Function.Drivers
@@ -106,9 +107,16 @@ namespace STrain.CQS.Test.Function.Drivers
         {
             var client = Host.CreateClient();
             using var cancellationTokenSource = new CancellationTokenSource(timeout);
-            var content = JsonContent.Create(query);
-            content.Headers.Add("Request-Type", $"{query.GetType().FullName}, {query.GetType().Assembly.GetName().Name}");
-            return await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "api") { Content = content }, cancellationTokenSource.Token);
+            var queryString = HttpUtility.ParseQueryString("");
+            foreach (var property in typeof(TQuery).GetProperties())
+            {
+                queryString.Add(property.Name, property.GetValue(query).ToString());
+            }
+            var uriBuilder = new UriBuilder(client.BaseAddress);
+            uriBuilder.Query = queryString.ToString();
+            uriBuilder.Path = "api";
+            client.DefaultRequestHeaders.Add("Request-Type", $"{query.GetType().FullName}, {query.GetType().Assembly.GetName().Name}");
+            return await client.GetAsync(uriBuilder.Uri, cancellationTokenSource.Token);
         }
 
         public async Task<IActionResult> ReceiveViaReceierAsync<TCommand>(TCommand command, TimeSpan timeout)
