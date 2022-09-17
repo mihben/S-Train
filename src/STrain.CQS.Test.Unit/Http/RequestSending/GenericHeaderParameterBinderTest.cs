@@ -1,6 +1,6 @@
 ﻿using STrain.CQS.Http.RequestSending.Providers.Generic;
 
-namespace STrain.CQS.Test.Unit.NetCore.RequestSending
+namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class GenericHeaderParameterBinderTest
     {

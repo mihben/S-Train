@@ -2,7 +2,7 @@
 using STrain.CQS.Http.RequestSending;
 using STrain.CQS.Http.RequestSending.Readers;
 
-namespace STrain.CQS.Test.Unit.NetCore.RequestSending
+namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class ResponseReaderRegistryTest
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using STrain;
 using STrain.CQS.Http.RequestSending;
+using STrain.CQS.Http.RequestSending.Binders;
 using STrain.CQS.Http.RequestSending.Providers;
 using STrain.CQS.Senders;
 
@@ -30,12 +31,6 @@ namespace LightInject
             where THeaderParameterBinder : IHeaderParameterBinder
         {
             container.RegisterTransient<IHeaderParameterBinder, THeaderParameterBinder>(key);
-        }
-
-        public static void AddParameterProvider<TParameterProvider>(this IServiceContainer container, string key)
-            where TParameterProvider : class, IParameterProvider
-        {
-            container.RegisterTransient<IParameterProvider, TParameterProvider>(key);
         }
 
         public static void AddHttpSender(this IServiceContainer container, string key)

@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace STrain.CQS.Http.RequestSending
+namespace STrain.CQS.Http.RequestSending.Binders
 {
     public interface IHeaderParameterBinder
     {

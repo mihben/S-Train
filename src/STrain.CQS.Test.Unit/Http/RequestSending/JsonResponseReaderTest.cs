@@ -3,7 +3,7 @@ using STrain.CQS.Http.RequestSending.Readers;
 using System.Net;
 using System.Net.Http.Json;
 
-namespace STrain.CQS.Test.Unit.NetCore.RequestSending
+namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class JsonResponseReaderTest
     {

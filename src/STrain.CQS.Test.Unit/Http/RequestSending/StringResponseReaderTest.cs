@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Text;
 
-namespace STrain.CQS.Test.Unit.NetCore.RequestSending
+namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class StringResponseReaderTest
     {

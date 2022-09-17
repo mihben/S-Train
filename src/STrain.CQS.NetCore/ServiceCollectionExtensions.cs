@@ -27,24 +27,6 @@ namespace STrain.CQS.NetCore
                 .AddApplicationPart(typeof(GenericRequestController).Assembly);
         }
 
-        public static void AddPathProvider<TPathProvider>(this IServiceCollection services)
-            where TPathProvider : class, IPathBinder
-        {
-            services.AddTransient<IPathBinder, TPathProvider>();
-        }
-
-        public static void AddMethodProvider<TMethodProvider>(this IServiceCollection services)
-            where TMethodProvider : class, IMethodProvider
-        {
-            services.AddTransient<IMethodProvider, TMethodProvider>();
-        }
-
-        public static void AddParameterProvider<TParameterProvider>(this IServiceCollection services)
-            where TParameterProvider : class, IParameterProvider
-        {
-            services.AddTransient<IParameterProvider, TParameterProvider>();
-        }
-
         public static void AddResponseReader<TResponseReader>(this IServiceCollection services)
             where TResponseReader : class, IResponseReader
         {

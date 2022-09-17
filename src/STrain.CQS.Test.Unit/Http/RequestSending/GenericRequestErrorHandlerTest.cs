@@ -9,7 +9,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Xunit.Abstractions;
 
-namespace STrain.CQS.Test.Unit.NetCore.RequestSending
+namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class GenericRequestErrorHandlerTest
     {

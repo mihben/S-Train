@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using STrain.CQS.Http.RequestSending.Binders;
 using STrain.CQS.Http.RequestSending.Providers;
 using STrain.CQS.Http.RequestSending.Readers;
 using STrain.CQS.Senders;

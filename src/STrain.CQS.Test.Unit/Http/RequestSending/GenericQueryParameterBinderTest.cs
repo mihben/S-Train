@@ -4,9 +4,9 @@ using STrain.CQS.Http.RequestSending.Providers.Generic;
 using System.Reflection;
 using System.Web;
 using Xunit.Abstractions;
-using static STrain.CQS.Test.Unit.NetCore.RequestSending.GenericQueryParameterBinderTest;
+using static STrain.CQS.Test.Unit.Http.RequestSending.GenericQueryParameterBinderTest;
 
-namespace STrain.CQS.Test.Unit.NetCore.RequestSending
+namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class GenericQueryParameterBinderTest
     {

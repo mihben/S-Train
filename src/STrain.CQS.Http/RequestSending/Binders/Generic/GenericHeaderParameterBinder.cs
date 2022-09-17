@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using STrain.CQS.Http.RequestSending.Binders;
 
 namespace STrain.CQS.Http.RequestSending.Providers.Generic
 {
