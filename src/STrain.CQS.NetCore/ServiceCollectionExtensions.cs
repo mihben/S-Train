@@ -28,9 +28,9 @@ namespace STrain.CQS.NetCore
         }
 
         public static void AddPathProvider<TPathProvider>(this IServiceCollection services)
-            where TPathProvider : class, IPathProvider
+            where TPathProvider : class, IPathBinder
         {
-            services.AddTransient<IPathProvider, TPathProvider>();
+            services.AddTransient<IPathBinder, TPathProvider>();
         }
 
         public static void AddMethodProvider<TMethodProvider>(this IServiceCollection services)

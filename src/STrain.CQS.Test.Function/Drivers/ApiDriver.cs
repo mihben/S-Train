@@ -45,19 +45,15 @@ namespace STrain.CQS.Test.Function.Drivers
 
                         using (var scope = factory.BeginScope())
                         {
-                            var pathProvider = scope.GetInstance<IPathProvider>(key);
-                            var methodProvider = scope.GetInstance<IMethodProvider>(key);
-                            var parameterProviders = new List<IParameterProvider>
-                             {
-                                 scope.GetInstance<IParameterProvider>($"{key}.header"),
-                                 scope.GetInstance<IParameterProvider>($"{key}.query"),
-                                 scope.GetInstance<IParameterProvider>($"{key}.body")
-                             };
-                            var responseReaderProvider = scope.GetInstance<IResponseReaderProvider>(key);
-                            var requestErrorHandler = scope.GetInstance<IRequestErrorHandler>(key);
-
-
-                            registration.Value = new HttpRequestSender(httpClient, scope.GetInstance<IServiceProvider>(), pathProvider, methodProvider, parameterProviders, responseReaderProvider, requestErrorHandler, scope.GetInstance<ILogger<HttpRequestSender>>());
+                            registration.Value = new HttpRequestSender(
+                                httpClient,
+                                scope.GetInstance<IServiceProvider>(),
+                                scope.GetInstance<IRouteBinder>(key),
+                                scope.GetInstance<IMethodBinder>(key),
+                                scope.GetInstance<IQueryParameterBinder>(key),
+                                scope.GetInstance<IResponseReaderProvider>(key),
+                                scope.GetInstance<IRequestErrorHandler>(key),
+                                scope.GetInstance<ILogger<HttpRequestSender>>());
                         }
 
                         return registration;

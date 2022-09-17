@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace STrain.CQS.Http.RequestSending.Providers.Attributive
 {
-    public class AttributivePathProvider : IPathProvider
+    public class AttributivePathProvider : IPathBinder
     {
         private readonly string? _path;
         private readonly ILogger<AttributivePathProvider> _logger;

@@ -8,16 +8,28 @@ namespace LightInject
 {
     public static class ServiceContainerExtensions
     {
-        public static void AddPathProvider<TPathProvider>(this IServiceContainer container, string key)
-            where TPathProvider : class, IPathProvider
+        public static void AddPathBinder<TRouteBinder>(this IServiceContainer container, string key)
+            where TRouteBinder : class, IRouteBinder
         {
-            container.RegisterTransient<IPathProvider, TPathProvider>(key);
+            container.RegisterTransient<IRouteBinder, TRouteBinder>(key);
         }
 
-        public static void AddMethodProvider<TMethodProvider>(this IServiceContainer container, string key)
-            where TMethodProvider : class, IMethodProvider
+        public static void AddMethodBinder<TMethodBinder>(this IServiceContainer container, string key)
+            where TMethodBinder : class, IMethodBinder
         {
-            container.RegisterTransient<IMethodProvider, TMethodProvider>(key);
+            container.RegisterTransient<IMethodBinder, TMethodBinder>(key);
+        }
+
+        public static void AddQueryParameterBinder<TQueryParameterBinder>(this IServiceContainer container, string key)
+            where TQueryParameterBinder : IQueryParameterBinder
+        {
+            container.RegisterTransient<IQueryParameterBinder, TQueryParameterBinder>(key);
+        }
+
+        public static void AddHeaderParameterBinder<THeaderParameterBinder>(this IServiceContainer container, string key)
+            where THeaderParameterBinder : IHeaderParameterBinder
+        {
+            container.RegisterTransient<IHeaderParameterBinder, THeaderParameterBinder>(key);
         }
 
         public static void AddParameterProvider<TParameterProvider>(this IServiceContainer container, string key)
@@ -32,24 +44,14 @@ namespace LightInject
             {
                 var clientFactory = factory.GetInstance<IHttpClientFactory>();
 
-                var pathProvider = factory.GetInstance<IPathProvider>(key);
-                var methodProvider = factory.GetInstance<IMethodProvider>(key);
-                var parameterProviders = new List<IParameterProvider>
-                {
-                    factory.GetInstance<IParameterProvider>($"{key}.header"),
-                    factory.GetInstance<IParameterProvider>($"{key}.query"),
-                    factory.GetInstance<IParameterProvider>($"{key}.body")
-                };
-                var responseReaderProvider = factory.GetInstance<IResponseReaderProvider>(key);
-                var requestErrrorHandler = factory.GetInstance<IRequestErrorHandler>(key);
-
                 return new HttpRequestSender(clientFactory.CreateClient(key),
                                                 factory.GetInstance<IServiceProvider>(),
-                                                pathProvider,
-                                                methodProvider,
-                                                parameterProviders,
-                                                responseReaderProvider,
-                                                requestErrrorHandler,
+                                                factory.GetInstance<IRouteBinder>(key),
+                                                factory.GetInstance<IMethodBinder>(key),
+                                                factory.GetInstance<IQueryParameterBinder>(key),
+                                                factory.GetInstance<IHeaderParameterBinder>(key),
+                                                factory.GetInstance<IResponseReaderProvider>(key),
+                                                factory.GetInstance<IRequestErrorHandler>(key),
                                                 factory.GetInstance<ILogger<HttpRequestSender>>());
             }, key);
         }

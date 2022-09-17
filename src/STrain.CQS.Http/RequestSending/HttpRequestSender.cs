@@ -10,34 +10,37 @@ namespace STrain.CQS.Http.RequestSending
     {
         private readonly HttpClient _httpClient;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IPathProvider _pathProvider;
-        private readonly IMethodProvider _methodProvider;
-        private readonly IEnumerable<IParameterProvider> _parameterProviders;
+        private readonly IRouteBinder _routeBinder;
+        private readonly IMethodBinder _methodBinder;
+        private readonly IQueryParameterBinder _queryParameterBinder;
+        private readonly IHeaderParameterBinder _headerParameterBinder;
         private readonly IResponseReaderProvider _responseReaderProvider;
         private readonly IRequestErrorHandler _requestErrorHandler;
         private readonly ILogger<HttpRequestSender> _logger;
 
         public HttpRequestSender(HttpClient httpClient,
                                  IServiceProvider serviceProvider,
-                                 IPathProvider pathProvider,
-                                 IMethodProvider methodProvider,
-                                 IEnumerable<IParameterProvider> parameterProviders,
+                                 IRouteBinder routeBinder,
+                                 IMethodBinder methodBinder,
+                                 IQueryParameterBinder queryParameterBinder,
+                                 IHeaderParameterBinder headerParameterBinder,
                                  IResponseReaderProvider responseReaderProvider,
                                  IRequestErrorHandler requestErrorHandler,
                                  ILogger<HttpRequestSender> logger)
         {
             _httpClient = httpClient;
             _serviceProvider = serviceProvider;
-            _pathProvider = pathProvider;
-            _methodProvider = methodProvider;
-            _parameterProviders = parameterProviders;
+            _routeBinder = routeBinder;
+            _methodBinder = methodBinder;
+            _queryParameterBinder = queryParameterBinder;
+            _headerParameterBinder = headerParameterBinder;
             _responseReaderProvider = responseReaderProvider;
             _requestErrorHandler = requestErrorHandler;
             _logger = logger;
         }
 
         public async Task<T?> GetAsync<TQuery, T>(TQuery query, CancellationToken cancellationToken)
-            where TQuery : Query<T> => await SendAsync<TQuery, T>(query, cancellationToken).ConfigureAwait(false);
+            where TQuery : Query<T> => await SendAsync<TQuery, T>(query, cancellationToken);
 
         public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
             where TCommand : Command => await SendAsync<TCommand, object>(command, cancellationToken).ConfigureAwait(false);
@@ -48,11 +51,18 @@ namespace STrain.CQS.Http.RequestSending
             _logger.LogDebug("Creating HTTP request");
             using (_logger.LogStopwatch("Sent HTTP request in {ElapsedTime} ms"))
             {
-                var message = new HttpRequestMessage(_methodProvider.GetMethod<TRequest>(), $"{_httpClient.BaseAddress}{_pathProvider.GetPath(request)}");
-                foreach (var parameterProvider in _parameterProviders)
+                var uriBuilder = new UriBuilder(_httpClient.BaseAddress)
                 {
-                    await parameterProvider.SetParametersAsync(message, request, cancellationToken);
-                }
+                    Path = await _routeBinder.BindAsync(request, cancellationToken),
+                    Query = await _queryParameterBinder.BindAsync(request, cancellationToken)
+                };
+
+                var message = new HttpRequestMessage
+                {
+                    RequestUri = uriBuilder.Uri,
+                    Method = await _methodBinder.BindAsync(request, cancellationToken)
+                };
+                await _headerParameterBinder.BindAsync(request, message.Headers, cancellationToken);
 
                 _logger.LogDebug("Sending HTTP request to {RequestUri}", message.RequestUri);
                 _logger.LogTrace("Request message: {@Message}", message);
@@ -62,7 +72,7 @@ namespace STrain.CQS.Http.RequestSending
 
                 if (response.Content.Headers.ContentLength == 0) return default;
                 return (T?)await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType?.MediaType])).ReadAsync<T>(response, cancellationToken);
-            }
+            };
         }
     }
 }

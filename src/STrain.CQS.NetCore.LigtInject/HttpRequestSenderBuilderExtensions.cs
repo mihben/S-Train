@@ -34,13 +34,13 @@ namespace STrain.CQS.NetCore.LigtInject
 
         public static HttpRequestSenderBuilder UseAttributivePathProvider(this HttpRequestSenderBuilder builder)
         {
-            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IPathProvider>(factory => new AttributivePathProvider(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path, factory.GetInstance<ILogger<AttributivePathProvider>>()), builder.Key));
+            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IPathBinder>(factory => new AttributivePathProvider(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path, factory.GetInstance<ILogger<AttributivePathProvider>>()), builder.Key));
             return builder;
         }
         public static HttpRequestSenderBuilder UsePathProvider<TPathProvider>(this HttpRequestSenderBuilder builder)
-            where TPathProvider : class, IPathProvider
+            where TPathProvider : class, IPathBinder
         {
-            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IPathProvider, TPathProvider>(builder.Key));
+            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.RegisterTransient<IPathBinder, TPathProvider>(builder.Key));
             return builder;
         }
 

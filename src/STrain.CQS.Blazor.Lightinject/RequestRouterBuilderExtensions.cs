@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using STrain.CQS.Blazor.Builders;
+using STrain.CQS.Blazor.Lightinject;
 using STrain.CQS.Http.RequestSending;
 
 namespace STrain
@@ -16,5 +17,13 @@ namespace STrain
             build(new HttpRequestSenderBuilder(builder.Builder, key));
             return builder;
         }
+
+        public static RequestRouterBuilder AddGenericHttpSender(this RequestRouterBuilder builder, string key, Action<HttpRequestSenderOptions, IConfiguration> configure)
+            => builder.AddHttpSender(key, configure, builder => builder.UseGenericPathBinder()
+                                                                            .UseGenericMethodBinder()
+                                                                            .UseGenericQueryParameterBinder()
+                                                                            .UseGenericHeaderParameterBinder()
+                                                                            .UseDefaultResponseReader()
+                                                                            .UseRequestErrorHandler());
     }
 }
