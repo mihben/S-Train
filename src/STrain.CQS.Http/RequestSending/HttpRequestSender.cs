@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using STrain.CQS.NetCore.RequestSending.Parsers;
-using STrain.CQS.NetCore.RequestSending.Providers;
+using STrain.CQS.Http.RequestSending.Providers;
+using STrain.CQS.Http.RequestSending.Readers;
 using STrain.CQS.Senders;
 
-namespace STrain.CQS.NetCore.RequestSending
+namespace STrain.CQS.Http.RequestSending
 {
     public class HttpRequestSender : IRequestSender
     {
@@ -61,7 +61,7 @@ namespace STrain.CQS.NetCore.RequestSending
                 if (!response.IsSuccessStatusCode) await _requestErrorHandler.HandleAsync(response, cancellationToken);
 
                 if (response.Content.Headers.ContentLength == 0) return default;
-                return (T?)(await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType?.MediaType])).ReadAsync<T>(response, cancellationToken));
+                return (T?)await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType?.MediaType])).ReadAsync<T>(response, cancellationToken);
             }
         }
     }

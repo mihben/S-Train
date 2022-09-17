@@ -20,7 +20,8 @@ namespace STrain.CQS.MVC.GenericRequestHandling
             if (requestType is null) throw new InvalidOperationException($"Unkown {requestType} type");
 
             _logger.LogDebug("Attempting to bind parameter {ParameterName} of type {ModelType}", bindingContext.ModelMetadata?.ParameterName, requestType);
-            bindingContext.Result = ModelBindingResult.Success(await bindingContext.HttpContext.Request.ReadAsJsonAsync(requestType, bindingContext.HttpContext.RequestAborted));
+            if (bindingContext.HttpContext.Request.ContentLength is null) bindingContext.Result = ModelBindingResult.Success(Activator.CreateInstance(requestType));
+            else bindingContext.Result = ModelBindingResult.Success(await bindingContext.HttpContext.Request.ReadAsJsonAsync(requestType, bindingContext.HttpContext.RequestAborted));
             _logger.LogDebug("Done attempting to bind parameter {ParameterName} of type {ModelType}", bindingContext.ModelMetadata?.ParameterName, requestType);
         }
     }

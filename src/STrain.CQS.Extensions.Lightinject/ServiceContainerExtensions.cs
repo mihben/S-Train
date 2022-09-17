@@ -1,13 +1,31 @@
 ﻿using Microsoft.Extensions.Logging;
 using STrain;
-using STrain.CQS.NetCore.RequestSending;
-using STrain.CQS.NetCore.RequestSending.Providers;
+using STrain.CQS.Http.RequestSending;
+using STrain.CQS.Http.RequestSending.Providers;
 using STrain.CQS.Senders;
 
 namespace LightInject
 {
     public static class ServiceContainerExtensions
     {
+        public static void AddPathProvider<TPathProvider>(this IServiceContainer container, string key)
+            where TPathProvider : class, IPathProvider
+        {
+            container.RegisterTransient<IPathProvider, TPathProvider>(key);
+        }
+
+        public static void AddMethodProvider<TMethodProvider>(this IServiceContainer container, string key)
+            where TMethodProvider : class, IMethodProvider
+        {
+            container.RegisterTransient<IMethodProvider, TMethodProvider>(key);
+        }
+
+        public static void AddParameterProvider<TParameterProvider>(this IServiceContainer container, string key)
+            where TParameterProvider : class, IParameterProvider
+        {
+            container.RegisterTransient<IParameterProvider, TParameterProvider>(key);
+        }
+
         public static void AddHttpSender(this IServiceContainer container, string key)
         {
             container.RegisterTransient<IRequestSender>(factory =>

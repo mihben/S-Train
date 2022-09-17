@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace STrain.CQS.NetCore.RequestSending
+namespace STrain.CQS.Http.RequestSending
 {
     internal static class RequestSendingExtensions
     {

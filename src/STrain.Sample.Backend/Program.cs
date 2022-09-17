@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Serilog;
-using STrain.Sample.Backend.Controllers;
+using STrain.CQS.NetCore;
 using STrain.Sample.Backend.Services;
 using STrain.Sample.Backend.Supports;
 using STrain.Sample.Backend.Wireup;
@@ -12,10 +12,7 @@ builder.Host.UseLightInject();
 builder.Logging.AddSerilog(new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger());
 
 builder.Services.AddMvc()
-    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true)
-    .AddControllersAsServices()
-    .AddApplicationPart(typeof(ExternalController).Assembly);
-builder.Services.AddControllers();
+    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
 builder.Services.AddAuthorization(options => options.AddPolicy("Forbidden", policy => policy.RequireUserName("Admin")));
 builder.Services.AddAuthentication()
@@ -33,6 +30,8 @@ builder.Services.AddTransient<ISampleService, SampleService>();
 var app = builder.Build();
 
 app.UseDefaultExceptionHandler();
+
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader());
 
 app.UseAuthentication();
 app.UseAuthorization();

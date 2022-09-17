@@ -1,6 +1,6 @@
-﻿using STrain.CQS.NetCore.RequestSending.Parsers;
+﻿using STrain.CQS.Http.RequestSending.Readers;
 
-namespace STrain.CQS.NetCore.RequestSending
+namespace STrain.CQS.Http.RequestSending
 {
     public interface IResponseReaderRegister
     {

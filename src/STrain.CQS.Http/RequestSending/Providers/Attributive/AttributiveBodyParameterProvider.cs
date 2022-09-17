@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Reflection;
 using System.Text;
 
-namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
+namespace STrain.CQS.Http.RequestSending.Providers.Attributive
 {
     public class AttributiveBodyParameterProvider : IParameterProvider
     {
@@ -25,7 +24,7 @@ namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
             var type = typeof(TRequest);
             if (type.IsGenericRequest() || type.GetCustomAttribute<BodyParameterAttribute>() is not null)
             {
-                message.Content = JsonContent.Create(request);
+                //message.Content = JsonContent.Create(request);
                 DoneLogMessage();
                 return Task.CompletedTask;
             }

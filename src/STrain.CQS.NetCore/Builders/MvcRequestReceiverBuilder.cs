@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using STrain.CQS.Receivers;
 
 namespace STrain.CQS.NetCore.Builders
 {

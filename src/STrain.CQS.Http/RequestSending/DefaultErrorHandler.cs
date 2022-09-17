@@ -1,7 +1,7 @@
 ﻿using STrain.CQS.Senders;
 using System.Diagnostics.CodeAnalysis;
 
-namespace STrain.CQS.NetCore.RequestSending
+namespace STrain.CQS.Http.RequestSending
 {
     [ExcludeFromCodeCoverage]
     public class DefaultErrorHandler : IRequestErrorHandler

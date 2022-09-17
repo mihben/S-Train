@@ -1,8 +1,7 @@
-﻿using STrain.CQS.NetCore.RequestSending.Parsers;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Net.Mime;
 
-namespace STrain.CQS.NetCore.RequestSending.Readers
+namespace STrain.CQS.Http.RequestSending.Readers
 {
     public class JsonResponseReader : IResponseReader
     {

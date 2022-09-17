@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
-using STrain.CQS.NetCore.RequestSending;
-using STrain.CQS.NetCore.RequestSending.Parsers;
+using STrain.CQS.Http.RequestSending;
+using STrain.CQS.Http.RequestSending.Readers;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending
 {

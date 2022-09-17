@@ -9,10 +9,11 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting
         public static void UseLightinject(this WebAssemblyHostBuilder builder)
         {
             var container = new ServiceContainer(ContainerOptions.Default.Clone().WithMicrosoftSettings());
-            ServiceProviderFactoryStore.Factory = new LightInjectServiceProviderFactory(container);
+            ContainerContext.Container = container;
+            builder.ConfigureContainer(new LightInjectServiceProviderFactory(ContainerContext.Container));
         }
 
         public static void ConfigureContainer(this WebAssemblyHostBuilder builder, Action<IServiceContainer> container)
-            => builder.ConfigureContainer(ServiceProviderFactoryStore.Factory, container);
+            => container(ContainerContext.Container);
     }
 }

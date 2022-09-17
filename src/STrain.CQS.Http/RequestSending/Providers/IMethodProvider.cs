@@ -1,4 +1,4 @@
-﻿namespace STrain.CQS.NetCore.RequestSending.Providers
+﻿namespace STrain.CQS.Http.RequestSending.Providers
 {
     public interface IMethodProvider
     {

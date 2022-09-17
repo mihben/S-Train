@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using STrain.CQS.NetCore.RequestSending.Providers;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace STrain.CQS.NetCore.RequestSending.Attributive
+namespace STrain.CQS.Http.RequestSending.Providers.Attributive
 {
     public class AttributivePathProvider : IPathProvider
     {

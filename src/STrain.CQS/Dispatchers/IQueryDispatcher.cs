@@ -1,6 +1,4 @@
-﻿using STrain.CQS.Api;
-
-namespace STrain
+﻿namespace STrain
 {
     /// <summary>
     /// Dispatch <see cref="Command"/> or <see cref="Query{T}"/> to <see cref="ICommandPerformer{TCommand}"/> or <see cref="IQueryPerformer{TQuery, T}"/>.

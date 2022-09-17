@@ -1,7 +1,6 @@
-﻿using STrain.CQS.NetCore.RequestSending.Parsers;
-using System.Net.Mime;
+﻿using System.Net.Mime;
 
-namespace STrain.CQS.NetCore.RequestSending.Readers
+namespace STrain.CQS.Http.RequestSending.Readers
 {
     public class StringResponseReader : IResponseReader
     {

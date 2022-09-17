@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using STrain.CQS.NetCore.RequestSending.Readers;
+using STrain.CQS.Http.RequestSending.Readers;
 using System.Net;
 using System.Net.Mime;
 using System.Text;

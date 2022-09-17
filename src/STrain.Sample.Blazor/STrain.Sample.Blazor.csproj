@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.Blazor.Lightinject\STrain.CQS.Blazor.Lightinject.csproj" />
-    <ProjectReference Include="..\STrain.CQS.Extensions.DependencyInjection\STrain.CQS.Extensions.DependencyInjection.csproj" />
-  </ItemGroup>
-
+    <ProjectReference Include="..\STrain.Sample.Api\STrain.Sample.Api.csproj" />
+  </ItemGroup>  
 </Project>

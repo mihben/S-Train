@@ -2,7 +2,7 @@
 using STrain.CQS.Attributes.RequestSending.Http.Parameters;
 using System.Reflection;
 
-namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
+namespace STrain.CQS.Http.RequestSending.Providers.Attributive
 {
     public class AttributiveHeaderParameterProvider : IParameterProvider
     {
@@ -36,9 +36,7 @@ namespace STrain.CQS.NetCore.RequestSending.Providers.Attributive
             {
                 var attribute = property.GetCustomAttribute<HeaderParameterAttribute>();
                 if (attribute is not null)
-                {
                     message.Headers.Add(attribute.Name ?? property.Name, property.GetValue(request)?.ToString() ?? string.Empty);
-                }
             }
 
             _logger.LogDebug("Done setting HTTP header parameter(s)");

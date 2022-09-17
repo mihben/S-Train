@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using STrain.CQS.NetCore.RequestSending.Providers.Attributive;
+using STrain.CQS.Http.RequestSending.Providers.Attributive;
 using System.Net.Http.Json;
 using Xunit.Abstractions;
 

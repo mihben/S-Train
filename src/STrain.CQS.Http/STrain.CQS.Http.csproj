@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LightInject" Version="6.5.2" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\STrain.CQS.Http\STrain.CQS.Http.csproj" />
+    <ProjectReference Include="..\STrain.CQS.Attributes\STrain.CQS.Attributes.csproj" />
     <ProjectReference Include="..\STrain.CQS\STrain.CQS.csproj" />
   </ItemGroup>
 

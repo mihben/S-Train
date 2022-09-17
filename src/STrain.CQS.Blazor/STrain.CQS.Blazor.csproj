@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.Extensions.DependencyInjection\STrain.CQS.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\STrain.CQS.Http\STrain.CQS.Http.csproj" />
   </ItemGroup>
 
 </Project>

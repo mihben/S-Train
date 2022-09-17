@@ -1,11 +1,11 @@
 ﻿using LightInject;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using STrain.CQS.Http.RequestSending;
+using STrain.CQS.Http.RequestSending.Providers;
+using STrain.CQS.Http.RequestSending.Providers.Attributive;
 using STrain.CQS.NetCore.Builders;
-using STrain.CQS.NetCore.RequestSending;
-using STrain.CQS.NetCore.RequestSending.Attributive;
-using STrain.CQS.NetCore.RequestSending.Providers;
-using STrain.CQS.NetCore.RequestSending.Providers.Attributive;
+using STrain.CQS.NetCore.ErrorHandling;
 using STrain.CQS.Senders;
 
 namespace STrain.CQS.NetCore.LigtInject

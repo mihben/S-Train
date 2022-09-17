@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using STrain.CQS.Api;
 using STrain.CQS.Attributes.RequestSending.Http;
-using STrain.CQS.NetCore.RequestSending.Providers;
 using System.Reflection;
 
-namespace STrain.CQS.NetCore.RequestSending.Attributive
+namespace STrain.CQS.Http.RequestSending.Providers.Attributive
 {
     public class AttributiveMethodProvider : IMethodProvider
     {

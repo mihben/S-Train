@@ -1,4 +1,4 @@
-﻿namespace STrain.CQS.NetCore.RequestSending
+﻿namespace STrain.CQS.Http.RequestSending
 {
     public interface IResponseReaderProvider
     {

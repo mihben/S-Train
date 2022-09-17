@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.Logging;
-using STrain.CQS.NetCore.RequestSending.Attributive;
+using STrain.CQS.Http.RequestSending.Providers.Attributive;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.NetCore.RequestSending

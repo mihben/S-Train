@@ -1,8 +1,8 @@
 ﻿using LightInject;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using STrain.CQS.Http.RequestSending;
 using STrain.CQS.NetCore.Builders;
-using STrain.CQS.NetCore.RequestSending;
 using System.Diagnostics.CodeAnalysis;
 
 namespace STrain.CQS.NetCore.LigtInject

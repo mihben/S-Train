@@ -6,7 +6,7 @@
     /// <typeparam name="TQuery">Type of the <see cref="Query{T}"/>.</typeparam>
     /// <typeparam name="T">Return type of the <see cref="Query{T}"/>.</typeparam>
     public interface IQueryPerformer<TQuery, T>
-        where TQuery: Query<T>
+        where TQuery : Query<T>
     {
         /// <summary>
         /// Performs <see cref="Query{T}"/>.

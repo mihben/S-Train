@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using STrain.CQS.MVC.Options;
 using STrain.CQS.NetCore.ErrorHandling;
 
-namespace Microsoft.AspNetCore.Builder
+namespace STrain.CQS.NetCore
 {
     public static class WebApplicationExtensions
     {

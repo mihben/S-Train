@@ -1,14 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using STrain.CQS.Http.RequestSending;
+using STrain.CQS.Http.RequestSending.Providers;
+using STrain.CQS.Http.RequestSending.Readers;
 using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.CQS.MVC.Options;
-using STrain.CQS.NetCore.RequestSending;
-using STrain.CQS.NetCore.RequestSending.Parsers;
-using STrain.CQS.NetCore.RequestSending.Providers;
-using STrain.CQS.NetCore.Validation;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace STrain.CQS.NetCore
 {
     [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
@@ -24,29 +23,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 })
                 .ValidateOnStart();
 
-            services.AddControllers()
+            services.AddControllers(options => options.ModelBinderProviders.Insert(0, new RequestModelBinderProvider()))
                 .AddApplicationPart(typeof(GenericRequestController).Assembly);
-
-            services.AddControllers(options => options.ModelBinderProviders.Insert(0, new RequestModelBinderProvider()));
-        }
-
-        public static void AddHttpRequestSender(this IServiceCollection services, string key, Action<HttpRequestSenderOptions, IConfiguration> configure)
-        {
-            services.AddOptions<HttpRequestSenderOptions>(key)
-                .Configure(configure)
-                .Validate(options => options.BaseAddress is not null, "Base address is required")
-                .PostConfigure(options =>
-                {
-                    if (options.BaseAddress is not null
-                        && !options.BaseAddress.AbsoluteUri.EndsWith('/')) options.BaseAddress = new Uri(options.BaseAddress, "/");
-                })
-                .ValidateOnStart();
-
-            services.AddHttpClient(key, (provider, client) =>
-            {
-                var options = provider.GetRequiredService<IOptionsSnapshot<HttpRequestSenderOptions>>();
-                client.BaseAddress = options.Get(key).BaseAddress;
-            });
         }
 
         public static void AddPathProvider<TPathProvider>(this IServiceCollection services)
