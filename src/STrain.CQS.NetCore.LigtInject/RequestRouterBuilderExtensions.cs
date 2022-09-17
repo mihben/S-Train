@@ -13,7 +13,7 @@ namespace STrain.CQS.NetCore.LigtInject
         public static HttpRequestSenderBuilder AddHttpSender(this RequestRouterBuilder builder, string key, Action<HttpRequestSenderOptions, IConfiguration> configure)
         {
             builder.Builder.Services.AddHttpRequestSender(key, configure);
-            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) => registry.AddHttpSender(key))
+            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) => container.AddHttpSender(key));
             return new HttpRequestSenderBuilder(key, builder.Builder);
         }
     }

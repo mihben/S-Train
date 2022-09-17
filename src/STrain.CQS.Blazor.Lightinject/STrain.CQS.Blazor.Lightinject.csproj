@@ -8,11 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="LightInject" Version="6.5.2" />
+    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.4.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\STrain.CQS.Blazor\STrain.CQS.Blazor.csproj" />
     <ProjectReference Include="..\STrain.CQS.Extensions.Lightinject\STrain.CQS.Extensions.Lightinject.csproj" />
-    <ProjectReference Include="..\STrain.CQS.NetCore\STrain.CQS.NetCore.csproj" />
   </ItemGroup>
 
 </Project>

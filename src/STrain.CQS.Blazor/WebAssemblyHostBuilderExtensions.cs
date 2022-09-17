@@ -2,7 +2,7 @@
 using STrain.CQS;
 using STrain.CQS.Blazor.Builders;
 
-namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting
 {
     public static class WebAssemblyHostBuilderExtensions
     {
