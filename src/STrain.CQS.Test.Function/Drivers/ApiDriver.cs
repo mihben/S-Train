@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
-using STrain.CQS.NetCore.RequestSending;
-using STrain.CQS.NetCore.RequestSending.Providers;
+using STrain.CQS.Http.RequestSending;
+using STrain.CQS.Http.RequestSending.Binders;
 using STrain.CQS.Senders;
 using STrain.Extensions.Testing.Drivers;
 using System.Net.Http.Json;
+using System.Web;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Function.Drivers
@@ -44,19 +45,17 @@ namespace STrain.CQS.Test.Function.Drivers
 
                         using (var scope = factory.BeginScope())
                         {
-                            var pathProvider = scope.GetInstance<IPathProvider>(key);
-                            var methodProvider = scope.GetInstance<IMethodProvider>(key);
-                            var parameterProviders = new List<IParameterProvider>
-                             {
-                                 scope.GetInstance<IParameterProvider>($"{key}.header"),
-                                 scope.GetInstance<IParameterProvider>($"{key}.query"),
-                                 scope.GetInstance<IParameterProvider>($"{key}.body")
-                             };
-                            var responseReaderProvider = scope.GetInstance<IResponseReaderProvider>(key);
-                            var requestErrorHandler = scope.GetInstance<IRequestErrorHandler>(key);
-
-
-                            registration.Value = new HttpRequestSender(httpClient, scope.GetInstance<IServiceProvider>(), pathProvider, methodProvider, parameterProviders, responseReaderProvider, requestErrorHandler, scope.GetInstance<ILogger<HttpRequestSender>>());
+                            registration.Value = new HttpRequestSender(
+                                httpClient,
+                                scope.GetInstance<IServiceProvider>(),
+                                scope.GetInstance<IRouteBinder>(key),
+                                scope.GetInstance<IMethodBinder>(key),
+                                scope.GetInstance<IQueryParameterBinder>(key),
+                                scope.GetInstance<IHeaderParameterBinder>(key),
+                                scope.GetInstance<IBodyParameterBinder>(key),
+                                scope.GetInstance<IResponseReaderProvider>(key),
+                                scope.GetInstance<IRequestErrorHandler>(key),
+                                scope.GetInstance<ILogger<HttpRequestSender>>());
                         }
 
                         return registration;
@@ -106,9 +105,18 @@ namespace STrain.CQS.Test.Function.Drivers
         {
             var client = Host.CreateClient();
             using var cancellationTokenSource = new CancellationTokenSource(timeout);
-            var content = JsonContent.Create(query);
-            content.Headers.Add("Request-Type", $"{query.GetType().FullName}, {query.GetType().Assembly.GetName().Name}");
-            return await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "api") { Content = content }, cancellationTokenSource.Token);
+            var queryString = HttpUtility.ParseQueryString("");
+            foreach (var property in typeof(TQuery).GetProperties())
+            {
+                queryString.Add(property.Name, property.GetValue(query)!.ToString());
+            }
+            var uriBuilder = new UriBuilder(client.BaseAddress!)
+            {
+                Query = queryString.ToString(),
+                Path = "api"
+            };
+            client.DefaultRequestHeaders.Add("Request-Type", $"{query.GetType().FullName}, {query.GetType().Assembly.GetName().Name}");
+            return await client.GetAsync(uriBuilder.Uri, cancellationTokenSource.Token);
         }
 
         public async Task<IActionResult> ReceiveViaReceierAsync<TCommand>(TCommand command, TimeSpan timeout)

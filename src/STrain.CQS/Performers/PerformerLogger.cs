@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using STrain.CQS.Extensions;
-using System.Diagnostics;
 
 namespace STrain.CQS.Performers
 {

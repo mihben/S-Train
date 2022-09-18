@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="RequestSending\Binders\Attributive\**" />
+    <EmbeddedResource Remove="RequestSending\Binders\Attributive\**" />
+    <None Remove="RequestSending\Binders\Attributive\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\STrain.CQS.Attributes\STrain.CQS.Attributes.csproj" />
+    <ProjectReference Include="..\STrain.CQS\STrain.CQS.csproj" />
+  </ItemGroup>
+
+</Project>

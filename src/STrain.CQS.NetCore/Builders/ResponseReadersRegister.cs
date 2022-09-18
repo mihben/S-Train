@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using STrain.CQS.NetCore.RequestSending;
-using STrain.CQS.NetCore.RequestSending.Parsers;
-using STrain.CQS.NetCore.RequestSending.Readers;
+using STrain.CQS.Http.RequestSending;
+using STrain.CQS.Http.RequestSending.Readers;
 using System.Net.Mime;
 
 namespace STrain.CQS.NetCore.Builders

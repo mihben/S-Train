@@ -65,7 +65,8 @@ namespace STrain.CQS.MVC.Authorization
 
                 if (authorizeResult.Challenged) return new ChallengeResult(policy.AuthenticationSchemes.ToArray());
                 else if (authorizeResult.Forbidden) return new ForbidResult(policy.AuthenticationSchemes.ToArray());
-            } else
+            }
+            else
             {
                 logger.LogDebug("Authorize data not found");
             }

@@ -208,10 +208,9 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public static bool Verify(this HttpRequestMessage message, string method, string baseAddress, string path)
         {
             if (message.RequestUri is null) return false;
-            if (message.Content is null) return false;
 
             return message.Method.Method.Equals(method)
-                && message.RequestUri.AbsoluteUri.Equals($"{baseAddress}{path}");
+                && message.RequestUri.AbsoluteUri.StartsWith($"{baseAddress}{path}");
         }
 
         public static bool Verify<TCommand>(this HttpRequestMessage message, string method, string baseAddress, string path, TCommand command)
@@ -227,13 +226,10 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public static bool Verify<TQuery, T>(this HttpRequestMessage message, string method, string baseAddress, string path, TQuery query)
             where TQuery : Query<T>
         {
-            if (message.Content is null) return false;
-
-            var content = message.Content.ReadFromJsonAsync<TQuery>().GetAwaiter().GetResult();
-            if (content is null) return false;
+            if (message.RequestUri is null) return false;
 
             return message.Verify(method, baseAddress, path)
-                && content.Equals(query);
+                && message.RequestUri.Query.Equals($"?{query.AsQueryString()}");
         }
 
         public static bool Verify(this HttpRequestMessage message, string method, string baseAddress, string path, RequestSendingStepDefinitions.PostRequest.Parameter parameter)

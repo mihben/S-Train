@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.4.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\STrain.CQS.Blazor\STrain.CQS.Blazor.csproj" />
+    <ProjectReference Include="..\STrain.CQS.Extensions.DependencyInjection\STrain.CQS.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\STrain.CQS.Extensions.Lightinject\STrain.CQS.Extensions.Lightinject.csproj" />
+  </ItemGroup>
+
+</Project>

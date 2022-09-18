@@ -25,11 +25,8 @@ namespace STrain.Sample.Backend.Wireup
                 if (request.GetType().Name.Contains("External")) return "External";
                 else return "Generic";
             },
-                builder =>
-                        {
-                            builder.AddHttpSender("External", (options, configuration) => configuration.Bind("Senders:External", options)).UseDefaults();
-                            builder.AddHttpSender("Generic", (options, configuraion) => configuraion.Bind("Senders:Generic", options)).UseGenericDefaults();
-                        });
+                builder => builder
+                                .AddGenericHttpSender("Generic", (options, configuraion) => configuraion.Bind("Senders:Generic", options)));
         }
     }
 }

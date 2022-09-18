@@ -8,12 +8,8 @@ namespace STrain.CQS.MVC.GenericRequestHandling
     {
         public IModelBinder? GetBinder(ModelBinderProviderContext context)
         {
-            if (context.Metadata.ModelType.IsAssignableTo(typeof(ICommand)) ||
-                context.Metadata.ModelType.IsAssignableTo(typeof(IQuery)))
-            {
-                return new BinderTypeModelBinder(typeof(RequestModelBinder));
-            }
-
+            if (context.Metadata.ModelType.IsAssignableTo(typeof(ICommand))) return new BinderTypeModelBinder(typeof(CommandModelBinder));
+            if (context.Metadata.ModelType.IsAssignableTo(typeof(IQuery))) return new BinderTypeModelBinder(typeof(QueryModelBinder));
             return null;
         }
     }

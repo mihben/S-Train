@@ -5,7 +5,7 @@ namespace STrain.CQS.Test.Function.Support
 {
     public static class TestLoggerFactory
     {
-        private static List<ILogger> _loggers = new();
+        private static readonly List<ILogger> _loggers = new();
 
         public static ILogger<TContext> CreateLogger<TContext>(ITestOutputHelper outputHelper)
         {

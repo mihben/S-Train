@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using STrain.CQS.NetCore;
 using STrain.CQS.NetCore.Builders;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Microsoft.AspNetCore.Builder
+namespace STrain.CQS.NetCore
 {
     [ExcludeFromCodeCoverage]
     public static class WebApplicationBuilderExtensions

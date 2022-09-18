@@ -16,7 +16,12 @@ namespace STrain.Sample.Api
 
         public record GenericQuery : Query<string>
         {
+            public string Parameter { get; }
 
+            public GenericQuery(string parameter)
+            {
+                Parameter = parameter;
+            }
         }
 
         [Get("api/v2/beers")]

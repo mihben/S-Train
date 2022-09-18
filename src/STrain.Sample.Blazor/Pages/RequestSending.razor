@@ -1,0 +1,74 @@
+﻿@page "/request-sending"
+@using STrain.CQS
+@using System.Diagnostics
+
+@inject IRequestSender RequestSender
+
+<div>
+    <button class="btn-primary" @onclick="SendCommandAsync">Command</button>
+</div>
+<div>
+    <button class="btn-primary" @onclick="SendQueryAsync">Query</button>
+</div>
+
+<div>
+    <table class="table-info table-bordered">
+        <tr>
+            <th>#</th>
+            <th>Request</th>
+            <th style="width: 75%">Response</th>
+            <th>Execution Time</th>
+        </tr>
+            @foreach (var response in Responses.OrderByDescending(r => r.Id))
+            {
+                <tr>
+                    <td>@response.Id</td>
+                    <td>@response.Request.GetType().Name</td>
+                    <td>@response.Content</td>
+                    <td>@response.ExecutionTime.TotalMilliseconds ms</td>
+                </tr>
+            }
+    </table>
+</div>
+
+@code {
+    public ICollection<Response> Responses = new List<Response>();
+
+    public async Task SendCommandAsync()
+    {
+        var stopwatch = Stopwatch.StartNew();
+        var request = new Sample.Api.Sample.GenericCommand("Called from Blazor Application");
+        await RequestSender.SendAsync(request, default);
+        stopwatch.Stop();
+
+        Responses.Add(new Response(Responses.Count, request, null, stopwatch.Elapsed));
+        StateHasChanged();
+    }
+
+    public async Task SendQueryAsync()
+    {
+        var stopwatch = Stopwatch.StartNew();
+        var request = new Sample.Api.Sample.GenericQuery("Called from Blazor Application");
+        var response = await RequestSender.GetAsync<Sample.Api.Sample.GenericQuery, string>(request, default);
+        stopwatch.Stop();
+
+        Responses.Add(new Response(Responses.Count(), request, response, stopwatch.Elapsed));
+        StateHasChanged();
+    }
+
+    public record Response
+    {
+        public int Id{ get; }
+        public IRequest Request { get; }
+        public object? Content { get; }
+        public TimeSpan ExecutionTime { get; }
+
+        public Response(int id, IRequest request, object? content, TimeSpan executionTime)
+        {
+            Id = id;
+            Request = request;
+            Content = content;
+            ExecutionTime = executionTime;
+        }
+    }
+}
