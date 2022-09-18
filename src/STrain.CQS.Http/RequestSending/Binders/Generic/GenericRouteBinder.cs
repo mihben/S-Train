@@ -15,7 +15,7 @@ namespace STrain.CQS.Http.RequestSending.Binders.Generic
 
         public Task<string?> BindAsync<TRequest>(TRequest request, CancellationToken cancellationToken) where TRequest : IRequest
         {
-            _logger.LogDebug("Binding route parameters");
+            _logger.LogDebug("Binding route");
             return Task.FromResult(_path);
         }
     }
