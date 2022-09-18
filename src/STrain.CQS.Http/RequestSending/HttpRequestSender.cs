@@ -48,15 +48,21 @@ namespace STrain.CQS.Http.RequestSending
         public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
             where TCommand : Command => await SendAsync<TCommand, object>(command, cancellationToken).ConfigureAwait(false);
 
-        public async Task<T?> SendAsync<TRequest, T>(TRequest request, CancellationToken cancellationToken)
+        public Task<T?> SendAsync<TRequest, T>(TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest
+        {
+            if (_httpClient.BaseAddress is null) throw new InvalidOperationException("Http client has not been initialized.");
+
+            return SendInternalAsync<TRequest, T>(request, cancellationToken);
+        }
+
+        private async Task<T?> SendInternalAsync<TRequest, T>(TRequest request, CancellationToken cancellationToken) where TRequest : IRequest
         {
             _logger.LogDebug("Creating HTTP request");
             using (_logger.LogStopwatch("Sent HTTP request in {ElapsedTime} ms"))
             {
-                if (_httpClient.BaseAddress is null) throw new ArgumentNullException(nameof(HttpClient.BaseAddress));
 
-                var uriBuilder = new UriBuilder(_httpClient.BaseAddress)
+                var uriBuilder = new UriBuilder(_httpClient.BaseAddress!)
                 {
                     Path = await _routeBinder.BindAsync(request, cancellationToken),
                     Query = await _queryParameterBinder.BindAsync(request, cancellationToken)
