@@ -7,8 +7,6 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Logging.AddDebug();
-
 builder.Services.AddHttpClient();
 builder.UseLightinject();
 builder.UseRequestRouter(_ => "backend")
