@@ -1,14 +1,25 @@
 ﻿using AutoFixture;
+using Microsoft.Extensions.Logging;
 using STrain.CQS.Http.RequestSending.Binders.Generic;
 using STrain.CQS.Test.Unit.Supports;
+using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class GenericRouteBinderTest
     {
+        private readonly ILogger<GenericRouteBinder> _logger;
+
+        public GenericRouteBinderTest(ITestOutputHelper outputHelper)
+        {
+            _logger = new LoggerFactory()
+                            .AddXUnit(outputHelper)
+                            .CreateLogger<GenericRouteBinder>();
+        }
+
         private GenericRouteBinder CreateSUT(string path)
         {
-            return new GenericRouteBinder(path);
+            return new GenericRouteBinder(path, _logger);
         }
 
         [Fact(DisplayName = "[UNIT][GRB-001] - Bind to path")]

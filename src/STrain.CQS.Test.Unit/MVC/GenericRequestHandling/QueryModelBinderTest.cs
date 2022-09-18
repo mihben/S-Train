@@ -161,7 +161,7 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
         }
     }
 
-    public record MissingConstructorQuery : Query<object> { public string Parameter { get; } }
+    public record MissingConstructorQuery : Query<object> { public string Parameter { get; } = null!; }
     public record MissingParameterQuery : Query<object>
     {
         public string Parameter { get; }

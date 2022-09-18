@@ -160,7 +160,7 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
             return this;
         }
 
-        public ModelBindingContextBuilder UseQueryString<TRequest>(TRequest request)
+        public ModelBindingContextBuilder UseQueryString<TRequest>(TRequest? request)
         {
             if (request is null) return this;
 

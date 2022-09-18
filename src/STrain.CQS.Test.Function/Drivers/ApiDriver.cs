@@ -108,11 +108,13 @@ namespace STrain.CQS.Test.Function.Drivers
             var queryString = HttpUtility.ParseQueryString("");
             foreach (var property in typeof(TQuery).GetProperties())
             {
-                queryString.Add(property.Name, property.GetValue(query).ToString());
+                queryString.Add(property.Name, property.GetValue(query)!.ToString());
             }
-            var uriBuilder = new UriBuilder(client.BaseAddress);
-            uriBuilder.Query = queryString.ToString();
-            uriBuilder.Path = "api";
+            var uriBuilder = new UriBuilder(client.BaseAddress!)
+            {
+                Query = queryString.ToString(),
+                Path = "api"
+            };
             client.DefaultRequestHeaders.Add("Request-Type", $"{query.GetType().FullName}, {query.GetType().Assembly.GetName().Name}");
             return await client.GetAsync(uriBuilder.Uri, cancellationTokenSource.Token);
         }

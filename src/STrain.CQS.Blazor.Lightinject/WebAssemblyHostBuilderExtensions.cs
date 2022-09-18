@@ -14,6 +14,10 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting
         }
 
         public static void ConfigureContainer(this WebAssemblyHostBuilder builder, Action<IServiceContainer> container)
-            => container(ContainerContext.Container);
+        {
+            if (ContainerContext.Container is null) throw new InvalidOperationException("Container has not been initialized. Use WebAssemblyHostBuilder.UseLightinject() method.");
+
+            container(ContainerContext.Container);
+        }
     }
 }

@@ -1,15 +1,26 @@
 ﻿using AutoFixture;
+using Microsoft.Extensions.Logging;
 using STrain.CQS.Http.RequestSending.Binders.Generic;
 using STrain.CQS.Test.Unit.Supports;
 using System.Net.Http.Json;
+using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.Http
 {
     public class GenericBodyParameterBinderTest
     {
+        private readonly ILogger<GenericBodyParameterBinder> _logger;
+
+        public GenericBodyParameterBinderTest(ITestOutputHelper outputHelper)
+        {
+            _logger = new LoggerFactory()
+                            .AddXUnit(outputHelper)
+                            .CreateLogger<GenericBodyParameterBinder>();
+        }
+
         private GenericBodyParameterBinder CreateSUT()
         {
-            return new GenericBodyParameterBinder();
+            return new GenericBodyParameterBinder(_logger);
         }
 
         [Fact(DisplayName = "[UNIT][GBPB-001] - Bind command")]
@@ -35,7 +46,9 @@ namespace STrain.CQS.Test.Unit.Http
 
             // Act
             // Assert
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.BindAsync<TestCommand>(null, default));
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact(DisplayName = "[UNIT][GBPB-003] - Bind query")]

@@ -1,5 +1,6 @@
 ﻿using LightInject;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using STrain.CQS.Blazor.Builders;
 using STrain.CQS.Http.RequestSending;
@@ -15,7 +16,7 @@ namespace STrain.CQS.Blazor.Lightinject
     {
         public static HttpRequestSenderBuilder UseGenericPathBinder(this HttpRequestSenderBuilder builder)
         {
-            builder.Builder.ConfigureContainer(registry => registry.RegisterTransient<IRouteBinder>(factory => new GenericRouteBinder(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path), builder.Key));
+            builder.Builder.ConfigureContainer(registry => registry.RegisterTransient<IRouteBinder>(factory => new GenericRouteBinder(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path, factory.GetInstance<ILogger<GenericRouteBinder>>()), builder.Key));
             return builder;
         }
 

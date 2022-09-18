@@ -54,6 +54,8 @@ namespace STrain.CQS.Http.RequestSending
             _logger.LogDebug("Creating HTTP request");
             using (_logger.LogStopwatch("Sent HTTP request in {ElapsedTime} ms"))
             {
+                if (_httpClient.BaseAddress is null) throw new ArgumentNullException(nameof(HttpClient.BaseAddress));
+
                 var uriBuilder = new UriBuilder(_httpClient.BaseAddress)
                 {
                     Path = await _routeBinder.BindAsync(request, cancellationToken),
@@ -76,7 +78,7 @@ namespace STrain.CQS.Http.RequestSending
 
                 if (response.Content.Headers.ContentLength == 0) return default;
                 return (T?)await ((IResponseReader)_serviceProvider.GetRequiredService(_responseReaderProvider[response.Content.Headers.ContentType?.MediaType])).ReadAsync<T>(response, cancellationToken);
-            };
+            }
         }
     }
 }

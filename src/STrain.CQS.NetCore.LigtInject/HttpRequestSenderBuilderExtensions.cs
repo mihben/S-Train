@@ -1,4 +1,5 @@
 ﻿using LightInject;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using STrain.CQS.Http.RequestSending;
 using STrain.CQS.Http.RequestSending.Binders;
@@ -13,7 +14,7 @@ namespace STrain.CQS.NetCore.LigtInject
     {
         public static HttpRequestSenderBuilder UseGenericRouteBinder(this HttpRequestSenderBuilder builder)
         {
-            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) => container.RegisterTransient<IRouteBinder>(factory => new GenericRouteBinder(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path), builder.Key));
+            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) => container.RegisterTransient<IRouteBinder>(factory => new GenericRouteBinder(factory.GetInstance<IOptionsSnapshot<HttpRequestSenderOptions>>().Get(builder.Key).Path, factory.GetInstance<ILogger<GenericRouteBinder>>()), builder.Key));
             return builder;
         }
 

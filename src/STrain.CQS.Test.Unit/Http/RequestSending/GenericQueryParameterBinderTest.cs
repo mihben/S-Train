@@ -47,7 +47,9 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 
             // Act
             // Assert
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.BindAsync<TestQuery>(null, default));
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact(DisplayName = "[UNIT][GQPB-003] - Skip null parameters")]
@@ -80,7 +82,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 
         public record TestQuery : Query<object>
         {
-            public string Parameter { get; set; }
+            public string Parameter { get; set; } = null!;
         }
     }
 
@@ -91,9 +93,9 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             var collection = HttpUtility.ParseQueryString("");
             foreach (var property in query.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                collection.Add(property.Name, property.GetValue(query).ToString());
+                collection.Add(property.Name, property.GetValue(query)!.ToString());
             }
-            return collection.ToString();
+            return collection.ToString()!;
         }
     }
 }

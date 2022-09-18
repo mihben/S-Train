@@ -1,14 +1,25 @@
 ﻿using AutoFixture;
+using Microsoft.Extensions.Logging;
 using STrain.CQS.Http.RequestSending.Binders.Generic;
 using STrain.CQS.Test.Unit.Supports;
+using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class GenericMethodBinderTest
     {
+        private readonly ILogger<GenericMethodBinder> _logger;
+
+        public GenericMethodBinderTest(ITestOutputHelper outputHelper)
+        {
+            _logger = new LoggerFactory()
+                            .AddXUnit(outputHelper)
+                            .CreateLogger<GenericMethodBinder>();
+        }
+
         private GenericMethodBinder CreateSUT()
         {
-            return new GenericMethodBinder();
+            return new GenericMethodBinder(_logger);
         }
 
         [Fact(DisplayName = "[UNIT][GMB-001] - Bind Command")]

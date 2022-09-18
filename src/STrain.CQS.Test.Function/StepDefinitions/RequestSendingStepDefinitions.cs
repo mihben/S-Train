@@ -226,6 +226,8 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public static bool Verify<TQuery, T>(this HttpRequestMessage message, string method, string baseAddress, string path, TQuery query)
             where TQuery : Query<T>
         {
+            if (message.RequestUri is null) return false;
+
             return message.Verify(method, baseAddress, path)
                 && message.RequestUri.Query.Equals($"?{query.AsQueryString()}");
         }
