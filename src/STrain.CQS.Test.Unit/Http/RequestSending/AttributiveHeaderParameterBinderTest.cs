@@ -112,18 +112,18 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
         [HeaderParameter]
         private record HeaderParameterRequest : IRequest
         {
-            public string ByName { get; set; }
+            public string ByName { get; set; } = null!;
             [HeaderParameter(Name = "by-attribute")]
-            public string ByAttribute { get; set; }
+            public string ByAttribute { get; set; } = null!;
         }
 
         private record HeaderPropertyParameterRequest : IRequest
         {
             [HeaderParameter]
-            public string ByName { get; set; }
+            public string ByName { get; set; } = null!;
             [HeaderParameter(Name = "by-attribute")]
-            public string ByAttribute { get; set; }
-            public string NotToBeSerialized { get; set; }
+            public string ByAttribute { get; set; } = null!;
+            public string NotToBeSerialized { get; set; } = null!;
         }
     }
 }

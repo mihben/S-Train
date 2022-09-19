@@ -60,7 +60,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             var result = await sut.BindAsync(new Fixture().Build<QueryParameterRequest>().Without(r => r.ByName).Without(r => r.ByAttribute).Create(), default);
 
             // Assert
-            Assert.Empty(result);
+            Assert.Empty(result!);
         }
 
         [Fact(DisplayName = "[UNIT][AQPB-004] - Without query parameter")]
@@ -73,7 +73,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             var result = await sut.BindAsync(new Fixture().Create<TestRequest>(), default);
 
             // Assert
-            Assert.Empty(result);
+            Assert.Empty(result!);
         }
 
         [Fact(DisplayName = "[UNIT][AQPB-005] - Request is null")]
@@ -90,18 +90,18 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
         [QueryParameter]
         private record QueryParameterRequest : IRequest
         {
-            public string ByName { get; set; }
+            public string ByName { get; set; } = null!;
             [QueryParameter(Name = "by-attribute")]
-            public string ByAttribute { get; set; }
+            public string ByAttribute { get; set; } = null!;
         }
 
         private record PropertyQueryParameterRequest : IRequest
         {
             [QueryParameter]
-            public string ByName { get; set; }
+            public string ByName { get; set; } = null!;
             [QueryParameter(Name = "by-attribute")]
-            public string ByAttribute { get; set; }
-            public string NotToBeSerialized { get; set; }
+            public string ByAttribute { get; set; } = null!;
+            public string NotToBeSerialized { get; set; } = null!;
         }
     }
 }

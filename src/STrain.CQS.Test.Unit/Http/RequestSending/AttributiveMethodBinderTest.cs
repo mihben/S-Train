@@ -53,7 +53,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.BindAsync<GetRequest>(null, default));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.BindAsync<GetRequest>(null!, default));
         }
 
         [Fact(DisplayName = "[UNIT][AMB-003] - Missing method attribute")]
@@ -64,7 +64,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.BindAsync<TestRequest>(new Fixture().Create<TestRequest>(), default));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.BindAsync(new Fixture().Create<TestRequest>(), default));
         }
 
         [Get]

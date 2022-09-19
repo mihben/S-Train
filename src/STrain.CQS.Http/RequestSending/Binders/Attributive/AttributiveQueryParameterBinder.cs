@@ -22,8 +22,8 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
 
             var type = typeof(TRequest);
             string? result;
-            if (type.GetCustomAttribute<QueryParameterAttribute>() is not null) result = request.SerializeToQueryString(typeof(TRequest).GetProperties(BindingFlags.Instance | BindingFlags.Public));
-            else result = request.SerializeToQueryString(typeof(TRequest).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            if (type.GetCustomAttribute<QueryParameterAttribute>() is not null) result = request.SerializeToQueryString(type.GetProperties(BindingFlags.Instance | BindingFlags.Public));
+            else result = request.SerializeToQueryString(type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                                         .Where(p => p.GetCustomAttribute<QueryParameterAttribute>() is not null));
 
             _logger.LogTrace("Query parameter: {query}", result);
@@ -35,7 +35,6 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
     {
         public static string? SerializeToQueryString<TRequest>(this TRequest request, IEnumerable<PropertyInfo> properties)
         {
-            var type = typeof(TRequest);
             var result = HttpUtility.ParseQueryString(string.Empty);
             foreach (var property in properties)
             {

@@ -84,13 +84,13 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
         [Route("test-route/{id}")]
         private record RoutedRequest : IRequest
         {
-            public string Id { get; set; }
+            public string Id { get; set; } = null!;
         }
 
         [Route("test-route/{name}")]
         private record InvalidRoutedRequest : IRequest
         {
-            public string Id { get; set; }
+            public string Id { get; set; } = null!;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             // Assert
             var content = Assert.IsType<StringContent>(result);
             Assert.Equal(request.AsJson(), await content.ReadAsStringAsync());
-            Assert.Equal(Encoding.UTF8.WebName, content.Headers.ContentType.CharSet);
+            Assert.Equal(Encoding.UTF8.WebName, content.Headers.ContentType!.CharSet);
             Assert.Equal(MediaTypeNames.Application.Json, content.Headers.ContentType.MediaType);
         }
 
@@ -55,7 +55,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             // Assert
             var content = Assert.IsType<StringContent>(result);
             Assert.Equal(request.AsJson(), await content.ReadAsStringAsync());
-            Assert.Equal(Encoding.UTF8.WebName, content.Headers.ContentType.CharSet);
+            Assert.Equal(Encoding.UTF8.WebName, content.Headers.ContentType!.CharSet);
             Assert.Equal(MediaTypeNames.Application.Json, content.Headers.ContentType.MediaType);
         }
 
@@ -87,18 +87,18 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
         [BodyParameter]
         internal record BodyParameterRequest : IRequest
         {
-            public string ByName { get; set; }
+            public string ByName { get; set; } = null!;
             [BodyParameter(Name = "by-attribute")]
-            public string ByAttribute { get; set; }
+            public string ByAttribute { get; set; } = null!;
         }
 
         internal record PropertyParameterRequest : IRequest
         {
             [BodyParameter]
-            public string ByName { get; set; }
+            public string ByName { get; set; } = null!;
             [BodyParameter(Name = "by-attribute")]
-            public string ByAttribute { get; set; }
-            public string NotToBeSerialized { get; set; }
+            public string ByAttribute { get; set; } = null!;
+            public string NotToBeSerialized { get; set; } = null!;
         }
     }
 
