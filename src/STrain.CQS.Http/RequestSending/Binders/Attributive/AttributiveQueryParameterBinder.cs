@@ -22,8 +22,9 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
 
             var type = typeof(TRequest);
             string? result;
-            if (type.GetCustomAttribute<QueryParameterAttribute>() is not null) result = request.SerializeToQueryString();
-            else result = request.SerializePropertiesToQueryString();
+            if (type.GetCustomAttribute<QueryParameterAttribute>() is not null) result = request.SerializeToQueryString(typeof(TRequest).GetProperties(BindingFlags.Instance | BindingFlags.Public));
+            else result = request.SerializeToQueryString(typeof(TRequest).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                                        .Where(p => p.GetCustomAttribute<QueryParameterAttribute>() is not null));
 
             _logger.LogTrace("Query parameter: {query}", result);
             return Task.FromResult(result);
@@ -32,25 +33,11 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
 
     internal static class AttributiveQueryParameterBinderExtensions
     {
-        public static string? SerializeToQueryString<TRequest>(this TRequest request)
+        public static string? SerializeToQueryString<TRequest>(this TRequest request, IEnumerable<PropertyInfo> properties)
         {
             var type = typeof(TRequest);
             var result = HttpUtility.ParseQueryString(string.Empty);
-            foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                var attribute = property.GetCustomAttribute<QueryParameterAttribute>();
-                var value = property.GetValue(request);
-                if (value is not null) result.Add(attribute?.Name ?? property.Name.ToLower(), value.ToString());
-            }
-            return result.ToString();
-        }
-
-        public static string? SerializePropertiesToQueryString<TRequest>(this TRequest request)
-            where TRequest : IRequest
-        {
-            var result = HttpUtility.ParseQueryString(string.Empty);
-            foreach (var property in typeof(TRequest).GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                                        .Where(p => p.GetCustomAttribute<QueryParameterAttribute>() is not null))
+            foreach (var property in properties)
             {
                 var attribute = property.GetCustomAttribute<QueryParameterAttribute>();
                 var value = property.GetValue(request);
