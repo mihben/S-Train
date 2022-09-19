@@ -26,7 +26,8 @@ namespace STrain.Sample.Backend.Wireup
                 else return "Generic";
             },
                 builder => builder
-                                .AddGenericHttpSender("Generic", (options, configuraion) => configuraion.Bind("Senders:Generic", options)));
+                                .AddGenericHttpSender("Generic", (options, configuraion) => configuraion.Bind("Senders:Generic", options))
+                                .AddAttributiveHttpSender("External", (options, configuraion) => configuraion.Bind("Senders:External", options)));
         }
     }
 }

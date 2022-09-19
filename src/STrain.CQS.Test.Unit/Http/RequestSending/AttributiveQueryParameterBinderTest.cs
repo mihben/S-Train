@@ -33,7 +33,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             var result = await sut.BindAsync(request, default);
 
             // Assert
-            Assert.Equal($"{nameof(QueryParameterRequest.ByName)}={request.ByName}&by-attribute={request.ByAttribute}", result);
+            Assert.Equal($"{nameof(QueryParameterRequest.ByName)}={request.ByName}&by-attribute={request.ByAttribute}", result, true);
         }
 
         [Fact(DisplayName = "[UNIT][AQPB-002] - Bind property")]
@@ -47,7 +47,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             var result = await sut.BindAsync(request, default);
 
             // Assert
-            Assert.Equal($"{nameof(PropertyQueryParameterRequest.ByName)}={request.ByName}&by-attribute={request.ByAttribute}", result);
+            Assert.Equal($"{nameof(PropertyQueryParameterRequest.ByName)}={request.ByName}&by-attribute={request.ByAttribute}", result, true);
         }
 
         [Fact(DisplayName = "[UNIT][AQPB-003] - Skip null value")]

@@ -40,7 +40,7 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
             {
                 var attribute = property.GetCustomAttribute<QueryParameterAttribute>();
                 var value = property.GetValue(request);
-                if (value is not null) result.Add(attribute?.Name ?? property.Name, value.ToString());
+                if (value is not null) result.Add(attribute?.Name ?? property.Name.ToLower(), value.ToString());
             }
             return result.ToString();
         }
@@ -54,7 +54,7 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
             {
                 var attribute = property.GetCustomAttribute<QueryParameterAttribute>();
                 var value = property.GetValue(request);
-                if (value is not null) result.Add(attribute?.Name ?? property.Name, value.ToString());
+                if (value is not null) result.Add(attribute?.Name ?? property.Name.ToLower(), value.ToString());
             }
             return result.ToString();
         }
