@@ -65,7 +65,18 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.BindAsync(new Fixture().Build<RoutedRequest>().Without(r => r.Id).Create<RoutedRequest>(), default));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.BindAsync(new Fixture().Build<RoutedRequest>().Without(r => r.Id).Create(), default));
+        }
+
+        [Fact(DisplayName = "[UNIT][ARB-005] - Request is null")]
+        public async Task AttributiveRouteBinder_BindAsync_RequestIsNull()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.BindAsync<IRequest>(null!, default));
         }
 
         private record UnroutedRequest : IRequest { }

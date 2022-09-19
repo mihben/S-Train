@@ -16,6 +16,8 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
         public Task<string?> BindAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest
         {
+            if (request is null) throw new ArgumentNullException(nameof(request));
+
             _logger.LogDebug("Binding query parameters");
 
             var type = typeof(TRequest);

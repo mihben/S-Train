@@ -17,6 +17,9 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
         public Task BindAsync<TRequest>(TRequest request, HttpRequestHeaders headers, CancellationToken cancellationToken)
             where TRequest : IRequest
         {
+            if (request is null) throw new ArgumentNullException(nameof(request));
+            if (headers is null) throw new ArgumentNullException(nameof(headers));
+
             _logger.LogDebug("Binding header parameters");
 
             var type = typeof(TRequest);

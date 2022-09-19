@@ -71,7 +71,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             Assert.Empty(message.Headers);
         }
 
-        [Fact(DisplayName = "[UNIT][AHPB-003] - Without header parameter")]
+        [Fact(DisplayName = "[UNIT][AHPB-004] - Without header parameter")]
         public async Task AttributiveHeaderParameterBinder_BindAsync_WithoutHeaderParameter()
         {
             // Arrange
@@ -84,6 +84,29 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 
             // Assert
             Assert.Empty(message.Headers);
+        }
+
+        [Fact(DisplayName = "[UNIT][AHPB-005] - Request is null")]
+        public async Task AttributiveHeaderParameterBinder_BindAsync_RequestIsNull()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var message = new HttpRequestMessage();
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.BindAsync<IRequest>(null!, message.Headers, default));
+        }
+
+        [Fact(DisplayName = "[UNIT][AHPB-006] - Header is null")]
+        public async Task AttributiveHeaderParameterBinder_BindAsync_HeaderIsNull()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.BindAsync(new Fixture().Create<TestRequest>(), null!, default));
         }
 
         [HeaderParameter]

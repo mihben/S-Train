@@ -76,6 +76,17 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             Assert.Empty(result);
         }
 
+        [Fact(DisplayName = "[UNIT][AQPB-005] - Request is null")]
+        public async Task AttributiveQueryParameterBinder_BindAsync_RequestIsNull()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.BindAsync<IRequest>(null!, default));
+        }
+
         [QueryParameter]
         private record QueryParameterRequest : IRequest
         {
