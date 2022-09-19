@@ -13,10 +13,10 @@ namespace STrain.CQS.Http.RequestSending.Binders.Generic
             _logger = logger;
         }
 
-        public Task<string?> BindAsync<TRequest>(TRequest request, CancellationToken cancellationToken) where TRequest : IRequest
+        public Task<string> BindAsync<TRequest>(TRequest request, CancellationToken cancellationToken) where TRequest : IRequest
         {
-            _logger.LogDebug("Binding route parameters");
-            return Task.FromResult(_path);
+            _logger.LogDebug("Binding route");
+            return Task.FromResult(_path ?? string.Empty);
         }
     }
 }

@@ -44,24 +44,24 @@ Sending request to external service. Currently only HTTP is supported.
 				| BaseAddress             | Path        | Method |
 				| http://generic-service/ | generic-api | GET    |
 
-#		@issue-17
-#		@api
-#		Scenario Outline: [API][RQS/SNR-003] - Send request to external service
-#			Given Configured HTTP sender
-#				| Key      | BaseAddress              |
-#				| External | http://external-service/ |
-#			When Sending external '<Method>' request
-#			Then Request should be sent to
-#				| BaseAddress              | Path   | Method   |
-#				| http://external-service/ | <Path> | <Method> |
-#
-#			Examples: 
-#				| Description    | Method | Path                         |
-#				| GET Request    | GET    | external-api/get-endpoint    |
-#				| POST Request   | POST   | external-api/post-endpoint   |
-#				| PUT Request    | PUT    | external-api/put-endpoint    |
-#				| PATCH Request  | PATCH  | external-api/patch-endpoint  |
-#				| DELETE Request | DELETE | external-api/delete-endpoint |
+		@issue-17
+		@api
+		Scenario Outline: [API][RQS/SNR-003] - Send request to external service
+			Given Configured HTTP sender
+				| Key      | BaseAddress              |
+				| External | http://external-service/ |
+			When Sending external '<Method>' request
+			Then Request should be sent to
+				| BaseAddress              | Path   | Method   |
+				| http://external-service/ | <Path> | <Method> |
+
+			Examples: 
+				| Description    | Method | Path                         |
+				| GET Request    | GET    | external-api/get-endpoint    |
+				| POST Request   | POST   | external-api/post-endpoint   |
+				| PUT Request    | PUT    | external-api/put-endpoint    |
+				| PATCH Request  | PATCH  | external-api/patch-endpoint  |
+				| DELETE Request | DELETE | external-api/delete-endpoint |
 
 	Rule: [RQS/ERH] - Generic error response handling
 

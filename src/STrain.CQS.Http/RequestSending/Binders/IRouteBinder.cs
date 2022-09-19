@@ -2,7 +2,7 @@
 {
     public interface IRouteBinder
     {
-        Task<string?> BindAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+        Task<string> BindAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest;
     }
 }

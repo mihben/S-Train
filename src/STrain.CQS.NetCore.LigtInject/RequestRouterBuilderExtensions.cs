@@ -26,5 +26,14 @@ namespace STrain.CQS.NetCore.LigtInject
                                                                     .UseGenericRouteBinder()
                                                                     .UseGenericErrorHandler()
                                                                     .UseResponseReaders(registry => registry.UseDefaultTextResponseReader().UseDefaultJsonResponseReader()));
+
+        public static RequestRouterBuilder AddAttributiveHttpSender(this RequestRouterBuilder builder, string key, Action<HttpRequestSenderOptions, IConfiguration> configure)
+            => builder.AddHttpSender(key, configure, builder => builder.UseAttributiveQueryParameterBinder()
+                                                                            .UseAttributiveBodyParameterBinder()
+                                                                            .UseAttributiveHeaderParameterBinder()
+                                                                            .UseAttributiveMethodBinder()
+                                                                            .UseAttributiveRouteBinder()
+                                                                            .UseDefaultErrorHandler()
+                                                                            .UseResponseReaders(registry => registry.UseDefaultTextResponseReader().UseDefaultJsonResponseReader()));
     }
 }
