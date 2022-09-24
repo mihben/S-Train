@@ -49,8 +49,8 @@ namespace STrain.CQS.Blazor.Lightinject
             builder.Builder.ConfigureContainer(container =>
             {
                 var responseReaderRegistry = new ResponseReaderRegistry();
-                responseReaderRegistry.Registrate<JsonResponseReader>(MediaTypeNames.Application.Json);
-                responseReaderRegistry.Registrate<StringResponseReader>(MediaTypeNames.Text.Plain);
+                responseReaderRegistry.Registrate<JsonResponseReader>(System.Net.Mime.MediaTypeNames.Application.Json);
+                responseReaderRegistry.Registrate<StringResponseReader>(System.Net.Mime.MediaTypeNames.Text.Plain);
                 container.RegisterInstance<IResponseReaderProvider>(responseReaderRegistry, builder.Key);
                 container.RegisterTransient<JsonResponseReader>();
                 container.RegisterTransient<StringResponseReader>();
@@ -59,7 +59,7 @@ namespace STrain.CQS.Blazor.Lightinject
             return builder;
         }
 
-        public static HttpRequestSenderBuilder UseRequestErrorHandler(this HttpRequestSenderBuilder builder)
+        public static HttpRequestSenderBuilder UseGenericRequestErrorHandler(this HttpRequestSenderBuilder builder)
         {
             builder.Builder.ConfigureContainer(container => container.RegisterTransient<IRequestErrorHandler, DefaultErrorHandler>(builder.Key));
             return builder;

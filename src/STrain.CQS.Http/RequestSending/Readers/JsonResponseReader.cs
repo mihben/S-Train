@@ -7,7 +7,7 @@ namespace STrain.CQS.Http.RequestSending.Readers
     {
         public async Task<object?> ReadAsync<T>(HttpResponseMessage message, CancellationToken cancellationToken)
         {
-            if (message.Content.Headers.ContentType?.MediaType != MediaTypeNames.Application.Json) throw new InvalidOperationException("Unsupported content type");
+            if (message.Content.Headers.ContentType?.MediaType != System.Net.Mime.MediaTypeNames.Application.Json) throw new InvalidOperationException("Unsupported content type");
 
             return await message.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
         }

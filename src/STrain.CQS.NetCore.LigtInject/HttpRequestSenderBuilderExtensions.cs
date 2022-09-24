@@ -6,7 +6,6 @@ using STrain.CQS.Http.RequestSending.Binders;
 using STrain.CQS.Http.RequestSending.Binders.Attributive;
 using STrain.CQS.Http.RequestSending.Binders.Generic;
 using STrain.CQS.NetCore.Builders;
-using STrain.CQS.NetCore.ErrorHandling;
 using STrain.CQS.Senders;
 
 namespace STrain.CQS.NetCore.LigtInject

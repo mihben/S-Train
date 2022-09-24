@@ -2,6 +2,7 @@
 using STrain.CQS.Http.RequestSending;
 using STrain.CQS.Http.RequestSending.Readers;
 using System.Net.Mime;
+using MediaTypeNames = System.Net.Mime.MediaTypeNames;
 
 namespace STrain.CQS.NetCore.Builders
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using STrain.Core.Exceptions;
+using STrain.CQS.Http.RequestSending;
 using STrain.CQS.NetCore.ErrorHandling;
 using System.Net;
 using System.Net.Http.Headers;

@@ -1,4 +1,4 @@
-﻿namespace STrain.CQS.NetCore.ErrorHandling
+﻿namespace STrain.CQS.Http.RequestSending
 {
     public static class MediaTypeNames
     {

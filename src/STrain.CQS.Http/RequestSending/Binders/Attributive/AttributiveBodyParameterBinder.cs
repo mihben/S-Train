@@ -30,7 +30,7 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
             var body = JsonConvert.SerializeObject(request, _serializerSettings);
             if (body.Equals("{}")) return Task.FromResult<HttpContent?>(null);
 
-            return Task.FromResult((HttpContent?)new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json));
+            return Task.FromResult((HttpContent?)new StringContent(body, Encoding.UTF8, System.Net.Mime.MediaTypeNames.Application.Json));
         }
     }
 
