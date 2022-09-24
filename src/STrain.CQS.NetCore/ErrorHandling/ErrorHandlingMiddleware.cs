@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using STrain.Core.Exceptions;
+using STrain.CQS.Http.RequestSending;
 
 namespace STrain.CQS.NetCore.ErrorHandling
 {

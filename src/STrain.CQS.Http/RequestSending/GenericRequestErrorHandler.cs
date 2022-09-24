@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using STrain.Core.Exceptions;
+using STrain.CQS.NetCore.ErrorHandling;
 using STrain.CQS.Senders;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace STrain.CQS.NetCore.ErrorHandling
+namespace STrain.CQS.Http.RequestSending
 {
     public class GenericRequestErrorHandler : IRequestErrorHandler
     {
@@ -24,7 +25,7 @@ namespace STrain.CQS.NetCore.ErrorHandling
                 || response.Content.Headers.ContentType.MediaType is null
                 || !response.Content.Headers.ContentType.MediaType.Equals(MediaTypeNames.Application.Json.Problem, StringComparison.OrdinalIgnoreCase)) throw RequestException(response.StatusCode);
 
-            var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(cancellationToken: cancellationToken);
+            var problem = await response.Content.ReadFromJsonAsync<Problem>(cancellationToken: cancellationToken);
             if (problem is null) throw InvalidOperationException();
 
             switch (response.StatusCode)
@@ -46,14 +47,14 @@ namespace STrain.CQS.NetCore.ErrorHandling
 
     internal static class GenericResponseHandlerExtensions
     {
-        public static ValidationException AsValidationException(this ProblemDetails problem)
+        public static ValidationException AsValidationException(this Problem problem)
         {
-            if (problem.Extensions.TryGetValue("errors", out var errors))
+            if (problem.Extensions?.TryGetValue("errors", out var errors) ?? false)
                 return new ValidationException(errors.AsReadOnlyDictionary());
             return new ValidationException();
         }
 
-        public static VerificationException AsVerificationException(this ProblemDetails problem)
+        public static VerificationException AsVerificationException(this Problem problem)
         {
             return new VerificationException(problem.Type!, problem.Title!, problem.Detail!);
         }
@@ -64,6 +65,17 @@ namespace STrain.CQS.NetCore.ErrorHandling
 
             return ((JsonElement)errors).Deserialize<IEnumerable<Error>>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true })?.ToDictionary(e => e.Property, e => e.Message) ?? new Dictionary<string, string>();
         }
+    }
+
+    public class Problem
+    {
+        public string? Title { get; init; }
+        public string? Detail { get; init; }
+        public string? Instance { get; init; }
+        public string? Type { get; init; }
+        public int? Status { get; init; }
+        [JsonExtensionData]
+        public IDictionary<string, object?>? Extensions { get; init; }
     }
 
     internal class Error

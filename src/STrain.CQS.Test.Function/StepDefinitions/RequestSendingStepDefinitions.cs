@@ -3,7 +3,7 @@ using LightInject;
 using Microsoft.AspNetCore.TestHost;
 using Moq;
 using STrain.Core.Exceptions;
-using STrain.CQS.NetCore.ErrorHandling;
+using STrain.CQS.Http.RequestSending;
 using STrain.CQS.Test.Function.Drivers;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
