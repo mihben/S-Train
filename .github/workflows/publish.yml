@@ -33,5 +33,5 @@ jobs:
       work-item-prefix: issue-
       
   publish-nuget:
-    uses: mihben/workflow-template/.github=workflows/publish-nuget@main
+    uses: mihben/workflow-template/.github/workflows/publish-nuget@main
     needs: publish-livingdoc
