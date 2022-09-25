@@ -8,4 +8,3 @@ on:
 jobs: 
   publish-nuget:
     uses: mihben/workflow-template/.github/workflows/dotnet-publish-nuget.yml@main
-    needs: publish-livingdoc
