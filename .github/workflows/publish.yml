@@ -7,6 +7,8 @@ on:
     
 jobs: 
   publish-nuget:
-    uses: mihben/workflow-template/.github/workflows/dotnet-publish-nuget.yml@main
+    uses: mihben/workflow-template/.github/workflows/dotnet-publish-nuget.yml@main3
+    with:
+      source: https://api.nuget.org/v3/index.json
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
