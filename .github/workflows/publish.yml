@@ -1,0 +1,14 @@
+name: Pulish Nuget
+
+on:
+  push:
+    tags:
+      - '*'
+    
+jobs: 
+  publish-nuget:
+    uses: mihben/workflow-template/.github/workflows/dotnet-publish-nuget.yml@main
+    with:
+      source: https://api.nuget.org/v3/index.json
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
