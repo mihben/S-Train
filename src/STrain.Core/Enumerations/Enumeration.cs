@@ -14,7 +14,7 @@ namespace STrain.Core.Enumerations
         public override string ToString() => Name;
 
         public static IEnumerable<T> GetAll<T>() where T : Enumeration =>
-            typeof(T).GetFields(BindingFlags.Public |
+            typeof(T).GetProperties(BindingFlags.Public |
                                 BindingFlags.Static |
                                 BindingFlags.DeclaredOnly)
                      .Select(f => f.GetValue(null))
