@@ -7,6 +7,7 @@ using Microsoft.Net.Http.Headers;
 using Moq;
 using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.CQS.Test.Unit.Supports;
+using System.Globalization;
 using System.Text.Json;
 using System.Web;
 using Xunit.Abstractions;
@@ -121,23 +122,26 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
         {
             var httpContextMock = new Mock<HttpContext>();
             var httpRequestMock = new Mock<HttpRequest>();
+            var valueProviderMock = new Mock<IValueProvider>();
 
             httpContextMock.SetupGet(hc => hc.Request)
                 .Returns(httpRequestMock.Object);
             context.SetupGet(c => c.HttpContext)
                 .Returns(httpContextMock.Object);
 
-            return new ModelBindingContextBuilder(httpRequestMock);
+            return new ModelBindingContextBuilder(httpRequestMock, context);
         }
     }
 
     internal class ModelBindingContextBuilder
     {
         private readonly Mock<HttpRequest> _httpRequestMock;
+        private readonly Mock<ModelBindingContext> _context;
 
-        public ModelBindingContextBuilder(Mock<HttpRequest> httpRequestMock)
+        public ModelBindingContextBuilder(Mock<HttpRequest> httpRequestMock, Mock<ModelBindingContext> context)
         {
             _httpRequestMock = httpRequestMock;
+            _context = context;
         }
 
         public ModelBindingContextBuilder UseHeaders(Dictionary<string, StringValues> headers)
@@ -166,12 +170,19 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
 
             var properties = request.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             var collection = HttpUtility.ParseQueryString(string.Empty);
+
+            var query = new Dictionary<string, StringValues>();
             foreach (var property in properties)
             {
+                query.Add(property.Name.ToLower(), new StringValues(property.GetValue(request).ToString()));
                 collection.Add(property.Name, property.GetValue(request)?.ToString());
             }
+            var queryString = new QueryString($"?{collection}");
             _httpRequestMock.Setup(request => request.QueryString)
-                .Returns(new QueryString($"?{collection}"));
+                .Returns(queryString);
+
+            _context.SetupGet(c => c.ValueProvider)
+                .Returns(new QueryStringValueProvider(BindingSource.Query, new QueryCollection(query), CultureInfo.InvariantCulture));
 
             return this;
         }
