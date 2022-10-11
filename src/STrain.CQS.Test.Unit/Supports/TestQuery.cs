@@ -9,8 +9,9 @@
         public string String { get; }
         public bool Bool { get; }
         public char Char { get; }
+        public IEnumerable<int> Collection { get; }
 
-        public TestQuery(Guid guid, int @int, double @double, long @long, string @string, bool @bool, char @char)
+        public TestQuery(Guid guid, int @int, double @double, long @long, string @string, bool @bool, char @char, IEnumerable<int> collection)
         {
             Guid = guid;
             Int = @int;
@@ -19,6 +20,7 @@
             String = @string;
             Bool = @bool;
             Char = @char;
+            Collection = collection;
         }
     }
 }

@@ -1,15 +1,16 @@
 ﻿using AutoFixture;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.CQS.Test.Unit.Supports;
+using System.Collections;
 using System.Globalization;
 using System.Text.Json;
-using System.Web;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
@@ -169,13 +170,27 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
             if (request is null) return this;
 
             var properties = request.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            var collection = HttpUtility.ParseQueryString(string.Empty);
+            var collection = QueryHelpers.ParseQuery(string.Empty);
 
             var query = new Dictionary<string, StringValues>();
             foreach (var property in properties)
             {
-                query.Add(property.Name.ToLower(), new StringValues(property.GetValue(request).ToString()));
-                collection.Add(property.Name, property.GetValue(request)?.ToString());
+                if (!property.PropertyType.Equals(typeof(string)) && property.PropertyType.GetInterface(nameof(IEnumerable)) != null)
+                {
+                    var values = new List<string>();
+                    foreach (var item in (IEnumerable)property.GetValue(request))
+                    {
+                        values.Add(item.ToString());
+                    }
+
+                    collection.Add(property.Name.ToLower(), new StringValues(values.ToArray()));
+                    query.Add(property.Name.ToLower(), new StringValues(values.ToArray()));
+                }
+                else
+                {
+                    collection.Add(property.Name, property.GetValue(request)?.ToString());
+                    query.Add(property.Name.ToLower(), new StringValues(property.GetValue(request).ToString()));
+                }
             }
             var queryString = new QueryString($"?{collection}");
             _httpRequestMock.Setup(request => request.QueryString)

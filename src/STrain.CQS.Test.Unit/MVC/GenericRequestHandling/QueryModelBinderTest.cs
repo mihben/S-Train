@@ -23,7 +23,7 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
 
         private QueryModelBinder CreateSUT()
         {
-            return new QueryModelBinder();
+            return new QueryModelBinder(_logger);
         }
 
         [Fact(DisplayName = "[UNIT][QMB-001]: Bind based on 'request-type' header")]
@@ -123,27 +123,6 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
                     [HeaderNames.ContentLength] = "1"
                 })
                 .UseQueryString(query);
-
-            // Act
-            // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.BindModelAsync(modelBindingContextMock.Object));
-        }
-
-        [Fact(DisplayName = "[UNIT][QMB-006]: Missing parameter")]
-        public async Task QueryModelBinder_BindModelAsync_MissingParameter()
-        {
-            // Arrange
-            var sut = CreateSUT();
-            var query = new Fixture().Create<UnsupportedQuery>();
-            var modelBindingContextMock = new Mock<ModelBindingContext>();
-
-            modelBindingContextMock.MockHttpContext()
-                .UseHeaders(new Dictionary<string, StringValues>
-                {
-                    ["request-type"] = "STrain.CQS.Test.Unit.Supports.TestQuery, STrain.CQS.Test.Unit",
-                    [HeaderNames.ContentLength] = "1"
-                })
-                .UseQueryString<MissingParameterQuery>(null);
 
             // Act
             // Assert
