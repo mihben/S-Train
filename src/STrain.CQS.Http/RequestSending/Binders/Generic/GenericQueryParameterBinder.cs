@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using STrain.CQS.Api;
 
 namespace STrain.CQS.Http.RequestSending.Binders.Generic
@@ -25,7 +26,7 @@ namespace STrain.CQS.Http.RequestSending.Binders.Generic
 
             var result = request.AsQueryString();
             _logger.LogTrace("Query parameter: {queryParameter}", result);
-            return Task.FromResult(result);
+            return Task.FromResult<string?>(QueryString.Create(result).ToString());
         }
     }
 }

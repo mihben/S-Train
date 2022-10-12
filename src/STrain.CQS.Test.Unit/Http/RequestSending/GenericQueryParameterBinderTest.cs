@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using STrain.CQS.Http.RequestSending.Binders.Generic;
 using STrain.CQS.Test.Unit.Supports;
-using System.Reflection;
 using System.Web;
 using Xunit.Abstractions;
 using TestQuery = STrain.CQS.Test.Unit.Http.RequestSending.GenericQueryParameterBinderTest.TestQuery;
@@ -57,7 +56,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
         {
             // Arrange
             var sut = CreateSUT();
-            var query = new Fixture().Build<TestQuery>().Without(tq => tq.Parameter).Create();
+            var query = new Fixture().Build<TestQuery>().Without(tq => tq.Parameter).Without(tq => tq.Collection).Create();
 
             // Act
             var result = await sut.BindAsync(query, default);
@@ -83,6 +82,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
         public record TestQuery : Query<object>
         {
             public string Parameter { get; set; } = null!;
+            public IEnumerable<int> Collection { get; set; } = null!;
         }
     }
 
@@ -91,11 +91,15 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
         public static string AsQueryString(this TestQuery query)
         {
             var collection = HttpUtility.ParseQueryString("");
-            foreach (var property in query.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            if (query.Parameter is not null) collection.Add(nameof(TestQuery.Parameter), query.Parameter);
+            if (query.Collection is not null)
             {
-                collection.Add(property.Name, property.GetValue(query)!.ToString());
+                foreach (var value in query.Collection)
+                {
+                    collection.Add(nameof(TestQuery.Collection), value.ToString());
+                }
             }
-            return collection.ToString()!;
+            return $"?{collection}";
         }
     }
 }
