@@ -8,9 +8,8 @@ using STrain.CQS.Http.RequestSending.Binders;
 using STrain.CQS.Http.RequestSending.Binders.Generic;
 using STrain.CQS.Http.RequestSending.Readers;
 using STrain.CQS.Senders;
-using System.Net.Mime;
 
-namespace STrain.CQS.Blazor.Lightinject
+namespace STrain.CQS.Blazor.LightInject
 {
     public static class HttpRequestSenderBuilderExtensions
     {

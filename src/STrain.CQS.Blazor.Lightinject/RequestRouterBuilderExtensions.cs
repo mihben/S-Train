@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using STrain.CQS.Blazor.Builders;
-using STrain.CQS.Blazor.Lightinject;
+using STrain.CQS.Blazor.LightInject;
 using STrain.CQS.Http.RequestSending;
 
 namespace STrain
