@@ -9,7 +9,7 @@ namespace STrain.Sample.Backend.Wireup
     {
         public static void Build(CQSBuilder builder)
         {
-            builder.AddPerformerFrom<SampleCommandPerformer>();
+            builder.AddPerformersFrom<SampleCommandPerformer>();
 
             builder.AddRequestValidator()
                 .UseFluentRequestValidator(builder => builder.RegistrateFrom<Error.ValidatedCommandValidator>());
