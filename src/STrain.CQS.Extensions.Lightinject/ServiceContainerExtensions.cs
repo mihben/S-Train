@@ -8,17 +8,21 @@ namespace LightInject
 {
     public static class ServiceContainerExtensions
     {
+        /// <summary>
+        /// Register <see cref="IRouteBinder"/> implementation.
+        /// </summary>
+        /// <typeparam name="TRouteBinder">Implementation type of the route binder. Must implement <see cref="IRouteBinder"/> interface.</typeparam>
+        /// <param name="key">Unique key of the route binder.</param>
         public static void AddRouteBinder<TRouteBinder>(this IServiceContainer container, string key)
-            where TRouteBinder : class, IRouteBinder
-        {
-            container.RegisterTransient<IRouteBinder, TRouteBinder>(key);
-        }
+            where TRouteBinder : class, IRouteBinder => container.RegisterTransient<IRouteBinder, TRouteBinder>(key);
 
+        /// <summary>
+        /// Register <see cref="IMethodBinder"/> implementation.
+        /// </summary>
+        /// <typeparam name="TMethodBinder">Implementation type of method binder. Must implement <see cref="IMethodBinder"/> interface.</typeparam>
+        /// <param name="key">Unique key of the route binder.</param>
         public static void AddMethodBinder<TMethodBinder>(this IServiceContainer container, string key)
-            where TMethodBinder : class, IMethodBinder
-        {
-            container.RegisterTransient<IMethodBinder, TMethodBinder>(key);
-        }
+            where TMethodBinder : class, IMethodBinder => container.RegisterTransient<IMethodBinder, TMethodBinder>(key);
 
         public static void AddQueryParameterBinder<TQueryParameterBinder>(this IServiceContainer container, string key)
             where TQueryParameterBinder : IQueryParameterBinder
