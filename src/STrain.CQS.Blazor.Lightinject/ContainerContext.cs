@@ -1,6 +1,6 @@
 ﻿using LightInject;
 
-namespace STrain.CQS.Blazor.Lightinject
+namespace STrain.CQS.Blazor.LightInject
 {
     public static class ContainerContext
     {

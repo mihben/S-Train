@@ -22,7 +22,7 @@ namespace STrain.CQS.NetCore.Builders
                 registry.Decorate(typeof(IQueryPerformer<,>), typeof(QueryPerformerLogger<,>));
             });
         }
-        public static void AddPerformerFrom<T>(this CQSBuilder builder) => builder.AddPerformersFrom(typeof(T).Assembly);
+        public static void AddPerformersFrom<T>(this CQSBuilder builder) => builder.AddPerformersFrom(typeof(T).Assembly);
 
         public static void AddRequestRouter(this CQSBuilder builder, Func<IRequest, string> requestSenderKeyProvider, Action<RequestRouterBuilder> build)
         {

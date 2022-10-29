@@ -1,6 +1,6 @@
 ﻿using LightInject;
 using LightInject.Microsoft.DependencyInjection;
-using STrain.CQS.Blazor.Lightinject;
+using STrain.CQS.Blazor.LightInject;
 
 namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting
 {

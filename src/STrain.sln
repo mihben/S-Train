@@ -39,11 +39,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.CQS.Blazor", "STrain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.Sample.Blazor", "STrain.Sample.Blazor\STrain.Sample.Blazor.csproj", "{F14ECE17-4B58-4BA7-8F1B-9051FEC637EA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.CQS.Extensions.Lightinject", "STrain.CQS.Extensions.Lightinject\STrain.CQS.Extensions.Lightinject.csproj", "{153E4BC7-D7C4-407D-8219-634C7F242C72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.CQS.Extensions.LightInject", "STrain.CQS.Extensions.LightInject\STrain.CQS.Extensions.LightInject.csproj", "{153E4BC7-D7C4-407D-8219-634C7F242C72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.CQS.Blazor.Lightinject", "STrain.CQS.Blazor.Lightinject\STrain.CQS.Blazor.Lightinject.csproj", "{9FCC807C-AE87-4D99-8024-D6EAD724061E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.CQS.Blazor.LightInject", "STrain.CQS.Blazor.Lightinject\STrain.CQS.Blazor.LightInject.csproj", "{9FCC807C-AE87-4D99-8024-D6EAD724061E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STrain.CQS.Http", "STrain.CQS.Http\STrain.CQS.Http.csproj", "{19A55532-C9BF-4BA5-AB76-0DE65B1063A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.CQS.Http", "STrain.CQS.Http\STrain.CQS.Http.csproj", "{19A55532-C9BF-4BA5-AB76-0DE65B1063A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
