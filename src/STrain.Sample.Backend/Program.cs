@@ -4,6 +4,7 @@ using STrain.CQS.NetCore;
 using STrain.Sample.Backend.Services;
 using STrain.Sample.Backend.Supports;
 using STrain.Sample.Backend.Wireup;
+using STrain.Tracing.NetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,8 @@ builder.Services.AddTransient<ISampleService, SampleService>();
 var app = builder.Build();
 
 app.UseDefaultExceptionHandler();
+
+app.UseTracing();
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader());
 

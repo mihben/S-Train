@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
-    <PackageReference Include="LightInject.Microsoft.Hosting" Version="1.3.3" />
+    <PackageReference Include="LightInject.Microsoft.Hosting" Version="1.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
@@ -26,6 +26,7 @@
     <ProjectReference Include="..\STrain.CQS.NetCore\STrain.CQS.NetCore.csproj" />
     <ProjectReference Include="..\STrain.CQS\STrain.CQS.csproj" />
     <ProjectReference Include="..\STrain.Sample.Api\STrain.Sample.Api.csproj" />
+    <ProjectReference Include="..\STrain.Tracing.NetCore\STrain.Tracing.NetCore.csproj" />
   </ItemGroup>
 
 </Project>

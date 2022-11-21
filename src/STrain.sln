@@ -47,11 +47,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.CQS.Http", "STrain.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tracing", "Tracing", "{B48D4F47-67B7-47E1-A4C2-AD61926901E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STrain.Tracing.Core", "STrain.Tracing.Core\STrain.Tracing.Core.csproj", "{5DDF0CCD-B679-4481-87E3-4FBA066AB633}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.Tracing.Core", "STrain.Tracing.Core\STrain.Tracing.Core.csproj", "{5DDF0CCD-B679-4481-87E3-4FBA066AB633}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STrain.Tracing.Http", "STrain.Tracing.Http\STrain.Tracing.Http.csproj", "{A185FA90-0179-42F0-BA42-AF8442930ADE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.Tracing.Http", "STrain.Tracing.Http\STrain.Tracing.Http.csproj", "{A185FA90-0179-42F0-BA42-AF8442930ADE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STrain.Tracing.Test.Unit", "STrain.Tracing.Test.Unit\STrain.Tracing.Test.Unit.csproj", "{25A4F08D-E589-4E4D-8A4D-2CFFBAF17C1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STrain.Tracing.Test.Unit", "STrain.Tracing.Test.Unit\STrain.Tracing.Test.Unit.csproj", "{25A4F08D-E589-4E4D-8A4D-2CFFBAF17C1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STrain.Tracing.NetCore", "STrain.Tracing.NetCore\STrain.Tracing.NetCore.csproj", "{7DE44A67-678D-4304-AA20-A599CB5B95E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STrain.Tracing.Extensions.DependencyInjection", "STrain.Tracing.Extensions.DependencyInjection\STrain.Tracing.Extensions.DependencyInjection.csproj", "{A8AE1B13-293C-4212-9FC5-A0E113A33350}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STrain.Tracing.Extensions.Lightinject", "STrain.Tracing.Extensions.Lightinject\STrain.Tracing.Extensions.Lightinject.csproj", "{35BE58E3-9234-4EFF-8E88-5ED86225711F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +149,18 @@ Global
 		{25A4F08D-E589-4E4D-8A4D-2CFFBAF17C1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25A4F08D-E589-4E4D-8A4D-2CFFBAF17C1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25A4F08D-E589-4E4D-8A4D-2CFFBAF17C1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DE44A67-678D-4304-AA20-A599CB5B95E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DE44A67-678D-4304-AA20-A599CB5B95E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DE44A67-678D-4304-AA20-A599CB5B95E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DE44A67-678D-4304-AA20-A599CB5B95E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8AE1B13-293C-4212-9FC5-A0E113A33350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8AE1B13-293C-4212-9FC5-A0E113A33350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8AE1B13-293C-4212-9FC5-A0E113A33350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8AE1B13-293C-4212-9FC5-A0E113A33350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35BE58E3-9234-4EFF-8E88-5ED86225711F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35BE58E3-9234-4EFF-8E88-5ED86225711F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35BE58E3-9234-4EFF-8E88-5ED86225711F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35BE58E3-9234-4EFF-8E88-5ED86225711F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,6 +185,9 @@ Global
 		{5DDF0CCD-B679-4481-87E3-4FBA066AB633} = {B48D4F47-67B7-47E1-A4C2-AD61926901E0}
 		{A185FA90-0179-42F0-BA42-AF8442930ADE} = {B48D4F47-67B7-47E1-A4C2-AD61926901E0}
 		{25A4F08D-E589-4E4D-8A4D-2CFFBAF17C1C} = {B48D4F47-67B7-47E1-A4C2-AD61926901E0}
+		{7DE44A67-678D-4304-AA20-A599CB5B95E2} = {B48D4F47-67B7-47E1-A4C2-AD61926901E0}
+		{A8AE1B13-293C-4212-9FC5-A0E113A33350} = {B48D4F47-67B7-47E1-A4C2-AD61926901E0}
+		{35BE58E3-9234-4EFF-8E88-5ED86225711F} = {B48D4F47-67B7-47E1-A4C2-AD61926901E0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B663B222-AB3B-44EB-B3F7-6AAEEDD843F9}

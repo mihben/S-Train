@@ -8,12 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="LightInject" Version="6.6.1" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\STrain.CQS.Http\STrain.CQS.Http.csproj" />
-    <ProjectReference Include="..\STrain.CQS\STrain.CQS.csproj" />
+    <ProjectReference Include="..\STrain.Tracing.Http\STrain.Tracing.Http.csproj" />
   </ItemGroup>
 
 </Project>

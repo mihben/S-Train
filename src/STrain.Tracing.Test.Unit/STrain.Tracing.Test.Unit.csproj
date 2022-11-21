@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
@@ -27,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\STrain.Tracing.Http\STrain.Tracing.Http.csproj" />
+    <ProjectReference Include="..\STrain.Tracing.NetCore\STrain.Tracing.NetCore.csproj" />
   </ItemGroup>
 
 </Project>

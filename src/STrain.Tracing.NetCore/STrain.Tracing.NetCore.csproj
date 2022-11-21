@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\STrain.CQS.NetCore\STrain.CQS.NetCore.csproj" />
+    <ProjectReference Include="..\STrain.Tracing.Core\STrain.Tracing.Core.csproj" />
+    <ProjectReference Include="..\STrain.Tracing.Extensions.DependencyInjection\STrain.Tracing.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\STrain.Tracing.Extensions.Lightinject\STrain.Tracing.Extensions.Lightinject.csproj" />
+    <ProjectReference Include="..\STrain.Tracing.Http\STrain.Tracing.Http.csproj" />
+  </ItemGroup>
+
+</Project>

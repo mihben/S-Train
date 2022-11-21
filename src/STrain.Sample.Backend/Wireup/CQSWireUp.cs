@@ -2,6 +2,7 @@
 using STrain.CQS.NetCore.LigtInject;
 using STrain.Sample.Api;
 using STrain.Sample.Backend.Performers;
+using STrain.Tracing.NetCore;
 
 namespace STrain.Sample.Backend.Wireup
 {
@@ -9,6 +10,8 @@ namespace STrain.Sample.Backend.Wireup
     {
         public static void Build(CQSBuilder builder)
         {
+            builder.AddTracing();
+
             builder.AddPerformerFrom<SampleCommandPerformer>();
 
             builder.AddRequestValidator()
@@ -26,8 +29,8 @@ namespace STrain.Sample.Backend.Wireup
                 else return "Generic";
             },
                 builder => builder
-                                .AddGenericHttpSender("Generic", (options, configuraion) => configuraion.Bind("Senders:Generic", options))
-                                .AddAttributiveHttpSender("External", (options, configuraion) => configuraion.Bind("Senders:External", options)));
+                                .AddGenericHttpSender("Generic", (options, configuraion) => configuraion.Bind("Senders:Generic", options), builder => builder.UseTracing())
+                                .AddAttributiveHttpSender("External", (options, configuraion) => configuraion.Bind("Senders:External", options), _ => { }));
         }
     }
 }

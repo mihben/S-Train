@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.4.3" />
+    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.6.0" />
   </ItemGroup>
 
   <ItemGroup>
