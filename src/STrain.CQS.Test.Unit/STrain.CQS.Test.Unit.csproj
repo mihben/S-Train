@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="JunitXml.TestLogger" Version="3.0.124" />
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="FluentValidation" Version="11.2.2" />
     <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.3.0" />

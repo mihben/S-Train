@@ -1,0 +1,81 @@
+image: mcr.microsoft.com/dotnet/sdk:6.0
+
+variables:
+  SOLUTION_FOLDER: "./src/"
+  ARTIFACTS_PATH: "$CI_PROJECT_DIR/artifacts/"
+  DOTNET_TOOL_PATH: "$CI_PROJECT_DIR/.dotnet/tools/"
+  SONAR_ANALYSIS_DIRECTORY: "$CI_PROJECT_DIR/$SOLUTION_FOLDER/.sonarqube/"
+
+stages:
+  - build
+  - qa
+
+install-sonar:
+  stage: .pre
+  cache:
+    policy: push
+    key: "${CI_COMMIT_SHA}"
+    paths:
+      - "${DOTNET_TOOL_PATH}"
+  script:
+    - dotnet tool install --tool-path ${DOTNET_TOOL_PATH} dotnet-sonarscanner
+  only:
+    - merge_requests
+
+build-job:       # Building the source code
+  stage: build
+  cache:
+    policy: pull-push
+    key: "${CI_COMMIT_SHA}"
+    paths:
+      - "${DOTNET_TOOL_PATH}"
+      - "${SONAR_ANALYSIS_DIRECTORY}"
+  script:
+    - cd $SOLUTION_FOLDER
+    - export PATH="$PATH:${DOTNET_TOOL_PATH}"
+    - dotnet sonarscanner begin /k:"mihben_strain" /o:"mihben-gitlab" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url=https://sonarcloud.io /d:sonar.cs.opencover.reportsPaths=$ARTIFACTS_PATH**/*.opencover.xml /d:sonar.junit.reportPaths=$ARTIFACTS_PATH**/*-test-result.xml
+    - dotnet build --configuration Release --output $ARTIFACTS_PATH
+  artifacts:
+    when: on_success
+    expire_in: 1 days
+    paths:
+      - $ARTIFACTS_PATH
+  only:
+    - merge_requests
+
+qa-job:
+  stage: qa
+  script:
+    - cd $SOLUTION_FOLDER
+    - dotnet test --test-adapter-path:. --logger:"junit;LogFilePath=$ARTIFACTS_PATH\\{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose" --collect:"XPlat Code Coverage;Format=cobertura,opencover" --results-directory:$ARTIFACTS_PATH
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - ./**/*test-result.xml
+      - ./**/*opencover.xml
+    reports:
+      junit:
+        - ./**/*test-result.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: ./**/*cobertura.xml
+  only:
+    - merge_requests
+
+sonarcloud-check:
+  stage: .post
+  cache:
+    policy: pull
+    key: "${CI_COMMIT_SHA}"
+    paths:
+      - "${DOTNET_TOOL_PATH}"
+      - $"{SONAR_ANALYSIS_DIRECTORY}"
+  when: always
+  script:
+    - apt-get update && apt-get dist-upgrade -y && apt-get install -y openjdk-11-jre
+    - export PATH="$PATH:${DOTNET_TOOL_PATH}"
+    - cd ${SOLUTION_FOLDER}
+    - dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+  only:
+    - merge_requests
