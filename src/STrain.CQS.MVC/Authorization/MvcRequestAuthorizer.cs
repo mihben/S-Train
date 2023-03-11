@@ -63,8 +63,8 @@ namespace STrain.CQS.MVC.Authorization
                 logger.LogTrace("Policy: {@policy}", policy);
                 var authorizeResult = await policyEvaulator.AuthorizeAsync(policy, authenticateResult, context, request);
 
-                if (authorizeResult.Challenged) return new ChallengeResult(policy.AuthenticationSchemes.ToArray());
-                else if (authorizeResult.Forbidden) return new ForbidResult(policy.AuthenticationSchemes.ToArray());
+                if (authorizeResult.Challenged) return new ChallengeResult(policy?.AuthenticationSchemes.ToArray() ?? Array.Empty<string>());
+                else if (authorizeResult.Forbidden) return new ForbidResult(policy?.AuthenticationSchemes.ToArray() ?? Array.Empty<string>());
             }
             else
             {

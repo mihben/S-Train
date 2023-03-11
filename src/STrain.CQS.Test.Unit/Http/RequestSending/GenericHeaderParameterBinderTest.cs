@@ -6,7 +6,9 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class GenericHeaderParameterBinderTest
     {
+#pragma warning disable CA1822 // Mark members as static
         private GenericHeaderParameterBinder CreateSUT()
+#pragma warning restore CA1822 // Mark members as static
         {
             return new GenericHeaderParameterBinder();
         }
