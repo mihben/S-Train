@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.Blazor\STrain.CQS.Blazor.csproj" />
     <ProjectReference Include="..\STrain.CQS.Extensions.DependencyInjection\STrain.CQS.Extensions.DependencyInjection.csproj" />
-    <ProjectReference Include="..\STrain.CQS.Extensions.Lightinject\STrain.CQS.Extensions.Lightinject.csproj" />
+    <ProjectReference Include="..\STrain.CQS.Extensions.LightInject\STrain.CQS.Extensions.LightInject.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\STrain.CQS.Extensions.Lightinject\STrain.CQS.Extensions.Lightinject.csproj" />
+    <ProjectReference Include="..\STrain.CQS.Extensions.LightInject\STrain.CQS.Extensions.LightInject.csproj" />
     <ProjectReference Include="..\STrain.CQS.NetCore\STrain.CQS.NetCore.csproj" />
   </ItemGroup>
 
