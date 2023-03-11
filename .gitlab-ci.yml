@@ -43,7 +43,7 @@ build-job:       # Building the source code
       - $ARTIFACTS_PATH
   only:
     variables:
-      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
+      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == merge_request_event
 
 qa-job:
   stage: qa
@@ -64,7 +64,7 @@ qa-job:
         path: ./**/*cobertura.xml
   only:
     variables:
-      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
+      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == merge_request_event
 
 sonarcloud-check:
   stage: .post
@@ -82,4 +82,4 @@ sonarcloud-check:
     - dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
   only:
     variables:
-      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
+      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == merge_request_event
