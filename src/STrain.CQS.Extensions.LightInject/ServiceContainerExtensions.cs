@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using STrain;
 using STrain.CQS.Http.RequestSending;
 using STrain.CQS.Http.RequestSending.Binders;
