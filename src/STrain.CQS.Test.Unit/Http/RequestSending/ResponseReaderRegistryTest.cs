@@ -6,7 +6,9 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class ResponseReaderRegistryTest
     {
+#pragma warning disable CA1822 // Mark members as static
         private ResponseReaderRegistry CreateSUT()
+#pragma warning restore CA1822 // Mark members as static
         {
             return new ResponseReaderRegistry();
         }

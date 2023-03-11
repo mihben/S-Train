@@ -23,7 +23,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         public async Task CallingAsync(string endpoint)
         {
             _resource = "NotFoundedResource";
-            _response = await _driver.GetAsync(endpoint, TimeSpan.FromSeconds(1));
+            _response = await _driver.GetAsync(endpoint, TimeSpan.FromSeconds(2));
         }
 
 

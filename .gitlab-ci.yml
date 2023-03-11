@@ -19,9 +19,10 @@ install-sonar:
       - "${DOTNET_TOOL_PATH}"
   script:
     - dotnet tool install --tool-path ${DOTNET_TOOL_PATH} dotnet-sonarscanner
-  only:
-    variables:
-      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" 
+    - if: $CI_COMMIT_BRANCH == "main" 
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 build-job:       # Building the source code
   stage: build
@@ -41,9 +42,10 @@ build-job:       # Building the source code
     expire_in: 1 days
     paths:
       - $ARTIFACTS_PATH
-  only:
-    variables:
-      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == merge_request_event
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" 
+    - if: $CI_COMMIT_BRANCH == "main" 
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 qa-job:
   stage: qa
@@ -62,9 +64,10 @@ qa-job:
       coverage_report:
         coverage_format: cobertura
         path: ./**/*cobertura.xml
-  only:
-    variables:
-      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == merge_request_event
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" 
+    - if: $CI_COMMIT_BRANCH == "main" 
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 sonarcloud-check:
   stage: .post
@@ -80,6 +83,7 @@ sonarcloud-check:
     - export PATH="$PATH:${DOTNET_TOOL_PATH}"
     - cd ${SOLUTION_FOLDER}
     - dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
-  only:
-    variables:
-      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == merge_request_event
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" 
+    - if: $CI_COMMIT_BRANCH == "main" 
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"

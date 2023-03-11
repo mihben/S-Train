@@ -178,9 +178,9 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
                 if (!property.PropertyType.Equals(typeof(string)) && property.PropertyType.GetInterface(nameof(IEnumerable)) != null)
                 {
                     var values = new List<string>();
-                    foreach (var item in (IEnumerable)property.GetValue(request))
+                    foreach (var item in (IEnumerable)property.GetValue(request)!)
                     {
-                        values.Add(item.ToString());
+                        values.Add(item.ToString()!);
                     }
 
                     collection.Add(property.Name.ToLower(), new StringValues(values.ToArray()));
@@ -189,7 +189,7 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
                 else
                 {
                     collection.Add(property.Name, property.GetValue(request)?.ToString());
-                    query.Add(property.Name.ToLower(), new StringValues(property.GetValue(request).ToString()));
+                    query.Add(property.Name.ToLower(), new StringValues(property.GetValue(request)!.ToString()));
                 }
             }
             var queryString = new QueryString($"?{collection}");

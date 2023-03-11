@@ -9,7 +9,9 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
 {
     public class RequestModelBinderProviderTest
     {
+#pragma warning disable CA1822 // Mark members as static
         private RequestModelBinderProvider CreateSUT()
+#pragma warning restore CA1822 // Mark members as static
         {
             return new RequestModelBinderProvider();
         }

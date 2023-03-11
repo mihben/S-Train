@@ -22,7 +22,9 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             return new AttributiveMethodBinder(_logger);
         }
 
+#pragma warning disable CA2211 // Non-constant fields should not be visible
         public static IEnumerable<object[]> BindMethodData = new List<object[]>
+#pragma warning restore CA2211 // Non-constant fields should not be visible
         {
             new object[] { new GetRequest(), HttpMethod.Get },
             new object[] { new PostRequest(), HttpMethod.Post },

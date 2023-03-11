@@ -159,7 +159,7 @@ namespace STrain.CQS.Test.Unit.MVC.GenericRequestHandling
         {
         }
 
-        public override IReadOnlyDictionary<object, object> AdditionalValues { get; }
+        public override IReadOnlyDictionary<object, object> AdditionalValues { get; } = new Dictionary<object, object>();
         public override ModelPropertyCollection Properties { get; }
         public override string? BinderModelName { get; }
         public override Type? BinderType { get; }

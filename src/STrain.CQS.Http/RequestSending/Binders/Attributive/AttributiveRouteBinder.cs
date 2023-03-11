@@ -27,7 +27,7 @@ namespace STrain.CQS.Http.RequestSending.Binders.Attributive
             if (attribute is null) throw new InvalidOperationException("Route attribute is not found.");
 
             var result = attribute.Path;
-            foreach (var match in new Regex(_pattern).Matches(result).Select(m => m.Value))
+            foreach (var match in new Regex(_pattern, RegexOptions.None, TimeSpan.FromMilliseconds(100)).Matches(result).Select(m => m.Value))
             {
                 var name = match.Trim('{').Trim('}');
                 var parameter = type.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
