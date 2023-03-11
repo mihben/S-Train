@@ -20,7 +20,8 @@ install-sonar:
   script:
     - dotnet tool install --tool-path ${DOTNET_TOOL_PATH} dotnet-sonarscanner
   only:
-    - merge_requests
+    variables:
+      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 build-job:       # Building the source code
   stage: build
@@ -41,7 +42,8 @@ build-job:       # Building the source code
     paths:
       - $ARTIFACTS_PATH
   only:
-    - merge_requests
+    variables:
+      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 qa-job:
   stage: qa
@@ -61,7 +63,8 @@ qa-job:
         coverage_format: cobertura
         path: ./**/*cobertura.xml
   only:
-    - merge_requests
+    variables:
+      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 sonarcloud-check:
   stage: .post
@@ -78,4 +81,5 @@ sonarcloud-check:
     - cd ${SOLUTION_FOLDER}
     - dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
   only:
-    - merge_requests
+    variables:
+      - $CI_COMMIT_BRANCH   == 'develop' || $CI_COMMIT_BRANCH  == 'main' || $CI_PIPELINE_SOURCE == 'merge_request_event'
