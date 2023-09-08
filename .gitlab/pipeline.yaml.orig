@@ -1,40 +1,50 @@
-image: mcr.microsoft.com/dotnet/sdk:6.0
-
 variables:
   SOLUTION_FOLDER: "./src/"
   ARTIFACTS_PATH: "$CI_PROJECT_DIR/artifacts/"
-  DOTNET_TOOL_PATH: "$CI_PROJECT_DIR/.dotnet/tools/"
+
+  SONARSCANNER_PATH: "$CI_PROJECT_DIR/.dotnet/tools/sonarscanner"
+  SONARSCANNER_KEY: "${CI_COMMIT_SHA}-SONARSCANNER"
+
+  VERSIONIZE_PATH: "$CI_PROJECT_DIR/.dotnet/tools/versionize"
+  VERSIONIZE_KEY: "${CI_COMMIT_SHA}-VERSIONIZE"
+  
   SONAR_ANALYSIS_DIRECTORY: "$CI_PROJECT_DIR/$SOLUTION_FOLDER/.sonarqube/"
 
-stages:
-  - build
-  - qa
-
-install-sonar:
+install-sonarscanner:
   stage: .pre
   cache:
     policy: push
-    key: "${CI_COMMIT_SHA}"
+    key: "${SONARSCANNER_KEY}"
     paths:
-      - "${DOTNET_TOOL_PATH}"
+      - "${SONARSCANNER_PATH}"
   script:
-    - dotnet tool install --tool-path ${DOTNET_TOOL_PATH} dotnet-sonarscanner
-  rules:
-    - if: $CI_COMMIT_BRANCH == "develop" 
-    - if: $CI_COMMIT_BRANCH == "main" 
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - dotnet tool install --tool-path ${SONARSCANNER_PATH} dotnet-sonarscanner
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "develop" 
+  #   - if: $CI_COMMIT_BRANCH == "main" 
+  #   - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+install-versionize:
+  stage: .pre
+  cache:
+    policy: push
+    key: "${VERSIONIZE_KEY}"
+    paths:
+    - "${VERSIONIZE_PATH}"
+  script:
+    - dotnet tool install --tool-path ${VERSIONIZE_PATH} Versionize
 
 build-job:       # Building the source code
   stage: build
   cache:
     policy: pull-push
-    key: "${CI_COMMIT_SHA}"
+    key: "${SONARSCANNER_KEY}"
     paths:
-      - "${DOTNET_TOOL_PATH}"
+      - "${SONARSCANNER_PATH}"
       - "${SONAR_ANALYSIS_DIRECTORY}"
   script:
     - cd $SOLUTION_FOLDER
-    - export PATH="$PATH:${DOTNET_TOOL_PATH}"
+    - export PATH="$PATH:${SONARSCANNER_PATH}"
     - dotnet sonarscanner begin /k:"mihben_strain" /o:"mihben-gitlab" /d:sonar.login="$SONAR_TOKEN" /d:sonar.host.url=https://sonarcloud.io /d:sonar.cs.opencover.reportsPaths=$ARTIFACTS_PATH**/*.opencover.xml /d:sonar.junit.reportPaths=$ARTIFACTS_PATH**/*-test-result.xml
     - dotnet build --configuration Release --output $ARTIFACTS_PATH
   artifacts:
@@ -42,10 +52,10 @@ build-job:       # Building the source code
     expire_in: 1 days
     paths:
       - $ARTIFACTS_PATH
-  rules:
-    - if: $CI_COMMIT_BRANCH == "develop" 
-    - if: $CI_COMMIT_BRANCH == "main" 
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "develop" 
+  #   - if: $CI_COMMIT_BRANCH == "main" 
+  #   - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 qa-job:
   stage: qa
@@ -64,26 +74,26 @@ qa-job:
       coverage_report:
         coverage_format: cobertura
         path: ./**/*cobertura.xml
-  rules:
-    - if: $CI_COMMIT_BRANCH == "develop" 
-    - if: $CI_COMMIT_BRANCH == "main" 
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "develop" 
+  #   - if: $CI_COMMIT_BRANCH == "main" 
+  #   - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 sonarcloud-check:
   stage: .post
   cache:
     policy: pull
-    key: "${CI_COMMIT_SHA}"
+    key: "${SONARSCANNER_KEY}"
     paths:
-      - "${DOTNET_TOOL_PATH}"
+      - "${SONARSCANNER_PATH}"
       - $"{SONAR_ANALYSIS_DIRECTORY}"
   when: always
   script:
     - apt-get update && apt-get dist-upgrade -y && apt-get install -y openjdk-11-jre
-    - export PATH="$PATH:${DOTNET_TOOL_PATH}"
+    - export PATH="$PATH:${SONARSCANNER_PATH}"
     - cd ${SOLUTION_FOLDER}
     - dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
-  rules:
-    - if: $CI_COMMIT_BRANCH == "develop" 
-    - if: $CI_COMMIT_BRANCH == "main" 
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "develop" 
+  #   - if: $CI_COMMIT_BRANCH == "main" 
+  #   - if: $CI_PIPELINE_SOURCE == "merge_request_event"
