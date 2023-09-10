@@ -11,6 +11,8 @@ builder.Host.UseLightInject();
 
 builder.Logging.AddSerilog(new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger());
 
+builder.Services.AddExceptionHandler().UseDefaultWriters();
+
 builder.Services.AddMvc()
     .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
@@ -29,7 +31,7 @@ builder.Services.AddTransient<ISampleService, SampleService>();
 
 var app = builder.Build();
 
-app.UseDefaultExceptionHandler();
+app.UseExceptionHandler();
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader());
 
@@ -42,6 +44,4 @@ app.MapControllers();
 
 app.Run();
 
-#pragma warning disable CA1050
 public partial class Program { }
-#pragma warning restore CA1050

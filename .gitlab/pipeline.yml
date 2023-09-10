@@ -6,7 +6,7 @@ workflow:
     - if: $ACTION == "pre-release"
     - if: $ACTION == "stable"
 
-image: mcr.microsoft.com/dotnet/sdk:6.0
+image: mcr.microsoft.com/dotnet/sdk:7.0
 
 variables:
   ACTION:
@@ -91,6 +91,7 @@ qa-job:
     key: "${SONAR_SCANNER_KEY}"
     paths:
       - "${SONAR_SCANNER_PATH}"
+      - "${SONAR_ANALYSIS_DIRECTORY}"
   script: 
   - !reference [.dotnet, test]
   artifacts:

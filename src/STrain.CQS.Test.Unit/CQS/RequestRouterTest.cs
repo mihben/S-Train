@@ -79,7 +79,6 @@ namespace STrain.CQS.Test.Unit.CQS
             // Assert
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.SendAsync<TestRequest, object>(new TestRequest(), default));
         }
+        private record TestRequest : IRequest { }
     }
-
-    internal record TestRequest : IRequest { }
 }

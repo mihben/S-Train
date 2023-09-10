@@ -11,7 +11,7 @@ namespace STrain.Extensions.Testing.Drivers
     public class HostDriver<TStartup>
         where TStartup : class
     {
-        private readonly IDictionary<string, string> _configuration = new Dictionary<string, string>();
+        private readonly IDictionary<string, string?> _configuration = new Dictionary<string, string?>();
 
         protected ITestOutputHelper OutputHelper { get; }
         protected WebApplicationFactory<TStartup> Host { get; private set; }

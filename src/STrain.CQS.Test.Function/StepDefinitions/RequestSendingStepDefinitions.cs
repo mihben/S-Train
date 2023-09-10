@@ -30,7 +30,6 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             _apiDriver = apiDriver;
         }
 
-
         [Given("Configured HTTP sender")]
         public void ConfigureHTTPSender(Table dataTable)
         {
@@ -64,7 +63,6 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             await _apiDriver.GetAsync<Sample.Api.Sample.GenericQuery, string>(_query, TimeSpan.FromSeconds(1));
         }
 
-
         [When("Sending external {string} request")]
         public async Task SendingExternalRequestAsync(string method)
         {
@@ -95,7 +93,6 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             }
         }
 
-
         [When("Generic request is responding")]
         public void GenericRequestIsResponding(Table dataTable)
         {
@@ -121,7 +118,6 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             if (_patchRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method!, baseAddress!, path!));
             if (_deleteRequest is not null) _messageHandlerMock.VerifySend(message => message.Verify(method!, baseAddress!, path!));
         }
-
 
         [Then("Should be thrown {string}")]
         public async Task ShoudlBeThrown(string exception)
@@ -204,7 +200,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
         #endregion
     }
 
-    internal static class RequestSendingExtensions
+    file static class RequestSendingExtensions
     {
         public static bool Verify(this HttpRequestMessage message, string method, string baseAddress, string path)
         {

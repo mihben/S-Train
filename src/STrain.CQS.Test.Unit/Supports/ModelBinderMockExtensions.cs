@@ -25,7 +25,7 @@ namespace STrain.CQS.Test.Unit.Supports
             context.SetupGet(c => c.HttpContext)
                 .Returns(httpContextMock.Object);
 
-            return new ModelBindingContextBuilder(httpRequestMock);
+            return new ModelBindingContextBuilder(httpRequestMock, context);
         }
     }
 }

@@ -61,7 +61,6 @@ namespace STrain.CQS.Http.RequestSending
             _logger.LogDebug("Creating HTTP request");
             using (_logger.LogStopwatch("Sent HTTP request in {ElapsedTime} ms"))
             {
-
                 var uriBuilder = new UriBuilder(_httpClient.BaseAddress!)
                 {
                     Path = await _routeBinder.BindAsync(request, cancellationToken),

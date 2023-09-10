@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.Logging;
 using STrain.CQS.Http.RequestSending.Binders.Generic;
-using STrain.CQS.Test.Unit.Supports;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.Http.RequestSending
@@ -62,6 +61,6 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             await Assert.ThrowsAsync<NotSupportedException>(async () => await sut.BindAsync(query, default));
         }
 
-        internal record TestRequest : IRequest { };
+        private record TestRequest : IRequest { };
     }
 }

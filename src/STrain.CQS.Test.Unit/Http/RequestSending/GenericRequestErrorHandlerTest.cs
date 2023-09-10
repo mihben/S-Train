@@ -51,7 +51,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
 
             // Act
             // Assert
-            var exception = await Assert.ThrowsAsync<NotFoundException>(async () => await sut.HandleAsync(new HttpResponseMessage(HttpStatusCode.NotFound)
+            await Assert.ThrowsAsync<NotFoundException>(async () => await sut.HandleAsync(new HttpResponseMessage(HttpStatusCode.NotFound)
             {
                 Content = JsonContent.Create(problem, new MediaTypeHeaderValue(MediaTypeNames.Application.Json.Problem))
             }, default));

@@ -17,6 +17,4 @@ namespace STrain.Sample.Api
         [AllowAnonymous]
         public record AllowAnonymusCommand : Command { }
     }
-
-
 }

@@ -9,6 +9,5 @@ namespace STrain
     [ExcludeFromCodeCoverage]
     public record Command : ICommand
     {
-
     }
 }

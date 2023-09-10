@@ -9,7 +9,7 @@ namespace STrain.CQS.Test.Function.Support
 
         public static ILogger<TContext> CreateLogger<TContext>(ITestOutputHelper outputHelper)
         {
-            var logger = _loggers.FirstOrDefault(l => l is ILogger<TContext>) as ILogger<TContext>;
+            var logger = _loggers.Find(l => l is ILogger<TContext>) as ILogger<TContext>;
             if (logger is null)
             {
                 logger = LoggerFactory.Create(builder => builder.AddXUnit(outputHelper)).CreateLogger<TContext>();

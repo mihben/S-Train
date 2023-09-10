@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.Logging;
 using STrain.CQS.Http.RequestSending.Binders.Attributive;
-using STrain.CQS.Test.Unit.CQS;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.Http.RequestSending
@@ -79,5 +78,6 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
         private record PatchRequest : IRequest { };
         [Delete]
         private record DeleteRequest : IRequest { };
+        private record TestRequest : IRequest { };
     }
 }

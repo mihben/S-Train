@@ -22,7 +22,6 @@ namespace STrain.CQS.Test.Unit.NetCore.Validation
 
         private FluentRequestValidator CreateSUT(IValidator<TestCommand>? validator)
         {
-
             var serviceProviderMock = new Mock<IServiceProvider>();
             serviceProviderMock.Setup(sp => sp.GetService(typeof(IValidator<TestCommand>)))
                 .Returns(validator);

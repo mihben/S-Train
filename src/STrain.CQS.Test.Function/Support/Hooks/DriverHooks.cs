@@ -3,6 +3,5 @@
     [Binding]
     public class DriverHooks
     {
-
     }
 }

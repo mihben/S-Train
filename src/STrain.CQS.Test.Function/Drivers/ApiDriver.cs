@@ -21,13 +21,6 @@ namespace STrain.CQS.Test.Function.Drivers
             SetConfiguration("Serilog:Properties:Environment", "Test");
         }
 
-        public async Task<HttpResponseMessage> SendAsync(string path, TimeSpan timeout)
-        {
-            var client = Host.CreateClient();
-            using var cancellationTokenSource = new CancellationTokenSource(timeout);
-            return await client.GetAsync(path, cancellationTokenSource.Token);
-        }
-
         public Mock<HttpMessageHandler> MockHttpSender(string key, string baseAddress)
         {
             var messageHandlerMock = new Mock<HttpMessageHandler>();
@@ -64,6 +57,13 @@ namespace STrain.CQS.Test.Function.Drivers
             });
 
             return messageHandlerMock;
+        }
+
+        public async Task<HttpResponseMessage> SendAsync(string path, TimeSpan timeout)
+        {
+            var client = Host.CreateClient();
+            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            return await client.GetAsync(path, cancellationTokenSource.Token);
         }
 
         public async Task<T?> SendAsync<TRequest, T>(TRequest request, TimeSpan timeout)
