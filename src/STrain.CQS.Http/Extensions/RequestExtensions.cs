@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Primitives;
+﻿using Microsoft.Extensions.Primitives;
 using STrain.CQS;
 using System.Collections;
+using System.Collections.Specialized;
 using System.Reflection;
+using System.Web;
 
 namespace STrain
 {
     public static class RequestExtensions
     {
-        public static IDictionary<string, StringValues> AsQueryString<TRequest>(this TRequest request)
+        public static NameValueCollection AsQueryString<TRequest>(this TRequest request)
             where TRequest : IRequest
         {
-            var result = QueryHelpers.ParseQuery(string.Empty);
+            var result = HttpUtility.ParseQueryString(string.Empty);
             foreach (var property in request.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 var value = property.GetValue(request);

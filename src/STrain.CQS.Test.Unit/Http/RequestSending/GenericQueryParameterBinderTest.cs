@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.Logging;
 using STrain.CQS.Http.RequestSending.Binders.Generic;
-using STrain.CQS.Test.Unit.Supports;
 using System.Web;
 using Xunit.Abstractions;
 using TestQuery = STrain.CQS.Test.Unit.Http.RequestSending.GenericQueryParameterBinderTest.TestQuery;
@@ -94,10 +93,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             if (query.Parameter is not null) collection.Add(nameof(TestQuery.Parameter), query.Parameter);
             if (query.Collection is not null)
             {
-                foreach (var value in query.Collection)
-                {
-                    collection.Add(nameof(TestQuery.Collection), value.ToString());
-                }
+                collection.Add(nameof(TestQuery.Collection), query.Collection.AsStringValues());
             }
             return $"?{collection}";
         }

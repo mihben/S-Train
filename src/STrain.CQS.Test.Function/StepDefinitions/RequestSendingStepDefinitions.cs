@@ -1,13 +1,13 @@
 ﻿using AutoFixture;
 using LightInject;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.AspNetCore.WebUtilities;
 using Moq;
 using STrain.Core.Exceptions;
 using STrain.CQS.Http.RequestSending;
 using STrain.CQS.Test.Function.Drivers;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Web;
 
 namespace STrain.CQS.Test.Function.StepDefinitions
 {
@@ -226,7 +226,7 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             if (message.RequestUri is null) return false;
 
             return message.Verify(method, baseAddress, path)
-                && QueryHelpers.ParseQuery(message.RequestUri.Query).SequenceEqual(query.AsQueryString());
+                && HttpUtility.ParseQueryString(message.RequestUri.Query).ToString().Equals(query.AsQueryString().ToString());
         }
 
         public static bool Verify(this HttpRequestMessage message, string method, string baseAddress, string path, RequestSendingStepDefinitions.PostRequest.Parameter parameter)
