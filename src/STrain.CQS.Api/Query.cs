@@ -12,6 +12,5 @@ namespace STrain
     [ExcludeFromCodeCoverage]
     public record Query<T> : IQuery
     {
-
     }
 }

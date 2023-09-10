@@ -8,7 +8,6 @@ namespace STrain
         public PatchAttribute()
             : this(string.Empty)
         {
-
         }
         public PatchAttribute(string path)
             : base(path, HttpMethod.Patch)

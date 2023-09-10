@@ -86,7 +86,7 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
         }
     }
 
-    internal static class GenericQueryParameterBinderTestExtensions
+    file static class GenericQueryParameterBinderTestExtensions
     {
         public static string AsQueryString(this TestQuery query)
         {

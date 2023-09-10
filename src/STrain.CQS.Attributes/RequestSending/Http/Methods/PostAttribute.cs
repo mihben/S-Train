@@ -8,7 +8,6 @@ namespace STrain
         public PostAttribute()
             : this(string.Empty)
         {
-
         }
         public PostAttribute(string path)
             : base(path, HttpMethod.Post)

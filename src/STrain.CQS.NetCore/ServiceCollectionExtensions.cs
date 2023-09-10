@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using STrain.CQS.Http.RequestSending;
 using STrain.CQS.Http.RequestSending.Readers;
 using STrain.CQS.MVC.GenericRequestHandling;
 using STrain.CQS.MVC.Options;
+using STrain.CQS.NetCore.Builders;
+using STrain.CQS.NetCore.ExceptionHandling;
 using System.Diagnostics.CodeAnalysis;
 
 namespace STrain.CQS.NetCore
@@ -36,6 +39,13 @@ namespace STrain.CQS.NetCore
         {
             services.AddSingleton(registry);
             services.AddTransient<IResponseReaderProvider>(provider => provider.GetRequiredService<ResponseReaderRegistry>());
+        }
+
+        public static ExceptionHandlerBuilder AddExceptionHandler(this IServiceCollection services)
+        {
+            services.AddTransient<IProblemDetailsService, ProblemDetailsService>();
+
+            return new ExceptionHandlerBuilder(services);
         }
     }
 }

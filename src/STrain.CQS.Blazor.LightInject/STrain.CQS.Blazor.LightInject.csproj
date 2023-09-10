@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.4.3" />
+    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.7.1" />
   </ItemGroup>
 
   <ItemGroup>

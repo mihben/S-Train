@@ -8,8 +8,7 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.Hosting
     {
         public static void UseLightinject(this WebAssemblyHostBuilder builder)
         {
-            var container = new ServiceContainer(ContainerOptions.Default.Clone().WithMicrosoftSettings());
-            ContainerContext.Container = container;
+            ContainerContext.Container = new ServiceContainer(ContainerOptions.Default.Clone().WithMicrosoftSettings());
             builder.ConfigureContainer(new LightInjectServiceProviderFactory(ContainerContext.Container));
         }
 

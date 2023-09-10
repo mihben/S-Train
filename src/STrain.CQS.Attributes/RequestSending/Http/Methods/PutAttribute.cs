@@ -8,7 +8,6 @@ namespace STrain
         public PutAttribute()
             : this(string.Empty)
         {
-
         }
         public PutAttribute(string path)
             : base(path, HttpMethod.Put)

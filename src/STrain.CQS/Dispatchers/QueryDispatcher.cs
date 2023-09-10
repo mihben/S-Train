@@ -17,9 +17,7 @@ namespace STrain.CQS.Dispatchers
         {
             _logger.LogDebug("Attempting to dispatch query");
             var type = typeof(IQueryPerformer<,>).MakeGenericType(query.GetType(), typeof(T));
-            var performer = _provider.GetService(type);
-
-            if (performer is null) throw new NotImplementedException($"Performer was not found for {query.LogEntry()}");
+            var performer = _provider.GetService(type) ?? throw new NotImplementedException($"Performer was not found for {query.LogEntry()}");
 
             var result = await ((dynamic)performer).PerformAsync((dynamic)query, cancellationToken);
             _logger.LogDebug("Done attempting to dispatch query");

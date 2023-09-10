@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using System.Collections;
+using System.Globalization;
 using System.Reflection;
 
 namespace STrain.CQS.MVC.GenericRequestHandling
@@ -37,7 +38,7 @@ namespace STrain.CQS.MVC.GenericRequestHandling
         }
     }
 
-    internal static class QueryModelBinderExtensions
+    file static class QueryModelBinderExtensions
     {
         public static dynamic ParseTo(this ValueProviderResult values, Type target)
         {
@@ -47,7 +48,7 @@ namespace STrain.CQS.MVC.GenericRequestHandling
                 var result = new List<int>();
                 foreach (var value in values)
                 {
-                    result.Add(value.ParseTo(target.GetTypeInfo().GenericTypeArguments.First()));
+                    result.Add(value.ParseTo(target.GetTypeInfo().GenericTypeArguments[0]));
                 }
                 return result;
             }
@@ -62,7 +63,7 @@ namespace STrain.CQS.MVC.GenericRequestHandling
             else if (target.Equals(typeof(double))) return double.Parse(value);
             else if (target.Equals(typeof(long))) return long.Parse(value);
             else if (target.Equals(typeof(string))) return value;
-            else if (target.Equals(typeof(DateTime))) return DateTime.Parse(value);
+            else if (target.Equals(typeof(DateTime))) return DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
             else if (target.Equals(typeof(bool))) return bool.Parse(value);
             else if (target.Equals(typeof(char))) return char.Parse(value);
             else throw new NotSupportedException($"{target} is unsupported.");

@@ -1,16 +1,14 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.Logging;
 using STrain.CQS.Http.RequestSending.Binders.Attributive;
-using STrain.CQS.Test.Unit.CQS;
 using System.Net.Mime;
 using System.Text;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
-    public class AttributiveBodyParameterBinderTest
+    public partial class AttributiveBodyParameterBinderTest
     {
-
         private readonly ILogger<AttributiveBodyParameterBinder> _logger;
 
         public AttributiveBodyParameterBinderTest(ITestOutputHelper outputHelper)
@@ -83,33 +81,17 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             // Assert
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.BindAsync<IRequest>(null!, default));
         }
-
-        [BodyParameter]
-        internal record BodyParameterRequest : IRequest
-        {
-            public string ByName { get; set; } = null!;
-            [BodyParameter(Name = "by-attribute")]
-            public string ByAttribute { get; set; } = null!;
-        }
-
-        internal record PropertyParameterRequest : IRequest
-        {
-            [BodyParameter]
-            public string ByName { get; set; } = null!;
-            [BodyParameter(Name = "by-attribute")]
-            public string ByAttribute { get; set; } = null!;
-            public string NotToBeSerialized { get; set; } = null!;
-        }
+        private record TestRequest : IRequest { };
     }
 
-    internal static class AttributiveBodyParameterBinderTestExtensions
+    file static class AttributiveBodyParameterBinderTestExtensions
     {
-        public static string AsJson(this AttributiveBodyParameterBinderTest.BodyParameterRequest request)
+        public static string AsJson(this BodyParameterRequest request)
         {
             return $"{{\"{nameof(request.ByName)}\":\"{request.ByName}\",\"by-attribute\":\"{request.ByAttribute}\"}}";
         }
 
-        public static string AsJson(this AttributiveBodyParameterBinderTest.PropertyParameterRequest request)
+        public static string AsJson(this PropertyParameterRequest request)
         {
             return $"{{\"{nameof(request.ByName)}\":\"{request.ByName}\",\"by-attribute\":\"{request.ByAttribute}\"}}";
         }

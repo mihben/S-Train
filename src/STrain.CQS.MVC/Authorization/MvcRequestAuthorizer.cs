@@ -37,7 +37,7 @@ namespace STrain.CQS.MVC.Authorization
         }
     }
 
-    internal static class MvcRequestAuthorizerExtensions
+    file static class MvcRequestAuthorizerExtensions
     {
         public static IEnumerable<IAuthorizeData> GetAuthorizeData(this Type type) => type.GetCustomAttributes().Where(ca => ca is IAuthorizeData).Cast<IAuthorizeData>();
         public static bool IsAllowedAnonymus(this Type type) => type.GetCustomAttributes().Any(ca => ca is IAllowAnonymous);

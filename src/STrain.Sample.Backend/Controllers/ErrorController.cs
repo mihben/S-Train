@@ -19,7 +19,7 @@ namespace STrain.Sample.Backend.Controllers
         [HttpGet("not-found")]
         public Task<IActionResult> NotFoundAsync(CancellationToken cancellationToken)
         {
-            throw new NotFoundException("NotFoundedResource");
+            throw new NotFoundException("NotFoundResource");
         }
 
         [HttpGet("internal-server-error")]

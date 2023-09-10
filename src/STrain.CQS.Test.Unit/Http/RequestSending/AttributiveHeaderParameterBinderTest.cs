@@ -2,14 +2,12 @@
 using Microsoft.Extensions.Logging;
 using STrain.CQS.Attributes.RequestSending.Http.Parameters;
 using STrain.CQS.Http.RequestSending.Binders.Attributive;
-using STrain.CQS.Test.Unit.CQS;
 using Xunit.Abstractions;
 
 namespace STrain.CQS.Test.Unit.Http.RequestSending
 {
     public class AttributiveHeaderParameterBinderTest
     {
-
         private readonly ILogger<AttributiveHeaderParameterBinder> _logger;
 
         public AttributiveHeaderParameterBinderTest(ITestOutputHelper outputHelper)
@@ -125,5 +123,6 @@ namespace STrain.CQS.Test.Unit.Http.RequestSending
             public string ByAttribute { get; set; } = null!;
             public string NotToBeSerialized { get; set; } = null!;
         }
+        private record TestRequest : IRequest { };
     }
 }

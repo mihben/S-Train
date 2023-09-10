@@ -8,7 +8,6 @@ namespace STrain
         public DeleteAttribute()
             : this(string.Empty)
         {
-
         }
         public DeleteAttribute(string path)
             : base(path, HttpMethod.Delete)

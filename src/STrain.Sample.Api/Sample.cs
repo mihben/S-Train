@@ -66,5 +66,4 @@ namespace STrain.Sample.Api
             }
         }
     }
-
 }

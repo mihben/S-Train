@@ -8,7 +8,6 @@ namespace STrain
         public GetAttribute()
             : this(string.Empty)
         {
-
         }
 
         public GetAttribute(string path)

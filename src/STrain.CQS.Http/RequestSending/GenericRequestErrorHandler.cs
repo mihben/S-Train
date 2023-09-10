@@ -45,7 +45,7 @@ namespace STrain.CQS.Http.RequestSending
         private static InvalidOperationException InvalidOperationException() => new("Error during reading response");
     }
 
-    internal static class GenericResponseHandlerExtensions
+    file static class GenericResponseHandlerExtensions
     {
         public static ValidationException AsValidationException(this Problem problem)
         {

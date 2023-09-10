@@ -21,29 +21,10 @@ S-Train provides default error handling.
 		Examples: 
 			| Description        | Endpoint                | Type                       | Title               | Detail                                             | Instance                 |
 			| Resource not found | api/error/not-found     | /errors/resource-not-found | Resource not found. | Resource '{resource}' was not found.               | /api/error/not-found     |
-			| Endpoint not found | api/error/fake-endpoint | /errors/endpoint-not-found | Endpoint not found. | Endpoint '/api/error/fake-endpoint' was not found. | /api/error/fake-endpoint |
 
 	@issue-23
 	@api
-	@unathorized
-	Scenario: [API][ERH/ERR-002] - Unathorized
-		When Calling '/api/error/unathorized' endpoint
-		Then Error response should be
-			| Code | ContentType              | Type                | Title                | Status | Detail                                                                   | Instance               |
-			| 401  | application/problem+json | /errors/unathorized | Unathorized request. | 401    | Authentication is required for access '/api/error/unathorized' endpoint. | /api/error/unathorized |
-
-	@issue-23
-	@api
-	@forbidden
-	Scenario: [API][ERH/ERR-003] - Forbidden request
-		When Calling '/api/error/forbidden' endpoint
-		Then Error response should be
-			| Code | ContentType              | Type              | Title      | Status | Detail                                                                      | Instance             |
-			| 403  | application/problem+json | /errors/forbidden | Forbidden. | 403    | Specific permission is required for access '/api/error/forbidden' endpoint. | /api/error/forbidden |
-
-	@issue-23
-	@api
-	Scenario: [API][ERH/ERR-005] - Internal server error
+	Scenario: [API][ERH/ERR-002] - Internal server error
 		When Calling '/api/error/internal-server-error' endpoint
 		Then Error response should be
 			| Code | ContentType              | Type                          | Title                  | Status | Detail                                               | Instance                         |
@@ -51,7 +32,7 @@ S-Train provides default error handling.
 				
 	@issue-23
 	@api
-	Scenario: [API][ERH/ERR-006] - Validation error
+	Scenario: [API][ERH/ERR-003] - Validation error
 		When Calling '/api/error/validation-error' endpoint
 		Then Error response should be
 			| Code | ContentType              | Type                    | Title            | Status | Detail                           | Instance                    | Errors.Property | Errors.Message             |
@@ -59,7 +40,7 @@ S-Train provides default error handling.
 				
 	@issue-23
 	@api
-	Scenario: [API][ERH/ERR-007] - Verification error
+	Scenario: [API][ERH/ERR-004] - Verification error
 		When Calling '/api/error/verification-error' endpoint
 		Then Error response should be
 			| Code | ContentType              | Type                              | Title               | Status | Detail                                                                    | Instance                       |

@@ -15,8 +15,8 @@ namespace STrain.CQS.NetCore.Builders
         {
             builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) =>
             {
-                registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().Any(i => i.Name.Equals(typeof(ICommandPerformer<>).Name)));
-                registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().Any(i => i.Name.Equals(typeof(IQueryPerformer<,>).Name)));
+                registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().ToList().Exists(i => i.Name.Equals(typeof(ICommandPerformer<>).Name)));
+                registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().ToList().Exists(i => i.Name.Equals(typeof(IQueryPerformer<,>).Name)));
 
                 registry.Decorate(typeof(ICommandPerformer<>), typeof(CommandPerformerLogger<>));
                 registry.Decorate(typeof(IQueryPerformer<,>), typeof(QueryPerformerLogger<,>));
