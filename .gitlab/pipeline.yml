@@ -5,7 +5,7 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $ACTION == "pre-release"
     - if: $ACTION == "stable"
-
+    
 image: mcr.microsoft.com/dotnet/sdk:7.0
 
 variables:
@@ -82,7 +82,8 @@ build-job:
     when: on_success
     expire_in: 1 days
     paths:
-      - $ARTIFACTS_PATH
+      - $ARTIFACTS_PATH      - 
+      - $SONAR_ANALYSIS_DIRECTORY
 
 qa-job:
   stage: test
