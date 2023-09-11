@@ -110,7 +110,7 @@ qa-job:
   after_script:
   - !reference [.sonar, upload]
 
-push-job:
+push-pre-release-job:
   stage: push
   cache:
     policy: pull
@@ -123,7 +123,7 @@ push-job:
   rules:
     - if: $ACTION == "pre-release"
 
-push-job:
+push-stable-job:
   stage: push
   cache:
     policy: pull
