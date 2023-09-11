@@ -42,7 +42,7 @@ stages:
   - .pre
   - build
   - test
-  - deploy
+  - push
   - .post
 
 install-sonarscanner-job:
@@ -111,7 +111,7 @@ qa-job:
   - !reference [.sonar, upload]
 
 push-job:
-  stage: deploy
+  stage: push
   cache:
     policy: pull
     key: "${VERSIONIZE_KEY}"
@@ -124,7 +124,7 @@ push-job:
     - if: $ACTION == "pre-release"
 
 push-job:
-  stage: deploy
+  stage: push
   cache:
     policy: pull
     key: "${VERSIONIZE_KEY}"
