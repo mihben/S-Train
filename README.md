@@ -1,6 +1,6 @@
 ![Banner](logo/cover.png)
 
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=mihben_S-Train)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=mihben_S-Train&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=mihben_S-Train)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mihben_S-Train&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mihben_S-Train)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mihben_S-Train&metric=coverage)](https://sonarcloud.io/summary/new_code?id=mihben_S-Train)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=mihben_strain)](https://sonarcloud.io/summary/new_code?id=mihben_strain)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=mihben_strain&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=mihben_strain)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mihben_strain&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mihben_strain)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mihben_strain&metric=coverage)](https://sonarcloud.io/summary/new_code?id=mihben_strain)
