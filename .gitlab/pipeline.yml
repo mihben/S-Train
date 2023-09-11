@@ -122,6 +122,8 @@ push-pre-release-job:
   - !reference [.dotnet, push-nuget]
   rules:
     - if: $ACTION == "pre-release"
+  before_script:
+    !reference [.git, setup]
 
 push-stable-job:
   stage: push
@@ -135,4 +137,6 @@ push-stable-job:
   - !reference [.dotnet, push-nuget]
   rules:
     - if: $ACTION == "stable"
+  before_script:
+    !reference [.git, setup]
   
