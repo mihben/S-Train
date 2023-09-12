@@ -3,19 +3,9 @@ workflow:
     - if: $CI_COMMIT_BRANCH == "develop" 
     - if: $CI_COMMIT_BRANCH == "main" 
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $ACTION == "pre-release"
-    - if: $ACTION == "stable"
+    - if: $CI_COMMIT_TAG
     
 image: mcr.microsoft.com/dotnet/sdk:7.0
-
-variables:
-  ACTION:
-    description: "Type of the release."
-    value: "merge-request"
-    options:
-      - "merge-request"
-      - "pre-release"
-      - "stable"
   
   SONAR_SCANNER_KEY: "${CI_COMMIT_SHA}-SONARSCANNER"
   SONAR_SCANNER_PATH: "$CI_PROJECT_DIR/.dotnet/tools/sonarscanner"
@@ -54,19 +44,6 @@ install-sonarscanner-job:
       - "${SONAR_SCANNER_PATH}"
   script:
   - !reference [.sonar, install]
-
-install-versionize-job:
-  stage: .pre
-  cache:
-    policy: push
-    key: "${VERSIONIZE_KEY}"
-    paths:
-      - "${VERSIONIZE_PATH}"
-  script:
-  - !reference [.versionize, install]
-  rules:
-    - if: $ACTION == "pre-release"
-    - if: $ACTION == "stable"
 
 build-job:
   stage: build
@@ -110,33 +87,10 @@ qa-job:
   after_script:
   - !reference [.sonar, upload]
 
-push-pre-release-job:
+push-job:
   stage: push
-  cache:
-    policy: pull
-    key: "${VERSIONIZE_KEY}"
-    paths:
-      - "${VERSIONIZE_PATH}"
   script:
-  - !reference [.versionize, pre-release]
   - !reference [.dotnet, push-nuget]
   rules:
-    - if: $ACTION == "pre-release"
-  before_script:
-    !reference [.git, setup]
-
-push-stable-job:
-  stage: push
-  cache:
-    policy: pull
-    key: "${VERSIONIZE_KEY}"
-    paths:
-      - "${VERSIONIZE_PATH}"
-  script:
-  - !reference [.versionize, stable]
-  - !reference [.dotnet, push-nuget]
-  rules:
-    - if: $ACTION == "stable"
-  before_script:
-    !reference [.git, setup]
+    - if: $CI_COMMIT_TAG
   
