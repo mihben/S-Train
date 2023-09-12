@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="1.0.0-rc.6"></a>
+## [1.0.0-rc.6](https://gitlab.com/mihben/strain/-/tags/v1.0.0-rc.6) (2023-9-12)
+
+### Bug Fixes
+
+* Removed depricated nuget packages ([4629238](https://gitlab.com/mihben/strain/-/commit/4629238ad40ca2144c227c3ee0856ed9d5fb34bc))
+
 <a name="1.0.0"></a>
 ## [1.0.0](https://gitlab.com/mihben/strain/-/tags/v1.0.0) (2023-9-10)
 
