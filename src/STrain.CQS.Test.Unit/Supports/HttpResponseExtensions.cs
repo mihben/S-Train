@@ -8,7 +8,7 @@ namespace STrain.CQS.Test.Unit.Supports
         public static async Task<T?> ReadFromJsonAsync<T>(this HttpResponse response)
         {
             response.Body.Position = 0;
-            return await JsonSerializer.DeserializeAsync<T>(response.Body);
+            return await JsonSerializer.DeserializeAsync<T>(response.Body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }

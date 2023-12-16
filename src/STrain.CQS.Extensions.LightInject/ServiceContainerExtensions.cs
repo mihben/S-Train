@@ -40,11 +40,11 @@ namespace LightInject
 
         public static void AddHttpSender(this IServiceContainer container, string key)
         {
-            container.RegisterTransient<IRequestSender>(factory =>
+            container.RegisterTransient<Func<IRequestSender>>(factory =>
             {
                 var clientFactory = factory.GetInstance<IHttpClientFactory>();
 
-                return new HttpRequestSender(clientFactory.CreateClient(key),
+                return () =>  new HttpRequestSender(clientFactory.CreateClient(key),
                                                 factory.GetInstance<IServiceProvider>(),
                                                 factory.GetInstance<IRouteBinder>(key),
                                                 factory.GetInstance<IMethodBinder>(key),

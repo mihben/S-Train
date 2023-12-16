@@ -38,7 +38,7 @@ namespace STrain.CQS.Test.Function.Drivers
 
                         using (var scope = factory.BeginScope())
                         {
-                            registration.Value = new HttpRequestSender(
+                            registration.Value = () => new HttpRequestSender(
                                 httpClient,
                                 scope.GetInstance<IServiceProvider>(),
                                 scope.GetInstance<IRouteBinder>(key),

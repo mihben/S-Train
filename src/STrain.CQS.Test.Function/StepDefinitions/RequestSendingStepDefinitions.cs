@@ -37,16 +37,20 @@ namespace STrain.CQS.Test.Function.StepDefinitions
             var baseAddress = dataTable.GetValue<string>("BaseAddress")!;
             var path = dataTable.GetValue<string>("Path");
 
+
             _apiDriver.SetConfiguration($"Senders:{key}:BaseAddress", baseAddress);
             if (path is not null) _apiDriver.SetConfiguration($"Senders:{key}:Path", path);
             _messageHandlerMock = _apiDriver.MockHttpSender(key, baseAddress);
             _messageHandlerMock.SetupSend();
 
             Func<IRequest, string> keySelector = _ => key;
-            _apiDriver.WithWebHostBuilder(builder => builder.ConfigureTestContainer<IServiceContainer>(registry => registry.Override(registration => registration.ServiceType.Equals(typeof(Func<IRequest, string>)), (_, registration) =>
-            {
-                registration.Value = keySelector; return registration;
-            })));
+            _apiDriver.WithWebHostBuilder(builder => 
+                builder.ConfigureTestContainer<IServiceContainer>(registry =>
+                    registry.Override(registration => registration.ServiceType.Equals(typeof(Func<IRequest, string?>)), (_, registration) =>
+                    {
+                        registration.Value = keySelector; return registration;
+                    })
+            ));
         }
 
         [When("Sending generic command")]

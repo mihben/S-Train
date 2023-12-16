@@ -17,7 +17,7 @@ namespace STrain.CQS.Test.Unit.CQS
                         .CreateLogger<RequestRouter>();
         }
 
-        private RequestRouter CreateSUT(Func<string, IRequestSender> senderFactory, Func<IRequest, string> senderKeyProvider)
+        private RequestRouter CreateSUT(Func<string, Func<IRequestSender>> senderFactory, Func<IRequest, string> senderKeyProvider)
         {
             return new RequestRouter(senderFactory, senderKeyProvider, _logger);
         }
@@ -28,7 +28,7 @@ namespace STrain.CQS.Test.Unit.CQS
             // Arrange
             var key = new Fixture().Create<string>();
             var requestSenderMock = new Mock<IRequestSender>();
-            var sut = CreateSUT(_ => requestSenderMock.Object, (_) => key);
+            var sut = CreateSUT(_ => () => requestSenderMock.Object, (_) => key);
             var request = new TestRequest();
 
             // Act

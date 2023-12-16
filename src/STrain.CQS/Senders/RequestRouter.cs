@@ -4,11 +4,11 @@ namespace STrain.CQS.Senders
 {
     public class RequestRouter : IRequestSender
     {
-        private readonly Func<string, IRequestSender?> _requestSenderFactory;
+        private readonly Func<string, Func<IRequestSender>?> _requestSenderFactory;
         private readonly Func<IRequest, string?> _requestSenderKeyProvider;
         private readonly ILogger<RequestRouter> _logger;
 
-        public RequestRouter(Func<string, IRequestSender?> requestSenderFactory, Func<IRequest, string?> requestSenderKeyProvider, ILogger<RequestRouter> logger)
+        public RequestRouter(Func<string, Func<IRequestSender>?> requestSenderFactory, Func<IRequest, string?> requestSenderKeyProvider, ILogger<RequestRouter> logger)
         {
             _requestSenderFactory = requestSenderFactory;
             _requestSenderKeyProvider = requestSenderKeyProvider;
@@ -34,12 +34,13 @@ namespace STrain.CQS.Senders
                 throw new InvalidOperationException($"Request sender key cannot be determined for {request}");
             }
 
-            var sender = _requestSenderFactory(key);
-            if (sender is null)
-            {
-                _logger.LogDebug("Routing request failed");
-                throw new InvalidOperationException($"Request sender was not found with {key}");
-            }
+            var factory = _requestSenderFactory(key);
+            if (factory is null)
+			{
+				_logger.LogDebug("Routing request failed");
+				throw new InvalidOperationException($"Request sender was not found with {key}");
+			}
+			var sender = factory();
 
             _logger.LogDebug("Request sender determined");
             using (_logger.BeginScope(new Dictionary<string, object> { ["Sender"] = key }))

@@ -69,7 +69,7 @@ namespace STrain.CQS.Test.Unit.NetCore.ExceptionHandling
             await sut.WriteAsync(new ProblemDetailsContext { HttpContext = context });
 
             // Assert
-            Assert.Equal(await context.Response.ReadFromJsonAsync<ProblemDetails>(), exception.AsProblemDetails(context.Features.GetRequiredFeature<IExceptionHandlerPathFeature>().Path), new ProblemDetailsEqualityComparer());
+            Assert.Equal(exception.AsProblemDetails(context.Features.GetRequiredFeature<IExceptionHandlerPathFeature>().Path), await context.Response.ReadFromJsonAsync<ProblemDetails>(), new ProblemDetailsEqualityComparer());
         }
     }
 

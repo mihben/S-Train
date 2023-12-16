@@ -7,8 +7,8 @@ namespace STrain.Sample.Backend.Supports
 {
     public class AuthorizedAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        public AuthorizedAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
-            : base(options, logger, encoder, clock)
+        public AuthorizedAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder)
+            : base(options, logger, encoder)
         {
         }
 
