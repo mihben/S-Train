@@ -46,7 +46,7 @@ namespace STrain.CQS.MVC.GenericRequestHandling
             if (target.GetInterface(nameof(IEnumerable)) != null)
             {
                 var result = new List<int>();
-                foreach (var value in values)
+                foreach (var value in values.FirstValue.Split(','))
                 {
                     result.Add(value.ParseTo(target.GetTypeInfo().GenericTypeArguments[0]));
                 }

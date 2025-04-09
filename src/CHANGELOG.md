@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="2.0.0-rc.1"></a>
+## [2.0.0-rc.1](https://gitlab.com/mihben/strain/-/tags/v2.0.0-rc.1) (2023-12-22)
+
+### Breaking Changes
+
+* Upgraded to .NET 8 ([8f6bb56](https://gitlab.com/mihben/strain/-/commit/8f6bb5629eb778ebdb4423380242c2dd7acb74ac))
+
 <a name="1.0.0-rc.6"></a>
 ## [1.0.0-rc.6](https://gitlab.com/mihben/strain/-/tags/v1.0.0-rc.6) (2023-9-12)
 

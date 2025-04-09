@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="2.0.0-rc.2"></a>
+## [2.0.0-rc.2](https://gitlab.com/mihben/strain/-/tags/v2.0.0-rc.2) (2024-07-18)
+
 <a name="1.0.1"></a>
 ## [1.0.1](https://gitlab.com/mihben/strain/-/tags/v1.0.1) (2023-9-3)
 

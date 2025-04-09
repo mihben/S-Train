@@ -72,7 +72,7 @@ qa-job:
       - "${SONAR_SCANNER_PATH}"
       - "${SONAR_ANALYSIS_DIRECTORY}"
   script: 
-  - !reference [.dotnet, test]
+  - !reference [.dotnet, test-unit]
   artifacts:
     when: always
     expire_in: 14 days

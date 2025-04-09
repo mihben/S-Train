@@ -29,7 +29,7 @@ namespace STrain
             {
                 stringValues.Add(value?.ToString() ?? string.Empty);
             }
-            return new StringValues(stringValues.ToArray());
+            return new StringValues([.. stringValues]);
         }
     }
 }

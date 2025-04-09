@@ -60,7 +60,7 @@ namespace STrain.CQS.Blazor.LightInject
 
         public static HttpRequestSenderBuilder UseGenericRequestErrorHandler(this HttpRequestSenderBuilder builder)
         {
-            builder.Builder.ConfigureContainer(container => container.RegisterTransient<IRequestErrorHandler, DefaultErrorHandler>(builder.Key));
+            builder.Builder.ConfigureContainer(container => container.RegisterTransient<IRequestErrorHandler, GenericRequestErrorHandler>(builder.Key));
             return builder;
         }
     }
