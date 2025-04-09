@@ -14,13 +14,13 @@ builder.Logging.AddSerilog(new LoggerConfiguration().ReadFrom.Configuration(buil
 builder.Services.AddExceptionHandler().UseDefaultWriters();
 
 builder.Services.AddMvc()
-    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
+	.AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
 builder.Services.AddAuthorization(options => options.AddPolicy("Forbidden", policy => policy.RequireUserName("Admin")));
 builder.Services.AddAuthentication()
-    .AddScheme<AuthenticationSchemeOptions, AuthorizedAuthenticationHandler>(authenticationScheme: "Authorized", null, null)
-    .AddScheme<AuthenticationSchemeOptions, UnauthorizedAuthenticationHandler>("Unathorized", null, null)
-    .AddScheme<AuthenticationSchemeOptions, ForbiddenAuthenticationHandler>("Forbidden", null, null);
+	.AddScheme<AuthenticationSchemeOptions, AuthorizedAuthenticationHandler>(authenticationScheme: "Authorized", null, null)
+	.AddScheme<AuthenticationSchemeOptions, UnauthorizedAuthenticationHandler>("Unathorized", null, null)
+	.AddScheme<AuthenticationSchemeOptions, ForbiddenAuthenticationHandler>("Forbidden", null, null);
 
 builder.Services.AddHttpContextAccessor();
 

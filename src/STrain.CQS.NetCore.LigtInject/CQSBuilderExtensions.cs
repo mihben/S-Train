@@ -8,41 +8,41 @@ using System.Reflection;
 
 namespace STrain.CQS.NetCore.Builders
 {
-    [ExcludeFromCodeCoverage]
-    public static class CQSBuilderExtensions
-    {
-        public static void AddPerformersFrom(this CQSBuilder builder, Assembly assembly)
-        {
-            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) =>
-            {
-                registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().ToList().Exists(i => i.Name.Equals(typeof(ICommandPerformer<>).Name)));
-                registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().ToList().Exists(i => i.Name.Equals(typeof(IQueryPerformer<,>).Name)));
+	[ExcludeFromCodeCoverage]
+	public static class CQSBuilderExtensions
+	{
+		public static void AddPerformersFrom(this CQSBuilder builder, Assembly assembly)
+		{
+			builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) =>
+			{
+				registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().ToList().Exists(i => i.Name.Equals(typeof(ICommandPerformer<>).Name)));
+				registry.RegisterAssembly(assembly, () => new PerScopeLifetime(), (_, type) => type.GetInterfaces().ToList().Exists(i => i.Name.Equals(typeof(IQueryPerformer<,>).Name)));
 
-                registry.Decorate(typeof(ICommandPerformer<>), typeof(CommandPerformerLogger<>));
-                registry.Decorate(typeof(IQueryPerformer<,>), typeof(QueryPerformerLogger<,>));
-            });
-        }
-        public static void AddPerformersFrom<T>(this CQSBuilder builder) => builder.AddPerformersFrom(typeof(T).Assembly);
+				registry.Decorate(typeof(ICommandPerformer<>), typeof(CommandPerformerLogger<>));
+				registry.Decorate(typeof(IQueryPerformer<,>), typeof(QueryPerformerLogger<,>));
+			});
+		}
+		public static void AddPerformersFrom<T>(this CQSBuilder builder) => builder.AddPerformersFrom(typeof(T).Assembly);
 
-        public static void AddRequestRouter(this CQSBuilder builder, Func<IRequest, string> requestSenderKeyProvider, Action<RequestRouterBuilder> build)
-        {
-            build(new RequestRouterBuilder(builder.Builder));
-            builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) =>
-            {
-                registry.RegisterInstance(requestSenderKeyProvider);
-                registry.RegisterTransient<IRequestSender, RequestRouter>();
-            });
-        }
+		public static void AddRequestRouter(this CQSBuilder builder, Func<IRequest, string> requestSenderKeyProvider, Action<RequestRouterBuilder> build)
+		{
+			build(new RequestRouterBuilder(builder.Builder));
+			builder.Builder.Host.ConfigureContainer<IServiceRegistry>((_, registry) =>
+			{
+				registry.RegisterInstance(requestSenderKeyProvider);
+				registry.RegisterTransient<IRequestSender, RequestRouter>();
+			});
+		}
 
-        public static RequestValidatorBuilder AddRequestValidator(this CQSBuilder builder)
-        {
-            builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) =>
-            {
-                container.Decorate<ICommandDispatcher, CommandValidator>();
-                container.Decorate<IQueryDispatcher, QueryValidator>();
-            });
+		public static RequestValidatorBuilder AddRequestValidator(this CQSBuilder builder)
+		{
+			builder.Builder.Host.ConfigureContainer<IServiceContainer>((_, container) =>
+			{
+				container.Decorate<ICommandDispatcher, CommandValidator>();
+				container.Decorate<IQueryDispatcher, QueryValidator>();
+			});
 
-            return new RequestValidatorBuilder(builder.Builder);
-        }
-    }
+			return new RequestValidatorBuilder(builder.Builder);
+		}
+	}
 }

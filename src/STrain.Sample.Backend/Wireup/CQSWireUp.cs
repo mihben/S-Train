@@ -5,29 +5,35 @@ using STrain.Sample.Backend.Performers;
 
 namespace STrain.Sample.Backend.Wireup
 {
-    public static class CQSWireUp
-    {
-        public static void Build(CQSBuilder builder)
-        {
-            builder.AddPerformersFrom<SampleCommandPerformer>();
+	public static class CQSWireUp
+	{
+		public static void Build(CQSBuilder builder)
+		{
+			//builder.AddPerformersFrom<SampleCommandPerformer>();
+			builder.AddPerformer<ICommandPerformer<Authorization.AuthorizedCommand>, AuthorizationPerformer>();
+			builder.AddPerformer<ICommandPerformer<Authorization.AllowAnonymusCommand>, AuthorizationPerformer>();
 
-            builder.AddRequestValidator()
-                .UseFluentRequestValidator(builder => builder.RegistrateFrom<Error.ValidatedCommandValidator>());
+			builder.AddPerformer<ICommandPerformer<Api.Sample.GenericCommand>, SampleCommandPerformer>();
 
-            builder.AddMvcRequestReceiver()
-                .UseAuthorization()
-                .UseLogger();
+			builder.AddPerformer<IQueryPerformer<Api.Sample.GenericQuery, string>, SampleQueryPerformer>();
 
-            builder.AddGenericRequestHandler("api");
+			builder.AddRequestValidator()
+				.UseFluentRequestValidator(builder => builder.RegistrateFrom<Error.ValidatedCommandValidator>());
 
-            builder.AddRequestRouter(request =>
-            {
-                if (request.GetType().Name.Contains("External")) return "External";
-                else return "Generic";
-            },
-                builder => builder
-                                .AddGenericHttpSender("Generic", (options, configuraion) => configuraion.Bind("Senders:Generic", options))
-                                .AddAttributiveHttpSender("External", (options, configuraion) => configuraion.Bind("Senders:External", options)));
-        }
-    }
+			builder.AddMvcRequestReceiver()
+				.UseAuthorization()
+				.UseLogger();
+
+			builder.AddGenericRequestHandler("api");
+
+			builder.AddRequestRouter(request =>
+			{
+				if (request.GetType().Name.Contains("External")) return "External";
+				else return "Generic";
+			},
+				builder => builder
+								.AddGenericHttpSender("Generic", (options, configuraion) => configuraion.Bind("Senders:Generic", options))
+								.AddAttributiveHttpSender("External", (options, configuraion) => configuraion.Bind("Senders:External", options)));
+		}
+	}
 }
