@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\STrain.Eventing.Api\STrain.Eventing.Api.csproj" />
+    <ProjectReference Include="..\STrain.Eventing.RabbitMQ\STrain.Eventing.RabbitMQ.csproj" />
     <ProjectReference Include="..\STrain.Eventing\STrain.Eventing.csproj" />
   </ItemGroup>
 

@@ -19,7 +19,7 @@ namespace STrain.Eventing.Dispatchers
 		{
 			_logger.LogDebug("Attempting to dispatch {Event} event", @event.LogEntry());
 			var handlers = _serviceProvider.GetService(typeof(IEnumerable<IEventHandler<TEvent>>)) as IEnumerable<IEventHandler<TEvent>>;
-			if (handlers is null)
+			if (handlers is null || handlers.Count() == 0)
 			{
 				_logger.LogDebug("Handler was not found for {Event} event", @event.LogEntry());
 				return;

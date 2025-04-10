@@ -7,6 +7,6 @@
 
 	public record TestEvent2 : Event
 	{
-		public string Value { get; init; } = null!;
+		public int Number { get; init; }
 	}
 }
