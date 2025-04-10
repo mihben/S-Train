@@ -8,7 +8,6 @@ namespace STrain.Sample.Backend.Performers
 		public Task HandleAsync(SampleEvent @event, CancellationToken cancellationToken)
 		{
 			Console.WriteLine($"Received: {@event.Value}");
-
 			return Task.CompletedTask;
 		}
 	}

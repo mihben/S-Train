@@ -26,6 +26,7 @@
     <ProjectReference Include="..\STrain.CQS.NetCore.LigtInject\STrain.CQS.NetCore.LigtInject.csproj" />
     <ProjectReference Include="..\STrain.CQS.NetCore\STrain.CQS.NetCore.csproj" />
     <ProjectReference Include="..\STrain.CQS\STrain.CQS.csproj" />
+    <ProjectReference Include="..\STrain.Eventing.NetCore.LightInject\STrain.Eventing.NetCore.LightInject.csproj" />
     <ProjectReference Include="..\STrain.Eventing.NetCore\STrain.Eventing.NetCore.csproj" />
     <ProjectReference Include="..\STrain.Eventing.RabbitMQ.NetCore\STrain.Eventing.RabbitMQ.NetCore.csproj" />
     <ProjectReference Include="..\STrain.Eventing.RabbitMQ\STrain.Eventing.RabbitMQ.csproj" />

@@ -1,4 +1,5 @@
 ﻿using STrain.Eventing.NetCore.Builders;
+using STrain.Eventing.NetCore.LightInject;
 using STrain.Eventing.RabbitMQ.NetCore.Extensions;
 using STrain.Sample.Api;
 using STrain.Sample.Backend.Performers;
@@ -13,6 +14,8 @@ namespace STrain.Sample.Backend.Wireup
 
 			builder.AddListener()
 				.AddRabbitMQListener((options, configuration) => configuration.Bind("RabbitMQ", options), builder => builder.AddDefaultReceiver());
+
+			builder.AddEventHandlerLogger();
 		}
 	}
 }

@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.Json;
 using Xunit.Abstractions;
 
-namespace STrain.Eventing.Test.Unit
+namespace STrain.Eventing.Test.Unit.RabbitMQ
 {
 	public class DefaultReceiverTest
 	{
