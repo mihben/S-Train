@@ -5,16 +5,16 @@ namespace STrain.Eventing.NetCore.Initializers
 {
 	public class ListenerInitializer : BackgroundService
 	{
-		private readonly IEnumerable<IListener> _listeners;
+		private readonly IListener _listener;
 
-		public ListenerInitializer(IEnumerable<IListener> listeners)
+		public ListenerInitializer(IListener listener)
 		{
-			_listeners = listeners;
+			_listener = listener;
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
-			await Parallel.ForEachAsync(_listeners, async (l, ct) => await l.ListenAsync(ct));
+			await _listener.ListenAsync(stoppingToken);
 		}
 	}
 }

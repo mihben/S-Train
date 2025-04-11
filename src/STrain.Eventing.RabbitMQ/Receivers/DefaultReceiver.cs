@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.HighPerformance;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.AMQP.Client;
+using RabbitMQ.Client;
 using STrain.Eventing.Dispatchers;
 using System.Text.Json;
 
@@ -16,27 +18,27 @@ namespace STrain.Eventing.RabbitMQ.Receivers
 			_logger = logger;
 		}
 
-		public bool CanReceive(IMessage message)
+		public bool CanReceive(IReadOnlyBasicProperties properties)
 		{
-			return message.EventType() is not null;
+			return properties.EventType() is not null;
 
 		}
 
-		public async Task ReceiveAsync(IContext context, IMessage message, CancellationToken cancellationToken)
+		public async Task ReceiveAsync(IReadOnlyBasicProperties properties, string routingKey, ReadOnlyMemory<byte> body, CancellationToken cancellationToken)
 		{
 			_logger.LogDebug("Attempting to receive message");
-			var type = Type.GetType(message.EventType()!);
+			var type = Type.GetType(properties.EventType()!);
 
 			if (type is null)
 			{
-				_logger.LogError("Unknown event type: {EventType}", message.EventType());
-				throw new InvalidOperationException($"Unknown event type: {message.EventType()}");
+				_logger.LogError("Unknown event type: {EventType}", properties.EventType());
+				throw new InvalidOperationException($"Unknown event type: {properties.EventType()}");
 			}
 
-			await using var stream = new MemoryStream((byte[])message.Body());
-			var body = await JsonSerializer.DeserializeAsync(stream, returnType: type, cancellationToken: cancellationToken);
+			await using var stream = body.AsStream();
+			var message = await JsonSerializer.DeserializeAsync(stream, returnType: type, cancellationToken: cancellationToken);
 
-			await _dispatcher.DispatchAsync((dynamic)body!, cancellationToken);
+			await _dispatcher.DispatchAsync((dynamic)message!, cancellationToken);
 			_logger.LogDebug("Done attempt to receive message");
 		}
 	}

@@ -1,10 +1,10 @@
-﻿using RabbitMQ.AMQP.Client;
+﻿using RabbitMQ.Client;
 
 namespace STrain.Eventing.RabbitMQ.Receivers
 {
 	public interface IReceiver
 	{
-		bool CanReceive(IMessage message);
-		Task ReceiveAsync(IContext context, IMessage message, CancellationToken cancellationToken);
+		bool CanReceive(IReadOnlyBasicProperties properties);
+		Task ReceiveAsync(IReadOnlyBasicProperties properties, string routingKey, ReadOnlyMemory<byte> body, CancellationToken cancellationToken);
 	}
 }

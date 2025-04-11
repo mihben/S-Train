@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RabbitMQ.AMQP.Client;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using STrain.Eventing.Listeners;
 using STrain.Eventing.RabbitMQ.Options;
 using STrain.Eventing.RabbitMQ.Receivers;
@@ -11,18 +12,16 @@ namespace STrain.Eventing.RabbitMQ.Listeners
 	{
 		private readonly IOptions<RabbitMQOptions> _options;
 
-		private readonly IEnvironment _environment;
-		private IConnection _connection;
-		private IConsumer? _consumer;
+		private readonly IChannel _channel;
 
 		private readonly IEnumerable<IReceiver> _receivers;
 
 		private readonly ILogger<RabbitMQListener> _logger;
 
-		public RabbitMQListener(IOptions<RabbitMQOptions> options, IEnvironment environment, IEnumerable<IReceiver> receivers, ILogger<RabbitMQListener> logger)
+		public RabbitMQListener(IOptions<RabbitMQOptions> options, IChannel channel, IEnumerable<IReceiver> receivers, ILogger<RabbitMQListener> logger)
 		{
 			_options = options;
-			_environment = environment;
+			_channel = channel;
 			_receivers = receivers;
 			_logger = logger;
 		}
@@ -31,44 +30,18 @@ namespace STrain.Eventing.RabbitMQ.Listeners
 		{
 			_logger.LogDebug("Starting RabbitMQ listener on queue {Queue}", _options.Value.Queue);
 
-			_connection = await _environment.CreateConnectionAsync();
-			_consumer = await _connection
-				.ConsumerBuilder()
-				.Queue(_options.Value.Queue)
-				.MessageHandler(HandleAsync)
-				.BuildAndStartAsync(cancellationToken);
+			var consumer = new AsyncEventingBasicConsumer(_channel);
+			consumer.ReceivedAsync += HandleAsync;
+			await _channel.BasicConsumeAsync(_options.Value.Queue, false, consumer, cancellationToken);
 
 			_logger.LogDebug("RabbitMQ listener has been started on queue {Queue}", _options.Value.Queue);
 		}
 
-		private async Task HandleAsync(IContext context, IMessage message)
+		private async Task HandleAsync(object sender, BasicDeliverEventArgs args)
 		{
-			try
-			{
-				await Parallel.ForEachAsync(_receivers.Where(r => r.CanReceive(message)), async (receiver, ct) => await receiver.ReceiveAsync(context, message, ct));
-				context.Accept();
-			}
-			catch
-			{
-				context.Discard();
-			}
-		}
+			await Parallel.ForEachAsync(_receivers.Where(r => r.CanReceive(args.BasicProperties)), async (r, ct) => await r.ReceiveAsync(args.BasicProperties, args.RoutingKey, args.Body, ct));
 
-		public async ValueTask DisposeAsync()
-		{
-			await DisposeAsync(true);
-			GC.SuppressFinalize(this);
-		}
-
-		private async Task DisposeAsync(bool disposing)
-		{
-			if (disposing)
-			{
-
-			}
-
-			if (_consumer != null) await _consumer.CloseAsync();
-			if (_connection != null) await _connection.CloseAsync();
+			await _channel.BasicAckAsync(args.DeliveryTag, false, args.CancellationToken);
 		}
 	}
 }

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using STrain.Eventing.Api;
 using STrain.Eventing.Handlers;
-using STrain.Eventing.NetCore.Initializers;
 
 namespace STrain.Eventing.NetCore.Builders
 {
@@ -22,11 +21,11 @@ namespace STrain.Eventing.NetCore.Builders
 			Builder.Services.AddHandler<TEvent, TImplementation>();
 		}
 
-		public ListenerBuilder AddListener()
+		public PublisherBuilder AddPublisher(Func<IEvent, string> routing)
 		{
-			Builder.Services.AddHostedService<ListenerInitializer>();
+			Builder.Services.AddEventPublisher(routing);
 
-			return new ListenerBuilder(Builder);
+			return new PublisherBuilder(Builder);
 		}
 	}
 }

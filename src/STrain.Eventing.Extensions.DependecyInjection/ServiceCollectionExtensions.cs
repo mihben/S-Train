@@ -1,6 +1,7 @@
 ﻿using STrain.Eventing.Api;
 using STrain.Eventing.Dispatchers;
 using STrain.Eventing.Handlers;
+using STrain.Eventing.Publishers;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -19,6 +20,12 @@ namespace Microsoft.Extensions.DependencyInjection
 			where TImplementation : class, IEventHandler<TEvent>
 		{
 			services.AddTransient<IEventHandler<TEvent>, TImplementation>();
+		}
+
+		public static void AddEventPublisher(this IServiceCollection services, Func<IEvent, string> routing)
+		{
+			services.AddTransient<IEventPublisher, EventRouter>();
+			services.AddSingleton(routing);
 		}
 	}
 }

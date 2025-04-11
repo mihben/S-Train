@@ -7,16 +7,19 @@ namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 	public class RabbitMQListenerBuilder
 	{
 		public WebApplicationBuilder Builder { get; }
+		public string? Key { get; }
 
-		public RabbitMQListenerBuilder(WebApplicationBuilder builder)
+		public RabbitMQListenerBuilder(WebApplicationBuilder builder, string? key)
 		{
 			Builder = builder;
+			Key = key;
 		}
 
 		public RabbitMQListenerBuilder AddReceiver<TReceiver>()
 			where TReceiver : class, IReceiver
 		{
-			Builder.Services.AddTransient<IReceiver, TReceiver>();
+			if (Key is null) Builder.Services.AddTransient<IReceiver, TReceiver>();
+			else Builder.Services.AddKeyedTransient<IReceiver, TReceiver>(Key);
 
 			return this;
 		}

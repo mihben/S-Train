@@ -13,5 +13,7 @@ namespace STrain.Eventing.RabbitMQ.Options
 		public required string Password { get; init; }
 		[Required]
 		public required string Queue { get; init; }
+		public required string Exchange { get; init; }
+		public required string RoutingKey { get; init; }
 	}
 }

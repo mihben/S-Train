@@ -1,6 +1,6 @@
 ﻿namespace STrain.Eventing.Listeners
 {
-	public interface IListener : IAsyncDisposable
+	public interface IListener
 	{
 		Task ListenAsync(CancellationToken cancellationToken);
 	}
