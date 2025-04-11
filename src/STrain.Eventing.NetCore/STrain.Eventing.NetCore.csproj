@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\STrain.Eventing.Extensions.DependecyInjection\STrain.Eventing.Extensions.DependecyInjection.csproj" />
+	  <ProjectReference Include="..\STrain.Eventing\STrain.Eventing.csproj" />
+	</ItemGroup>
+	
+</Project>

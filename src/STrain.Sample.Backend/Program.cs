@@ -25,7 +25,9 @@ builder.Services.AddAuthentication()
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddHttpClient();
+
 builder.AddCQS(CQSWireUp.Build);
+builder.AddEventing(EventingWireup.Build);
 
 builder.Services.AddTransient<ISampleService, SampleService>();
 
@@ -42,6 +44,9 @@ app.MapGenericRequestController();
 
 app.MapControllers();
 
+await app.InitializeAsync();
+
 app.Run();
+
 
 public partial class Program { }

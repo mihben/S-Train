@@ -18,7 +18,7 @@ namespace STrain.Sample.Backend.Wireup
 			builder.AddPerformer<IQueryPerformer<Api.Sample.GenericQuery, string>, SampleQueryPerformer>();
 
 			builder.AddRequestValidator()
-				.UseFluentRequestValidator(builder => builder.RegistrateFrom<Error.ValidatedCommandValidator>());
+				.UseFluentRequestValidator(builder => builder.RegistrateFrom<STrain.Sample.Api.Error.ValidatedCommandValidator>());
 
 			builder.AddMvcRequestReceiver()
 				.UseAuthorization()
@@ -36,4 +36,5 @@ namespace STrain.Sample.Backend.Wireup
 								.AddAttributiveHttpSender("External", (options, configuraion) => configuraion.Bind("Senders:External", options)));
 		}
 	}
+
 }

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LightInject" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\STrain.Eventing.Extensions.LightInject\STrain.Eventing.Extensions.LightInject.csproj" />
+    <ProjectReference Include="..\STrain.Eventing.NetCore\STrain.Eventing.NetCore.csproj" />
+  </ItemGroup>
+
+</Project>

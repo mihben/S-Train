@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\STrain.CQS.Api\STrain.CQS.Api.csproj" />
     <ProjectReference Include="..\STrain.CQS.Attributes\STrain.CQS.Attributes.csproj" />
+    <ProjectReference Include="..\STrain.Eventing.Api\STrain.Eventing.Api.csproj" />
   </ItemGroup>
 
 </Project>
