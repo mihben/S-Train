@@ -127,3 +127,4 @@ namespace STrain.Eventing.Test.Unit.RabbitMQ
 		}
 	}
 }
+
