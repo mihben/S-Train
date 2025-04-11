@@ -2,11 +2,11 @@
 using Bogus;
 using Microsoft.Extensions.Logging;
 using Moq;
-using RabbitMQ.AMQP.Client;
+using RabbitMQ.Client;
 using STrain.Eventing.Dispatchers;
+using STrain.Eventing.RabbitMQ.Extensions;
 using STrain.Eventing.RabbitMQ.Receivers;
 using STrain.Eventing.Test.Unit.Utils;
-using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using Xunit.Abstractions;
@@ -38,11 +38,9 @@ namespace STrain.Eventing.Test.Unit.RabbitMQ
 		{
 			// Arrange
 			var sut = CreateSUT();
-			var contextMock = new Mock<IContext>();
+			var propertiesMock = new Mock<IReadOnlyBasicProperties>();
 			var @event = new AutoFaker<TestEvent1>().Generate();
-			var messageMock = new MessageMock();
-
-			messageMock.Body(@event);
+			var messageMock = new PropertiesMock().EventType(@event.GetEventType());
 
 			// Act
 			var result = sut.CanReceive(messageMock.Object);
@@ -56,12 +54,11 @@ namespace STrain.Eventing.Test.Unit.RabbitMQ
 		{
 			// Arrange
 			var sut = CreateSUT();
-			var contextMock = new Mock<IContext>();
 			var @event = new AutoFaker<TestEvent1>().Generate();
-			var messageMock = new MessageMock();
+			var propertiesMock = new PropertiesMock();
 
 			// Act
-			var result = sut.CanReceive(messageMock.Object);
+			var result = sut.CanReceive(propertiesMock.Object);
 
 			// Assert
 			Assert.False(result);
@@ -72,14 +69,13 @@ namespace STrain.Eventing.Test.Unit.RabbitMQ
 		{
 			// Arrange
 			var sut = CreateSUT();
-			var contextMock = new Mock<IContext>();
+			var propertiesMock = new PropertiesMock();
 			var @event = new AutoFaker<TestEvent1>().Generate();
-			var messageMock = new MessageMock();
 
-			messageMock.Body(@event);
+			propertiesMock.EventType(@event.GetEventType());
 
 			// Act
-			await sut.ReceiveAsync(contextMock.Object, messageMock.Object, default);
+			await sut.ReceiveAsync(propertiesMock.Object, new Faker().Random.String(), new ReadOnlyMemory<byte>(@event.AsBytes()), default);
 
 			// Assert
 			_dispatcherMock.Verify(d => d.DispatchAsync(It.Is<TestEvent1>(te => te.Equals(@event)), It.IsAny<CancellationToken>()), Times.Once());
@@ -90,15 +86,14 @@ namespace STrain.Eventing.Test.Unit.RabbitMQ
 		{
 			// Arrange
 			var sut = CreateSUT();
-			var contextMock = new Mock<IContext>();
+			var propertiesMock = new PropertiesMock();
 			var @event = new AutoFaker<TestEvent1>().Generate();
-			var messageMock = new MessageMock();
 
-			messageMock.Body(@event).RandomEventType();
+			propertiesMock.RandomEventType();
 
 			// Act
 			// Assert
-			await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.ReceiveAsync(contextMock.Object, messageMock.Object, default));
+			await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.ReceiveAsync(propertiesMock.Object, new Faker().Random.String(), new ReadOnlyMemory<byte>(@event.AsBytes()), It.IsAny<CancellationToken>()));
 		}
 	}
 
@@ -110,48 +105,23 @@ namespace STrain.Eventing.Test.Unit.RabbitMQ
 		}
 	}
 
-	file class MessageMock : Mock<IMessage>
+	file class PropertiesMock : Mock<IReadOnlyBasicProperties>
 	{
-		public MessageMock()
+		public PropertiesMock RandomEventType()
 		{
-			Setup(m => m.ContentType()).Returns(MediaTypeNames.Application.Json);
-			Setup(m => m.ContentEncoding()).Returns(Encoding.UTF8.EncodingName);
-		}
-
-		public MessageMock Body<TEvent>(TEvent @event)
-		{
-			Setup(m => m.Property("event-type")).Returns($"{typeof(TEvent).FullName}, {typeof(TEvent).Assembly.GetName().Name}");
-			Setup(m => m.Body()).Returns(JsonSerializer.SerializeToUtf8Bytes(@event));
+			SetupGet(m => m.Headers).Returns(new Dictionary<string, object?>
+			{
+				["event-type"] = Encoding.UTF8.GetBytes(new Faker().Random.String())
+			});
 
 			return this;
 		}
-
-		public MessageMock InvalidContentType()
+		public PropertiesMock EventType(string eventType)
 		{
-			var mimeType = "";
-			do { mimeType = new Faker().System.MimeType(); } while (mimeType == MediaTypeNames.Application.Json);
-			Setup(m => m.ContentType()).Returns(mimeType);
-
-			return this;
-		}
-
-		public MessageMock InvalidEncoding()
-		{
-			Setup(m => m.ContentType()).Returns(new Faker().Random.String());
-
-			return this;
-		}
-
-		public MessageMock RandomEventType()
-		{
-			Setup(m => m.Property("event-type")).Returns(new Faker().Random.String());
-
-			return this;
-		}
-
-		public MessageMock RandomBody()
-		{
-			Setup(m => m.Body()).Returns(JsonSerializer.SerializeToUtf8Bytes(new AutoFaker<TestEvent2>().Generate()));
+			SetupGet(m => m.Headers).Returns(new Dictionary<string, object?>
+			{
+				["event-type"] = Encoding.UTF8.GetBytes(eventType)
+			});
 
 			return this;
 		}

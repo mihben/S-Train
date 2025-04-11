@@ -11,9 +11,10 @@ namespace RabbitMQ.AMQP.Client
 			return Encoding.UTF8.GetString((byte[])properties.Headers["event-type"]);
 		}
 
-		public static IReadOnlyBasicProperties EventType(this IReadOnlyBasicProperties properties, string type)
+		public static IBasicProperties EventType(this IBasicProperties properties, string type)
 		{
-			properties.Headers?.Add("event-type", type);
+			if (properties.Headers is null) properties.Headers = new Dictionary<string, object?>();
+			properties.Headers!.Add("event-type", type);
 
 			return properties;
 		}
