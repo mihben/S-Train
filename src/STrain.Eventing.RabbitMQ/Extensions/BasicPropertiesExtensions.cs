@@ -1,5 +1,4 @@
 ﻿using RabbitMQ.Client;
-using System.Text;
 
 namespace RabbitMQ.AMQP.Client
 {
@@ -8,7 +7,7 @@ namespace RabbitMQ.AMQP.Client
 		public static string? EventType(this IReadOnlyBasicProperties properties)
 		{
 			if (properties.Headers?.ContainsKey("event-type") is null) return null;
-			return Encoding.UTF8.GetString((byte[])properties.Headers["event-type"]);
+			return properties.Headers["event-type"] as string;
 		}
 
 		public static IBasicProperties EventType(this IBasicProperties properties, string type)

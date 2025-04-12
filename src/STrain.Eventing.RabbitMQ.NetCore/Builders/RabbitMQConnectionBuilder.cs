@@ -3,13 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
-using STrain.Eventing.Listeners;
-using STrain.Eventing.NetCore.Initializers;
 using STrain.Eventing.Publishers;
-using STrain.Eventing.RabbitMQ.Listeners;
 using STrain.Eventing.RabbitMQ.Options;
 using STrain.Eventing.RabbitMQ.Publishers;
-using STrain.Eventing.RabbitMQ.Receivers;
 
 namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 {
@@ -28,15 +24,15 @@ namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 		{
 			if (Key is null)
 			{
-				Builder.Services.AddHostedService(provider => new ListenerInitializer(provider.GetRequiredService<IListener>()));
-				Builder.Services.AddSingleton((provider) => provider.GetRequiredService<IConnection>().CreateChannelAsync().GetAwaiter().GetResult());
-				Builder.Services.AddTransient<IListener, RabbitMQListener>();
+				//Builder.Services.AddHostedService(provider => new ListenerInitializer(provider.GetRequiredService<IListener>()));
+				//Builder.Services.AddSingleton((provider) => provider.GetRequiredService<IConnection>().CreateChannelAsync().GetAwaiter().GetResult());
+				//Builder.Services.AddTransient<IListener, Consumer>();
 			}
 			else
 			{
-				Builder.Services.AddHostedService(provider => new ListenerInitializer(provider.GetRequiredKeyedService<IListener>(Key)));
-				Builder.Services.AddKeyedSingleton(Key, (provider, key) => provider.GetRequiredKeyedService<IConnection>(key).CreateChannelAsync().GetAwaiter().GetResult());
-				Builder.Services.AddKeyedTransient<IListener>(Key, (provider, key) => new RabbitMQListener(provider.GetRequiredService<IOptions<RabbitMQOptions>>(), provider.GetRequiredKeyedService<IChannel>(key), provider.GetKeyedServices<IReceiver>(key), provider.GetRequiredService<ILogger<RabbitMQListener>>()));
+				//Builder.Services.AddHostedService(provider => new ListenerInitializer(provider.GetRequiredKeyedService<IListener>(Key)));
+				//Builder.Services.AddKeyedSingleton(Key, (provider, key) => provider.GetRequiredKeyedService<IConnection>(key).CreateChannelAsync().GetAwaiter().GetResult());
+				//Builder.Services.AddKeyedTransient<IListener>(Key, (provider, key) => new Consumer(provider.GetRequiredService<IOptions<RabbitMQOptions>>(), provider.GetRequiredKeyedService<IChannel>(key), provider.GetKeyedServices<IReceiver>(key), provider.GetRequiredService<ILogger<Consumer>>()));
 			}
 
 			build(new RabbitMQListenerBuilder(Builder, Key));

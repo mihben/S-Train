@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using STrain.Eventing.RabbitMQ.Receivers;
 
 namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 {
@@ -16,17 +14,17 @@ namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 		}
 
 		public RabbitMQListenerBuilder AddReceiver<TReceiver>()
-			where TReceiver : class, IReceiver
+		//where TReceiver : class, IReceiver
 		{
-			if (Key is null) Builder.Services.AddTransient<IReceiver, TReceiver>();
-			else Builder.Services.AddKeyedTransient<IReceiver, TReceiver>(Key);
+			//if (Key is null) Builder.Services.AddTransient<IReceiver, TReceiver>();
+			//else Builder.Services.AddKeyedTransient<IReceiver, TReceiver>(Key);
 
 			return this;
 		}
 
 		public RabbitMQListenerBuilder AddDefaultReceiver()
 		{
-			AddReceiver<DefaultReceiver>();
+			//AddReceiver<DefaultReceiver>();
 
 			return this;
 		}
