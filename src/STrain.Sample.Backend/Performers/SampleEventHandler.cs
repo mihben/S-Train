@@ -6,9 +6,9 @@ namespace STrain.Sample.Backend.Performers
 {
 	public class SampleEventHandler : IEventHandler<SampleEvent>
 	{
-		private readonly IEventPublisher _publisher;
+		private readonly IPublisher _publisher;
 
-		public SampleEventHandler(IEventPublisher publisher)
+		public SampleEventHandler(IPublisher publisher)
 		{
 			_publisher = publisher;
 		}

@@ -1,0 +1,32 @@
+name: CD Workflow
+run-name: 'Release'
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x.x'
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Calculate Version
+        id: version
+        uses: mihben/actions-repository/.github/actions/get-version@main
+
+      - name: Execute
+        id: execute
+        uses: mihben/actions-repository/.github/actions/dotnet/publish/nuget@feature/nuget
+        with:
+          working-directory: src
+          target_version: ${{ steps.version.outputs.version }}
+          api-key: ${{ secrets.NUGET_API_KEY }}

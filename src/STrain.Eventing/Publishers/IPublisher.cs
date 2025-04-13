@@ -2,7 +2,7 @@
 
 namespace STrain.Eventing.Publishers
 {
-	public interface IEventPublisher
+	public interface IPublisher
 	{
 		Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken)
 			where TEvent : IEvent;

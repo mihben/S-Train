@@ -5,9 +5,9 @@ using STrain.Eventing.Api;
 
 namespace STrain.Eventing.Publishers
 {
-	public class EventRouter : IEventPublisher
+	public class EventRouter : IPublisher
 	{
-		private readonly Func<string, Func<IEventPublisher>?> _publisherFactory;
+		private readonly Func<string, Func<IPublisher>?> _publisherFactory;
 		private readonly IServiceProvider _serviceProvider;
 		private readonly Func<IEvent, string?> _keyResolver;
 		private readonly ILogger<EventRouter> _logger;
@@ -33,7 +33,7 @@ namespace STrain.Eventing.Publishers
 			var publisherKey = _keyResolver(@event) ?? throw new InvalidOperationException($"Publisher was not found for {@event.LogEntry()} event");
 			_logger.LogDebug("Selected {Publisher} publisher", publisherKey);
 
-			var publisher = _serviceProvider.GetKeyedService<IEventPublisher>(publisherKey) ?? throw new InvalidOperationException($"Publisher was not found for {key} key");
+			var publisher = _serviceProvider.GetKeyedService<IPublisher>(publisherKey) ?? throw new InvalidOperationException($"Publisher was not found for {key} key");
 
 			await publisher.PublishAsync(@event, key, cancellationToken).ConfigureAwait(false);
 			_logger.LogDebug("Done attempt to route {Event} event", @event.LogEntry());

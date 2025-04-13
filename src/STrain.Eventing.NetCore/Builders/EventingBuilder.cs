@@ -21,11 +21,9 @@ namespace STrain.Eventing.NetCore.Builders
 			Builder.Services.AddHandler<TEvent, TImplementation>();
 		}
 
-		public PublisherBuilder AddPublisher(Func<IEvent, string> routing)
+		public void AddRouter(Func<IEvent, string> routing)
 		{
 			Builder.Services.AddEventPublisher(routing);
-
-			return new PublisherBuilder(Builder);
 		}
 	}
 }

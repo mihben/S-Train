@@ -14,42 +14,45 @@ namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 		{
 			Builder = builder;
 		}
-		public RabbitMQConnectionBuilder AddConnection(string? key = null)
+
+		public ConnectionBuilder AddConnection()
 		{
-			if (key is null)
+			Builder.Services.AddSingleton((provider) =>
 			{
-				Builder.Services.AddSingleton((provider) =>
+				var options = provider.GetRequiredService<IOptions<RabbitMQOptions>>();
+
+				var factory = new ConnectionFactory
 				{
-					var options = provider.GetRequiredService<IOptions<RabbitMQOptions>>();
+					HostName = options.Value.Host,
+					Port = options.Value.Port,
+					UserName = options.Value.User,
+					Password = options.Value.Password
+				};
 
-					var factory = new ConnectionFactory();
-					factory.HostName = options.Value.Host;
-					factory.Port = options.Value.Port;
-					factory.UserName = options.Value.User;
-					factory.Password = options.Value.Password;
+				return factory.CreateConnectionAsync().GetAwaiter().GetResult();
+			});
 
-					return factory.CreateConnectionAsync();
-				});
-			}
-			else
+			return new ConnectionBuilder(Builder, null);
+		}
+
+		public ConnectionBuilder AddConnection(string key)
+		{
+			Builder.Services.AddKeyedSingleton(key, (provider, _) =>
 			{
-				Builder.Services.AddKeyedSingleton(key, (provider, _) =>
+				var options = provider.GetRequiredService<IOptions<RabbitMQOptions>>();
+
+				var factory = new ConnectionFactory
 				{
-					var options = provider.GetRequiredService<IOptions<RabbitMQOptions>>();
+					HostName = options.Value.Host,
+					Port = options.Value.Port,
+					UserName = options.Value.User,
+					Password = options.Value.Password
+				};
 
-					var factory = new ConnectionFactory
-					{
-						HostName = options.Value.Host,
-						Port = options.Value.Port,
-						UserName = options.Value.User,
-						Password = options.Value.Password
-					};
+				return factory.CreateConnectionAsync().GetAwaiter().GetResult();
+			});
 
-					return factory.CreateConnectionAsync().GetAwaiter().GetResult();
-				});
-			}
-
-			return new RabbitMQConnectionBuilder(this.Builder, key);
+			return new ConnectionBuilder(Builder, key);
 		}
 	}
 }
