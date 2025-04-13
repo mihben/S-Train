@@ -3,9 +3,12 @@ using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using STrain.Eventing.Consumers;
 using STrain.Eventing.Dispatchers;
+using STrain.Eventing.Publishers;
 using STrain.Eventing.RabbitMQ.Consumers;
 using STrain.Eventing.RabbitMQ.Options;
+using STrain.Eventing.RabbitMQ.Publishers;
 using STrain.Eventing.RabbitMQ.Unwrappers;
+using STrain.Eventing.RabbitMQ.Wrappers;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -46,6 +49,31 @@ namespace Microsoft.Extensions.DependencyInjection
 				var logger = provider.GetRequiredService<ILogger<Consumer>>();
 
 				return new Consumer(options.Get((string)key!), channel, unwrapper, dispatcher, logger);
+			});
+		}
+
+		public static void AddPublisher(this IServiceCollection services, string key, string connectionKey)
+		{
+			if (connectionKey is null)
+			{
+				services.AddKeyedSingleton(key, (provider, key) =>
+				{
+					IConnection connection;
+					if (connectionKey is not null) connection = provider.GetRequiredKeyedService<IConnection>(connectionKey);
+					else connection = provider.GetRequiredService<IConnection>();
+
+					return connection.CreateChannelAsync().GetAwaiter().GetResult();
+				});
+			}
+
+			services.AddKeyedTransient<IPublisher>(key, (provider, key) =>
+			{
+				var options = provider.GetRequiredService<IOptionsSnapshot<PublisherOptions>>();
+				var channel = provider.GetRequiredKeyedService<IChannel>(key);
+				var wrapper = provider.GetRequiredKeyedService<IWrapper>(key);
+				var logger = provider.GetRequiredService<ILogger<RabbitMQPublisher>>();
+
+				return new RabbitMQPublisher(options.Get((string)key!), channel, wrapper, logger);
 			});
 		}
 	}

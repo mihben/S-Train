@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using RabbitMQ.Client;
-using STrain.Eventing.Publishers;
 using STrain.Eventing.RabbitMQ.Options;
-using STrain.Eventing.RabbitMQ.Publishers;
 
 namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 {
@@ -41,21 +36,16 @@ namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 			return this;
 		}
 
-		public ConnectionBuilder AddPublisher(string key)
+		public ConnectionBuilder AddPublisher(string key, string section) => AddPublisher(key, builder => builder.AddGenericWrapper(), (options, configuration) => configuration.Bind(section, options));
+		public ConnectionBuilder AddPublisher(string key, Action<PublisherBuilder> builder, Action<PublisherOptions, IConfiguration> configure)
 		{
-			if (Key is null)
-			{
-				Builder.Services.AddSingleton((provider) => provider.GetRequiredService<IConnection>().CreateChannelAsync().GetAwaiter().GetResult());
-				Builder.Services.AddTransient<IEventPublisher, RabbitMQEventPublisher>();
-			}
-			else
-			{
-				Builder.Services.AddKeyedSingleton(Key, (provider, key) => provider.GetRequiredKeyedService<IConnection>(key).CreateChannelAsync().GetAwaiter().GetResult());
-				Builder.Services.AddKeyedTransient<IEventPublisher>(key, (provider, _) =>
-				{
-					return new RabbitMQEventPublisher(provider.GetRequiredKeyedService<IChannel>(Key), provider.GetRequiredService<IOptions<RabbitMQOptions>>(), provider.GetRequiredService<ILogger<RabbitMQEventPublisher>>());
-				});
-			}
+			Builder.Services.AddOptions<PublisherOptions>(key)
+				.Configure(configure)
+				.ValidateDataAnnotations()
+				.ValidateOnStart();
+			Builder.Services.AddPublisher(key, Key);
+
+			builder(new PublisherBuilder(Builder, key));
 
 			return this;
 		}

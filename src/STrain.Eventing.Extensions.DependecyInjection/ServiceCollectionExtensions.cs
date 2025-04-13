@@ -24,7 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
 		public static void AddEventPublisher(this IServiceCollection services, Func<IEvent, string> routing)
 		{
-			services.AddTransient<IEventPublisher, EventRouter>();
+			services.AddTransient<IPublisher, EventRouter>();
 			services.AddSingleton(routing);
 		}
 	}

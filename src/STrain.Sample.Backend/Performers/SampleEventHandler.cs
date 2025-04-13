@@ -6,9 +6,9 @@ namespace STrain.Sample.Backend.Performers
 {
 	public class SampleEventHandler : IEventHandler<SampleEvent>
 	{
-		private readonly IEventPublisher _publisher;
+		private readonly IPublisher _publisher;
 
-		public SampleEventHandler(IEventPublisher publisher)
+		public SampleEventHandler(IPublisher publisher)
 		{
 			_publisher = publisher;
 		}
@@ -16,7 +16,7 @@ namespace STrain.Sample.Backend.Performers
 		public async Task HandleAsync(SampleEvent @event, CancellationToken cancellationToken)
 		{
 			Console.WriteLine($"Received: {@event.Value}");
-			//await _publisher.PublishAsync(@event, "test-routing", cancellationToken);
+			await _publisher.PublishAsync(@event, "test-routing", cancellationToken);
 		}
 	}
 }

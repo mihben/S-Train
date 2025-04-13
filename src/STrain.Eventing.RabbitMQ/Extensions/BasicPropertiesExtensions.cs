@@ -18,7 +18,7 @@ namespace RabbitMQ.AMQP.Client
 		public static IBasicProperties EventType(this IBasicProperties properties, string type)
 		{
 			if (properties.Headers is null) properties.Headers = new Dictionary<string, object?>();
-			properties.Headers!.Add("event-type", type);
+			properties.Headers!.Add("event-type", Encoding.UTF8.GetBytes(type));
 
 			return properties;
 		}

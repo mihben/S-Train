@@ -13,11 +13,12 @@ namespace STrain.Sample.Backend.Wireup
 			builder.AddHandler<SampleEvent, SampleEventHandler>();
 			builder.AddEventHandlerLogger();
 
-			builder.AddPublisher(_ => "rabbitmq");
+			builder.AddRouter(_ => "test-exchange");
 
 			var rabbitmq = builder.AddRabbitMQ((options, configuration) => configuration.Bind("RabbitMQ", options))
 				.AddConnection()
-					.AddConsumer("RabbitMQ:Consumer");
+					.AddConsumer("RabbitMQ:Consumer")
+					.AddPublisher("test-exchange", "RabbitMQ:Publisher");
 
 		}
 	}

@@ -33,7 +33,7 @@ namespace STrain.Eventing.RabbitMQ.Unwrappers
 				throw new NotSupportedException($"Unknown event type: {eventType}");
 			}
 
-			var result = await JsonSerializer.DeserializeAsync(body.AsStream(), type, cancellationToken: cancellationToken).ConfigureAwait(false) as IEvent;
+			var result = await JsonSerializer.DeserializeAsync(body.TrimEnd(new ReadOnlySpan<byte>([0])).AsStream(), type, cancellationToken: cancellationToken).ConfigureAwait(false) as IEvent;
 
 			_logger.LogDebug("Done attempting to unwrap generic event");
 			_logger.LogTrace("Event: {@Event}", result);
