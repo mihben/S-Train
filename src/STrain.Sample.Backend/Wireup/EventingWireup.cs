@@ -15,9 +15,9 @@ namespace STrain.Sample.Backend.Wireup
 
 			builder.AddPublisher(_ => "rabbitmq");
 
-			var rabbitMqBuilder = builder.AddRabbitMQ((options, configuration) => configuration.Bind("RabbitMQ", options));
-			rabbitMqBuilder.AddConnection("receive").AddListener(builder => builder.AddDefaultReceiver());
-			rabbitMqBuilder.AddConnection("publish").AddPublisher("rabbitmq");
+			var rabbitmq = builder.AddRabbitMQ((options, configuration) => configuration.Bind("RabbitMQ", options))
+				.AddConnection()
+					.AddConsumer("RabbitMQ:Consumer");
 
 		}
 	}

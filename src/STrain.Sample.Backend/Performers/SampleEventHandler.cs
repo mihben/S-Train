@@ -16,7 +16,7 @@ namespace STrain.Sample.Backend.Performers
 		public async Task HandleAsync(SampleEvent @event, CancellationToken cancellationToken)
 		{
 			Console.WriteLine($"Received: {@event.Value}");
-			await _publisher.PublishAsync(@event, "test-routing", cancellationToken);
+			//await _publisher.PublishAsync(@event, "test-routing", cancellationToken);
 		}
 	}
 }

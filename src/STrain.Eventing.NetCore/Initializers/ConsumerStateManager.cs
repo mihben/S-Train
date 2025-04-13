@@ -14,6 +14,7 @@ namespace STrain.Eventing.NetCore.Initializers
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
+			await _consumer.InitializeAsync(stoppingToken).ConfigureAwait(false);
 			await _consumer.StartAsync(stoppingToken).ConfigureAwait(false);
 		}
 	}

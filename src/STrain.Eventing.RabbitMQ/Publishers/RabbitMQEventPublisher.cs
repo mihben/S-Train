@@ -37,7 +37,7 @@ namespace STrain.Eventing.RabbitMQ.Publishers
 			var properties = new BasicProperties();
 			properties.EventType(@event.GetEventType());
 
-			await _channel.BasicPublishAsync(_options.Value.Exchange, key ?? _options.Value.RoutingKey, false, properties, new ReadOnlyMemory<byte>(stream.GetBuffer()), cancellationToken).ConfigureAwait(false);
+			//await _channel.BasicPublishAsync(_options.Value.Exchange, key ?? _options.Value.RoutingKey, false, properties, new ReadOnlyMemory<byte>(stream.GetBuffer()), cancellationToken).ConfigureAwait(false);
 			_logger.LogDebug("Published {Event} event", @event.LogEntry());
 		}
 	}

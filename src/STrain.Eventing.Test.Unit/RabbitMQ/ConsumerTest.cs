@@ -1,6 +1,6 @@
 ﻿using AutoBogus;
+using Bogus;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -28,12 +28,10 @@ namespace STrain.Eventing.Test.Unit.RabbitMQ
 		private Consumer CreateSUT()
 		{
 			_options ??= new AutoFaker<ConsumerOptions>().Generate();
-			var optionsMock = new Mock<IOptions<ConsumerOptions>>();
-			optionsMock.SetupGet(o => o.Value).Returns(_options);
 
 			_channelMock = new Mock<IChannel>();
 
-			return new Consumer(optionsMock.Object, _channelMock.Object, new Mock<IUnwrapper>().Object, new Mock<IEventDispatcher>().Object, _logger);
+			return new Consumer(_options, _channelMock.Object, new Mock<IUnwrapper>().Object, new Mock<IEventDispatcher>().Object, _logger);
 		}
 
 		[Fact(DisplayName = "[UNIT][CNS-001]: Start Consumer")]
@@ -61,6 +59,34 @@ namespace STrain.Eventing.Test.Unit.RabbitMQ
 
 			// Assert
 			_channelMock.Verify(c => c.BasicConsumeAsync(_options.Queue, false, string.Empty, It.IsAny<bool>(), false, It.IsAny<Dictionary<string, object?>>(), It.Is<AsyncEventingBasicConsumer>(c => c.Channel == _channelMock.Object), It.IsAny<CancellationToken>()), Times.Once());
+		}
+
+		[Fact(DisplayName = "[UNIT][CNS-003]: Create Queue")]
+		public async Task Consumer_InitailizeAsync_CreateQueue()
+		{
+			// Arrange
+			var sut = CreateSUT();
+
+			// Act
+			await sut.InitializeAsync(default);
+
+			// Assert
+			_channelMock.Verify(c => c.QueueDeclareAsync(_options.Queue, true, false, false, null, false, false, default), Times.Once());
+		}
+
+		[Fact(DisplayName = "[UNIT][CNS-003]: Bind Queue")]
+		public async Task Consumer_InitailizeAsync_BindQueue()
+		{
+			// Arrange
+			var routingKey = new Faker().Random.String();
+			_options = new AutoFaker<ConsumerOptions>().RuleFor(o => o.RoutingKeys, [routingKey, routingKey]).Generate();
+			var sut = CreateSUT();
+
+			// Act
+			await sut.InitializeAsync(default);
+
+			// Assert
+			_channelMock.Verify(c => c.QueueBindAsync(_options.Queue, _options.Exchange, routingKey, null, false, default), Times.Exactly(2));
 		}
 	}
 }

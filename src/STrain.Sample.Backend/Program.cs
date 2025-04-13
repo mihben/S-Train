@@ -44,8 +44,6 @@ app.MapGenericRequestController();
 
 app.MapControllers();
 
-await app.InitializeAsync();
-
 app.Run();
 
 
