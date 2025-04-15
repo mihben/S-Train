@@ -32,7 +32,7 @@ namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 
 		public PublisherBuilder Initialize()
 		{
-			Builder.Services.AddHostedService(provider => new PublisherInitializer(provider.GetRequiredKeyedService<IPublisher>(Key));
+			Builder.Services.AddHostedService(provider => new PublisherInitializer(provider.GetRequiredKeyedService<IPublisher>(Key)));
 
 			return this;
 		}
