@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using RabbitMQ.AMQP.Client;
 using STrain.Eventing.Api;
-using STrain.Eventing.RabbitMQ.Extensions;
 using System.Text.Json;
 
 namespace STrain.Eventing.RabbitMQ.Wrappers

@@ -1,22 +1,21 @@
 ﻿using STrain.Eventing.Handlers;
-using STrain.Eventing.Publishers;
 using STrain.Sample.Api;
 
 namespace STrain.Sample.Backend.Performers
 {
 	public class SampleEventHandler : IEventHandler<SampleEvent>
 	{
-		private readonly IPublisher _publisher;
+		private readonly IRequestSender _sender;
 
-		public SampleEventHandler(IPublisher publisher)
+		public SampleEventHandler(IRequestSender sender)
 		{
-			_publisher = publisher;
+			_sender = sender;
 		}
 
 		public async Task HandleAsync(SampleEvent @event, CancellationToken cancellationToken)
 		{
 			Console.WriteLine($"Received: {@event.Value}");
-			await _publisher.PublishAsync(@event, "test-routing", cancellationToken);
+			await _sender.SendAsync(new Api.Sample.GenericCommand(@event.Value), cancellationToken);
 		}
 	}
 }

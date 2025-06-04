@@ -2,9 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using STrain.Eventing.Consumers;
 using STrain.Eventing.NetCore.Initializers;
-using STrain.Eventing.RabbitMQ.Unwrappers;
 
-namespace STrain.Eventing.RabbitMQ.NetCore.Builders
+namespace STrain.Eventing.NetCore.Builders
 {
 	public class ConsumerBuilder
 	{
@@ -16,17 +15,6 @@ namespace STrain.Eventing.RabbitMQ.NetCore.Builders
 			Builder = builder;
 			Key = key;
 		}
-
-		public ConsumerBuilder AddUnwrapper<TUnwrapper>()
-			where TUnwrapper : class, IUnwrapper
-		{
-			if (Key is null) Builder.Services.AddTransient<IUnwrapper, TUnwrapper>();
-			else Builder.Services.AddKeyedTransient<IUnwrapper, TUnwrapper>(Key);
-
-			return this;
-		}
-
-		public ConsumerBuilder AddGenericUnwrapper() => AddUnwrapper<GenericUnwrapper>();
 
 		public ConsumerBuilder AutoStateManagement()
 		{

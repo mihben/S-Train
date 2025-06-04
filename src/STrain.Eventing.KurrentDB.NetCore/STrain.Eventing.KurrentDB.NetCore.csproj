@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\STrain.Eventing.KurrentDB\STrain.Eventing.KurrentDB.csproj" />
+    <ProjectReference Include="..\STrain.Eventing.NetCore\STrain.Eventing.NetCore.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,7 +1,7 @@
 ﻿using AutoBogus;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.AMQP.Client;
-using STrain.Eventing.RabbitMQ.Extensions;
+using STrain.Eventing.Api;
 using STrain.Eventing.RabbitMQ.Wrappers;
 using STrain.Eventing.Test.Unit.Utils;
 using System.Text.Json;
