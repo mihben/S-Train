@@ -21,7 +21,7 @@ namespace STrain.Eventing.RabbitMQ.NetCore.Builders
             return AddConsumer(builder => builder.AddGenericUnwrapper().AutoStateManagement(), (options, configuration) => configuration.Bind(section, options));
         }
 
-        public ConnectionBuilder AddConsumer(Action<ConsumerBuilder> build, Action<ConsumerOptions, IConfiguration> configure)
+        public ConnectionBuilder AddConsumer(Action<ConsumerBuilderExtensions> build, Action<ConsumerOptions, IConfiguration> configure)
         {
             Builder.Services.AddOptions<ConsumerOptions>(Key)
                 .Configure(configure)
@@ -31,7 +31,7 @@ namespace STrain.Eventing.RabbitMQ.NetCore.Builders
             if (Key is null) Builder.Services.AddConsumer();
             else Builder.Services.AddConsumer(Key);
 
-            build(new ConsumerBuilder(Builder, Key));
+            build(new ConsumerBuilderExtensions(Builder, Key));
 
             return this;
         }

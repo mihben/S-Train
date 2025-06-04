@@ -1,6 +1,4 @@
-﻿using STrain.Eventing.Api;
-
-namespace STrain.Eventing.RabbitMQ.Extensions
+﻿namespace STrain.Eventing.Api
 {
 	public static class EventExtensions
 	{

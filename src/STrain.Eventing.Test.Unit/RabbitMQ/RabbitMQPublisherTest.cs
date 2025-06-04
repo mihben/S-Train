@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using RabbitMQ.Client;
 using STrain.Eventing.Api;
-using STrain.Eventing.RabbitMQ.Extensions;
+using STrain.Eventing.Extensions;
 using STrain.Eventing.RabbitMQ.Options;
 using STrain.Eventing.RabbitMQ.Publishers;
 using STrain.Eventing.RabbitMQ.Wrappers;

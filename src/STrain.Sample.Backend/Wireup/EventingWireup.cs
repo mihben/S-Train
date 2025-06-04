@@ -1,25 +1,24 @@
-﻿using STrain.Eventing.NetCore.Builders;
+﻿using STrain.Eventing.KurrentDB.NetCore.Extensions;
+using STrain.Eventing.NetCore.Builders;
 using STrain.Eventing.NetCore.LightInject;
-using STrain.Eventing.RabbitMQ.NetCore.Extensions;
 using STrain.Sample.Api;
 using STrain.Sample.Backend.Performers;
 
 namespace STrain.Sample.Backend.Wireup
 {
-    public static class EventingWireup
-    {
-        public static void Build(EventingBuilder builder)
-        {
-            builder.AddHandler<SampleEvent, SampleEventHandler>();
-            builder.AddEventHandlerLogger();
+	public static class EventingWireup
+	{
+		public static void Build(EventingBuilder builder)
+		{
+			builder.AddHandler<SampleEvent, SampleEventHandler>();
+			builder.AddEventHandlerLogger();
 
-            builder.AddRouter(_ => "test-exchange");
+			builder.AddRouter(_ => "kurrentdb");
 
-            builder.AddRabbitMQ((options, configuration) => configuration.Bind("RabbitMQ", options))
-                .AddConnection()
-                    .AddConsumer("RabbitMQ:Consumer")
-                    .AddPublisher("test-exchange", "RabbitMQ:Publisher");
-
-        }
-    }
+			builder.AddKurrentDB((settings, configuration) => configuration.Bind("KurrentDB", settings))
+				.Consume("sample-events")
+					.AddGenericUnwrapper()
+					.AutoStateManagement();
+		}
+	}
 }
