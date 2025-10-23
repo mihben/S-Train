@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using STrain;
 using STrain.Sample.Blazor;
@@ -10,7 +11,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddHttpClient();
 builder.UseLightinject();
 builder.UseRequestRouter(_ => "backend")
-    .AddGenericHttpSender("backend", (options, _) => { options.BaseAddress = new Uri("http://localhost:5100/"); options.Path = "api"; });
+	.AddGenericHttpSender("backend", (options, _) => { options.BaseAddress = new Uri("http://localhost:5100/"); options.Path = "api"; })
+		.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 await builder.Build().RunAsync();
 

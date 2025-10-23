@@ -4,11 +4,11 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>2.0.0-rc.2</Version>
+    <Version>3.2.0-alpha.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="4.0.0" />
+    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="4.0.3" />
   </ItemGroup>
 
   <ItemGroup>

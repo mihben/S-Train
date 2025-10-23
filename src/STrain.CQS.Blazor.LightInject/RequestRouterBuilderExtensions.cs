@@ -8,23 +8,23 @@ using STrain.CQS.Http.RequestSending;
 
 namespace STrain
 {
-    public static class RequestRouterBuilderExtensions
-    {
-        public static RequestRouterBuilder AddHttpSender(this RequestRouterBuilder builder, string key, Action<HttpRequestSenderOptions, IConfiguration> configure, Action<HttpRequestSenderBuilder> build)
-        {
-            builder.Builder.Services.AddHttpRequestSender(key, configure);
-            builder.Builder.ConfigureContainer(container => container.AddHttpSender(key));
-            build(new HttpRequestSenderBuilder(builder.Builder, key));
-            return builder;
-        }
+	public static class RequestRouterBuilderExtensions
+	{
+		public static IHttpClientBuilder AddHttpSender(this RequestRouterBuilder builder, string key, Action<HttpRequestSenderOptions, IConfiguration> configure, Action<HttpRequestSenderBuilder> build)
+		{
+			builder.Builder.ConfigureContainer(container => container.AddHttpSender(key));
+			build(new HttpRequestSenderBuilder(builder.Builder, key));
 
-        public static RequestRouterBuilder AddGenericHttpSender(this RequestRouterBuilder builder, string key, Action<HttpRequestSenderOptions, IConfiguration> configure)
-            => builder.AddHttpSender(key, configure, builder => builder.UseGenericPathBinder()
-                                                                            .UseGenericMethodBinder()
-                                                                            .UseGenericQueryParameterBinder()
-                                                                            .UseGenericHeaderParameterBinder()
-                                                                            .UseGenericBodyParameterBinder()
-                                                                            .UseDefaultResponseReader()
-                                                                            .UseGenericRequestErrorHandler());
-    }
+			return builder.Builder.Services.AddHttpRequestSender(key, configure);
+		}
+
+		public static IHttpClientBuilder AddGenericHttpSender(this RequestRouterBuilder builder, string key, Action<HttpRequestSenderOptions, IConfiguration> configure)
+			=> builder.AddHttpSender(key, configure, builder => builder.UseGenericPathBinder()
+																			.UseGenericMethodBinder()
+																			.UseGenericQueryParameterBinder()
+																			.UseGenericHeaderParameterBinder()
+																			.UseGenericBodyParameterBinder()
+																			.UseDefaultResponseReader()
+																			.UseGenericRequestErrorHandler());
+	}
 }
